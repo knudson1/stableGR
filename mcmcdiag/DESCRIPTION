@@ -9,7 +9,7 @@ email = "dootika.vats@gmail.com"))
 Maintainer: Christina Knudson <knud8583@stthomas.edu>
 Description: Calculates a revised Gelman-Rubin diagnostic for convergence of Markov chain sequences.
 License: GPL (>= 2)
-Depends: R (>= 3.1.1), mcmc
+Depends: R (>= 3.1.1), mcmc, mvtnorm
 Imports: stats
 ByteCompile: TRUE
 Repository: CRAN
