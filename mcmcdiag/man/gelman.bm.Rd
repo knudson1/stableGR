@@ -18,7 +18,8 @@ distribution of the variable under examination is normal. Hence the
 }
 
 \usage{
-gelman.bm(x, confidence = 0.95, transform = FALSE, autoburnin = TRUE, multivariate = TRUE)
+gelman.bm(x, confidence = 0.95, transform = FALSE, 
+	autoburnin = FALSE, multivariate = TRUE)
 }
 
 \arguments{
@@ -33,7 +34,7 @@ distribution. If set to TRUE, a log transform or logit transform, as
 appropriate, will be applied.}
 \item{autoburnin}{a logical flag indicating whether only the second half
   of the series should be used in the computation.  If set to TRUE
-  (default) and \code{start(x)} is less than \code{end(x)/2} then start
+   and \code{start(x)} is less than \code{end(x)/2} then start
   of series will be adjusted so that only second half of series is used.}
 \item{multivariate}{a logical flag indicating whether the multivariate
 potential scale reduction factor should be calculated for multivariate

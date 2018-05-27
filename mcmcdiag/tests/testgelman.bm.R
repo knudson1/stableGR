@@ -6,8 +6,8 @@ library(mcmcdiag)
 
 ################ 
 # Start by making a few chains to work with
+
 # Details on the chain construction
-mvn_gibbs <- mcmcdiag:::mvn_gibbs
 p <- 5
 N <- 100
 tail.ind <- floor(N*.80):N
@@ -15,7 +15,9 @@ foo <- matrix(.50, nrow=p, ncol=p)
 sigma <- foo^(abs(col(foo)-row(foo)))
 mu <- sample(10:20, p)
 mu2 <- mu[p]
+
 # Create the chains
+mvn_gibbs <- mcmcdiag:::mvn_gibbs
 out.gibbs1 <- mvn_gibbs(N = N, mu = mu, sigma = sigma, p = p)
 out.gibbs2 <- mvn_gibbs(N = N, mu = mu, sigma = sigma, p = p)
 # Convert to MCMC objects
@@ -25,17 +27,12 @@ obj <- mcmc.list(out1, out2)
 
 ################ 
 # Perform unit test using the two chains in obj
-
 # Just for the first variable
+
+# Write the psrf for the specific obj chains
 # Isolate the first component of the two chains
 chain1 <- out1[ ,1]
 chain2 <- out2[ ,1]
-
-
-
-
-
-# Write the psrf for the specific obj chains
 
 # Calculate tau^2 for each chain
 tausq1 <- (mcse(chain1)$se)^2 * N 
@@ -86,11 +83,11 @@ byhand <- list(tausq1 = tausq1, tausq2 = tausq2, tausq = tausq, sampvar1 = sampv
 
 byhand
 
-that
 
-(this <- gelman.bm(obj))
-this$psrf[1]
-all.equal(as.numeric(this$psrf[1]), that)
+
+(withfunc <- gelman.bm(obj))
+withfunc$psrf[1]
+all.equal(as.numeric(withfunc$psrf[1]), that)
 
 
 

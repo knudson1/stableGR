@@ -6,7 +6,7 @@
 #####################################
 
 gelman.bm <-
-function (x, confidence = 0.95, transform = FALSE, autoburnin = TRUE, 
+function (x, confidence = 0.95, transform = FALSE, autoburnin = FALSE, 
     multivariate = TRUE) 
 {
     x <- as.mcmc.list(x)
