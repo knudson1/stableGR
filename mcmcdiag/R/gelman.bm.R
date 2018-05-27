@@ -1,0 +1,94 @@
+#####################################
+### gelman.bm incorporates batch means variance estimates
+### into the Gelman-Rubin diagnostic framework 
+### x: a list of chains
+### the rest of the arguments are leftover from gelman.diag
+#####################################
+
+gelman.bm <-
+function (x, confidence = 0.95, transform = FALSE, autoburnin = TRUE, 
+    multivariate = TRUE) 
+{
+    x <- as.mcmc.list(x)
+    if (nchain(x) < 2) 
+        stop("You need at least two chains")
+    if (autoburnin && start(x) < end(x)/2) 
+        x <- window(x, start = end(x)/2 + 1)
+
+	# Define some notation.
+    Niter <- niter(x)  #number of iterations per chains. We also call this n.
+    Nchain <- nchain(x) #number of chains. We also call this m.
+    Nvar <- nvar(x) #number of variables
+    xnames <- varnames(x)
+
+	# Transform to logit or log if asked and if applicable.
+    if (transform) 
+        x <- gelman.transform(x) 
+
+	# Since x is a list of markov chains, turn each into matrix.
+    x <- lapply(x, as.matrix) 
+
+	# First, calculate sample means.
+	# Calculate column means for each chain.
+    xbar <- matrix(sapply(x, apply, 2, mean, simplify = TRUE),nrow = Nvar, ncol = Nchain) 
+	# Average the means across chains
+    muhat <- apply(xbar, 1, mean) 
+
+	# Second, calculate overall sample variance for each variable.
+	# Calculate vcov matrix for variables in each chain. List length = nchain.
+    Si2 <- array(sapply(x, var, simplify = TRUE), dim = c(Nvar, Nvar, Nchain)) 
+    W <- apply(Si2, c(1, 2), mean) # Average the vcov matrices across chains.
+    Ssq <- diag(W) # Isolate the variances, throw away covariances.
+	# For each chain, find sample variance for each variable. 
+	s2 <- matrix(apply(Si2, 3, diag), nrow = Nvar, ncol = Nchain)
+	# Variance of the variances, divided by m chains. 
+    var.s2 <- apply(s2, 1, var)/Nchain # Known as var.w in GR.
+
+	# Third, calculate tau^2 and its variance for each variable. 
+	# This replaces the GR b.
+	# Sample variance of the sample means (between chain vars) calculated using batch means.
+    tau2i <- sapply(x, gettau) # For each chain
+	tau2 <- apply(tau2i, 1, mean)  # Average over the chains
+	tau2var <- apply(tau2i, 1, var)/Nchain # Calculate the variance of our estimate
+
+	# Fourth, calculate cov(tau^2, s^2). Calculate it for each chain, then average.
+	# This replaces cov(w,b) from GR. w = s^2 but tau^2 != b.
+	cov.s2t2 <- sapply(1:Nvar, function(index) {cov(x = tau2i[index, ], y = s2[index, ])}) / Nchain
+    # cov(s^2, tau^2) = sample cov(s^2, tau^2) / m
+
+	# Fifth, calculate the estimate of sigma^2.
+	sigsq <- (Niter - 1) * Ssq/Niter + tau2 / Niter 
+
+	# Sixth, calculateV, the scale of the t distribution.    
+	V <- sigsq +  tau2/(Niter * Nchain) 
+
+    # Seventh, calculate the variance of V.
+	var.V <- ((Niter - 1)/Niter)^2 * var.s2/Nchain + 
+		+ ((Nchain + 1)/(Nchain * Niter))^2 * tau2var / Nchain +  
+		+ cov.s2t2/Nchain 
+
+	# Eight, calculate degrees of freedom for our T dist.
+    df.V <- (2 * V^2)/var.V 
+    df.adj <- (df.V + 3)/(df.V + 1) 
+	# Adjustment keeps SRF finite. 
+
+    B.df <- Nchain - 1 # Not using this now. for confidence regions in R2. 
+	# Let's check out coverage probabilities for R2.
+
+    W.df <- (2 * Ssq^2)/var.s2 #not needed for now (division of 2 chisqs --> F dist)
+    R2.fixed <- (Niter - 1)/Niter #all part of eqn (20)
+    R2.random <- (1 + 1/Nchain) * (1/Niter) * (tau2/Ssq) #all part of eqn (20)
+    R2.estimate <- R2.fixed + R2.random #all part of eqn (20)
+    R2.upper <- R2.fixed + qf((1 + confidence)/2, B.df, W.df) * 
+    R2.random #this is the upper confidence bound on R
+    psrf <- cbind(sqrt(df.adj * R2.estimate), sqrt(df.adj * R2.upper))
+
+    dimnames(psrf) <- list(xnames, c("Point est.", "Upper C.I."))
+    out <- list(psrf = psrf)
+    class(out) <- "gelman.diag"
+    out
+}
+
+
+gettau <- function(x1) {(mcse.mat(x1)[ ,2])^2 *Niter}
+
