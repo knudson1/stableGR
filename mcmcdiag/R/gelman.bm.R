@@ -47,7 +47,7 @@ function (x, confidence = 0.95, transform = FALSE, autoburnin = TRUE,
 	# Third, calculate tau^2 and its variance for each variable. 
 	# This replaces the GR b.
 	# Sample variance of the sample means (between chain vars) calculated using batch means.
-    tau2i <- sapply(x, gettau) # For each chain
+    tau2i <- sapply(x, gettau)*Niter # For each chain
 	tau2 <- apply(tau2i, 1, mean)  # Average over the chains
 	tau2var <- apply(tau2i, 1, var)/Nchain # Calculate the variance of our estimate
 
@@ -90,5 +90,5 @@ function (x, confidence = 0.95, transform = FALSE, autoburnin = TRUE,
 }
 
 
-gettau <- function(x1) {(mcse.mat(x1)[ ,2])^2 *Niter}
+gettau <- function(x1) {(mcse.mat(x1)[ ,2])^2 }
 
