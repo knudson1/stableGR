@@ -1,4 +1,5 @@
 export(gelman.bm)
 
-import(mvtnorm)
+import(mvtnorm, mcmc, mcmcse, coda)
+importFrom("stats", "cov", "end", "start", "var", "window")
 

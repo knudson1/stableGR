@@ -72,18 +72,22 @@ function (x, confidence = 0.95, transform = FALSE, autoburnin = TRUE,
     df.adj <- (df.V + 3)/(df.V + 1) 
 	# Adjustment keeps SRF finite. 
 
-    B.df <- Nchain - 1 # Not using this now. for confidence regions in R2. 
+
+	Rhat <- V * df.adj / Ssq
+	psrf <- sqrt(Rhat)
+
+    #B.df <- Nchain - 1 # Not using this now. for confidence regions in R2. 
 	# Let's check out coverage probabilities for R2.
+    #W.df <- (2 * Ssq^2)/var.s2 #not needed for now (division of 2 chisqs --> F dist)
+	
+    #R2.fixed <- (Niter - 1)/Niter #all part of eqn (20)
+    #R2.random <- (1 + 1/Nchain) * (1/Niter) * (tau2/Ssq) #all part of eqn (20)
+    #R2.estimate <- R2.fixed + R2.random #all part of eqn (20)
+    #R2.upper <- R2.fixed + qf((1 + confidence)/2, B.df, W.df) * 
+    #R2.random #this is the upper confidence bound on R
+    #psrf <- cbind(sqrt(df.adj * R2.estimate), sqrt(df.adj * R2.upper))
 
-    W.df <- (2 * Ssq^2)/var.s2 #not needed for now (division of 2 chisqs --> F dist)
-    R2.fixed <- (Niter - 1)/Niter #all part of eqn (20)
-    R2.random <- (1 + 1/Nchain) * (1/Niter) * (tau2/Ssq) #all part of eqn (20)
-    R2.estimate <- R2.fixed + R2.random #all part of eqn (20)
-    R2.upper <- R2.fixed + qf((1 + confidence)/2, B.df, W.df) * 
-    R2.random #this is the upper confidence bound on R
-    psrf <- cbind(sqrt(df.adj * R2.estimate), sqrt(df.adj * R2.upper))
-
-    dimnames(psrf) <- list(xnames, c("Point est.", "Upper C.I."))
+    #dimnames(psrf) <- list(xnames, c("Point est.", "Upper C.I."))
     out <- list(psrf = psrf)
     class(out) <- "gelman.diag"
     out
@@ -91,4 +95,7 @@ function (x, confidence = 0.95, transform = FALSE, autoburnin = TRUE,
 
 
 gettau <- function(x1) {(mcse.mat(x1)[ ,2])^2 }
+
+mcse.mat <- mcmcse:::mcse.mat
+gelman.transform <- coda:::gelman.transform
 

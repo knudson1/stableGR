@@ -5,7 +5,7 @@
 \title{
 \packageTitle{mcmcdiag}
 }
-\description{
+\description{Calculates a convergence diagnostic in the spirit of Gelman-Rubin
 \packageDescription{mcmcdiag}
 }
 \details{
@@ -22,15 +22,10 @@ The DESCRIPTION file:
 Maintainer: \packageMaintainer{mcmcdiag}
 }
 \references{
-~~ Literature or other references for background information ~~
+Gelman Rubin 1992; Brooks and Gelman 1998 (add these later)
 }
-~~ Optionally other standard keywords, one per line, from file KEYWORDS in ~~
-~~ the R documentation directory ~~
-\keyword{ package }
-\seealso{
-~~ Optional links to other man pages, e.g. ~~
-~~ \code{\link[<pkg>:<pkg>-package]{<pkg>}} ~~
-}
+
+\keyword{ htest }
 \examples{
-~~ simple examples of the most important functions ~~
+
 }

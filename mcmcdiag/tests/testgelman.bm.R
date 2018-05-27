@@ -2,6 +2,7 @@ set.seed(10)
 library(mvtnorm)
 library(mcmcse)
 library(coda)
+library(mcmcdiag)
 
 ################ 
 # Start by making a few chains to work with
@@ -30,7 +31,7 @@ obj <- mcmc.list(out1, out2)
 chain1 <- out1[ ,1]
 chain2 <- out2[ ,1]
 
-this <- gelman.bm(obj)
+
 
 
 
@@ -45,7 +46,7 @@ tausq2 <- (mcse(chain2)$se)^2 * N
 # Calulate s^2 for each chain
 sampvar1 <- var(chain1)
 sampvar2 <- var(chain2)
-ssquared <- .5 * (sampvar1 + sampvar2)
+(ssquared <- .5 * (sampvar1 + sampvar2))
 #checked, right
 
 # Calculate sigma^2 estimate
@@ -71,18 +72,25 @@ varv <- ((N-1)/N)^2 * varssq + ((m+1)/(m*N))^2 * vartausq + thecov/2
 # checked, looks great
 
 # Calculate df for the T distribution
-defo <- 2 * Vhat / varv
+defo <- 2 * Vhat^2 / varv
+dfchunk <- (defo + 3)/(defo + 1)
+# checked
+
 
 # Calculate the diagnostic
-Rhat <- Vhat * (defo + 3) / (ssquared * (defo + 1))
+Rhat <- Vhat * dfchunk / ssquared
 
 that <- sqrt(Rhat)
 
-byhand <- list(se1 = se1, se2 = se2, tausq = tausq, sampvar1 = sampvar1, ssquared = ssquared, sigsq = sigsq, Vhat = Vhat, vartausq = vartausq, varssq = varssq, thecov = thecov, varv = varv, defo = defo, Rhat = Rhat)
+byhand <- list(tausq1 = tausq1, tausq2 = tausq2, tausq = tausq, sampvar1 = sampvar1, ssquared = ssquared, sigsq = sigsq, Vhat = Vhat, vartausq = vartausq, varssq = varssq, thecov = thecov, varv = varv, defo = defo, Rhat = Rhat)
+
+byhand
 
 that
-this$psrf[1,1]
-all.equal(this$psrf[1,1], that)
+
+(this <- gelman.bm(obj))
+this$psrf[1]
+all.equal(this$psrf[1], that)
 
 
 
