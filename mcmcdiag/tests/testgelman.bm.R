@@ -16,8 +16,8 @@ sigma <- foo^(abs(col(foo)-row(foo)))
 mu <- sample(10:20, p)
 mu2 <- mu[p]
 # Create the chains
-out.gibbs1 <- mvn_gibbs(N = N, mu = mu, sigma = sigma)
-out.gibbs2 <- mvn_gibbs(N = N, mu = mu, sigma = sigma)
+out.gibbs1 <- mvn_gibbs(N = N, mu = mu, sigma = sigma, p = p)
+out.gibbs2 <- mvn_gibbs(N = N, mu = mu, sigma = sigma, p = p)
 # Convert to MCMC objects
 out1 <- mcmc(out.gibbs1)
 out2 <- mcmc(out.gibbs2)
@@ -90,7 +90,7 @@ that
 
 (this <- gelman.bm(obj))
 this$psrf[1]
-all.equal(this$psrf[1], that)
+all.equal(as.numeric(this$psrf[1]), that)
 
 
 

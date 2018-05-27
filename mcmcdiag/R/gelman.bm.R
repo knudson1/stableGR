@@ -54,7 +54,7 @@ function (x, confidence = 0.95, transform = FALSE, autoburnin = TRUE,
 	# Fourth, calculate cov(tau^2, s^2). Calculate it for each chain, then average.
 	# This replaces cov(w,b) from GR. w = s^2 but tau^2 != b.
 	cov.s2t2 <- sapply(1:Nvar, function(index) {cov(x = tau2i[index, ], y = s2[index, ])}) 
-    # cov(s^2, tau^2) = sample cov(s^2, tau^2) / m
+    # cov(s^2, tau^2) = sample cov(s^2, tau^2) 
 
 	# Fifth, calculate the estimate of sigma^2.
 	sigsq <- (Niter - 1) * Ssq/Niter + tau2 / Niter 
@@ -73,8 +73,9 @@ function (x, confidence = 0.95, transform = FALSE, autoburnin = TRUE,
 	# Adjustment keeps SRF finite. 
 
 
-	Rhat <- V * df.adj / Ssq
-	psrf <- sqrt(Rhat)
+	arrr <- V * df.adj / Ssq
+	psrf <- sqrt(arrr)
+	list(psrf = psrf, Rhat = arrr)
 
     #B.df <- Nchain - 1 # Not using this now. for confidence regions in R2. 
 	# Let's check out coverage probabilities for R2.
@@ -88,9 +89,9 @@ function (x, confidence = 0.95, transform = FALSE, autoburnin = TRUE,
     #psrf <- cbind(sqrt(df.adj * R2.estimate), sqrt(df.adj * R2.upper))
 
     #dimnames(psrf) <- list(xnames, c("Point est.", "Upper C.I."))
-    out <- list(psrf = psrf)
-    class(out) <- "gelman.diag"
-    out
+    #out <- list(psrf = psrf)
+    #class(out) <- "gelman.diag"
+    #out
 }
 
 
