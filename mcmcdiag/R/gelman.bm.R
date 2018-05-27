@@ -53,7 +53,7 @@ function (x, confidence = 0.95, transform = FALSE, autoburnin = TRUE,
 
 	# Fourth, calculate cov(tau^2, s^2). Calculate it for each chain, then average.
 	# This replaces cov(w,b) from GR. w = s^2 but tau^2 != b.
-	cov.s2t2 <- sapply(1:Nvar, function(index) {cov(x = tau2i[index, ], y = s2[index, ])}) / Nchain
+	cov.s2t2 <- sapply(1:Nvar, function(index) {cov(x = tau2i[index, ], y = s2[index, ])}) 
     # cov(s^2, tau^2) = sample cov(s^2, tau^2) / m
 
 	# Fifth, calculate the estimate of sigma^2.
@@ -63,9 +63,9 @@ function (x, confidence = 0.95, transform = FALSE, autoburnin = TRUE,
 	V <- sigsq +  tau2/(Niter * Nchain) 
 
     # Seventh, calculate the variance of V.
-	var.V <- ((Niter - 1)/Niter)^2 * var.s2/Nchain + 
-		+ ((Nchain + 1)/(Nchain * Niter))^2 * tau2var / Nchain +  
-		+ cov.s2t2/Nchain 
+	var.V <- ((Niter - 1)/Niter)^2 * var.s2 + 
+		+ ((Nchain + 1)/(Nchain * Niter))^2 * tau2var  +  
+		+ cov.s2t2 / Nchain
 
 	# Eight, calculate degrees of freedom for our T dist.
     df.V <- (2 * V^2)/var.V 
