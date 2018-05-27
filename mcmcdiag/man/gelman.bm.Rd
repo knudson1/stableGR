@@ -1,115 +1,127 @@
 \name{gelman.bm}
 \alias{gelman.bm}
-%- Also NEED an '\alias' for EACH other topic documented here.
-\title{
-%%  ~~function to do ... ~~
+
+\title{Gelman-Rubin diagnostic with batch means}
+
+\description{Uses batch means to calculate a convergence diagnostic in the spirit Gelman-Rubin.
+
+ The `potential scale reduction factor' is calculated for each variable in
+\code{x}, together with upper and lower confidence limits. Approximate
+convergence is diagnosed when the upper limit is close to 1. For
+multivariate chains, a multivariate value is calculated that bounds
+above the potential scale reduction factor for any linear combination
+of the (possibly transformed) variables.
+
+The confidence limits are based on the assumption that the stationary
+distribution of the variable under examination is normal. Hence the
+`transform' parameter may be used to improve the normal approximation.
 }
-\description{
-%%  ~~ A concise (1-5 lines) description of what the function does. ~~
-}
+
 \usage{
 gelman.bm(x, confidence = 0.95, transform = FALSE, autoburnin = TRUE, multivariate = TRUE)
 }
-%- maybe also 'usage' for other objects documented here.
+
 \arguments{
-  \item{x}{
-%%     ~~Describe \code{x} here~~
+\item{x}{An \code{mcmc.list} object with more than one chain,
+and with starting values that are overdispersed with respect to the
+posterior distribution.}
+\item{confidence}{the coverage probability of the confidence interval for the
+potential scale reduction factor}
+\item{transform}{a logical flag indicating whether variables in
+\code{x} should be transformed to improve the normality of the
+distribution. If set to TRUE, a log transform or logit transform, as
+appropriate, will be applied.}
+\item{autoburnin}{a logical flag indicating whether only the second half
+  of the series should be used in the computation.  If set to TRUE
+  (default) and \code{start(x)} is less than \code{end(x)/2} then start
+  of series will be adjusted so that only second half of series is used.}
+\item{multivariate}{a logical flag indicating whether the multivariate
+potential scale reduction factor should be calculated for multivariate
+chains}
 }
-  \item{confidence}{
-%%     ~~Describe \code{confidence} here~~
-}
-  \item{transform}{
-%%     ~~Describe \code{transform} here~~
-}
-  \item{autoburnin}{
-%%     ~~Describe \code{autoburnin} here~~
-}
-  \item{multivariate}{
-%%     ~~Describe \code{multivariate} here~~
-}
-}
-\details{
-%%  ~~ If necessary, more details than the description above ~~
-}
+
+
+
 \value{
-%%  ~Describe the value returned
-%%  If it is a LIST, use
-%%  \item{comp1 }{Description of 'comp1'}
-%%  \item{comp2 }{Description of 'comp2'}
-%% ...
+
+  An object of class \code{gelman.diag}. This is a list with the
+  following elements:
+  \item{psrf}{A list containing the point estimates of the potential
+  scale reduction factor (labelled \code{Point est.})  and their upper
+  confidence limits (labelled \code{Upper C.I.}).}
+  \item{mpsrf}{The point estimate of the multivariate potential scale reduction
+  factor. This is NULL if there is only one variable in \code{x}.}
+  The \code{gelman.diag} class has its own \code{print} method.
 }
-\references{
-%% ~put references to the literature/web site here ~
+
+
+\section{Theory}{ THIS SHOULD BE UPDATED.
+
+Gelman and Rubin (1992) propose a general approach to monitoring
+convergence of MCMC output in which \eqn{m > 1} parallel chains are run
+with starting values that are overdispersed relative to the posterior
+distribution. Convergence is diagnosed when the chains have `forgotten'
+their initial values, and the output from all chains is
+indistinguishable.  The \code{gelman.diag} diagnostic is applied to a
+single variable from the chain. It is based a comparison of within-chain
+and between-chain variances, and is similar to a classical analysis of
+variance.
+
+There are two ways to estimate the variance of the stationary distribution:
+the mean of the empirical variance within each chain, \eqn{W}, and
+the empirical variance from all chains combined, which can be expressed as
+\deqn{ \widehat{\sigma}^2 = 
+  \frac{(n-1) W }{n} + \frac{B}{n} }{ sigma.hat^2 =  (n-1)W/n + B/n }
+where \eqn{n} is the number of iterations and \eqn{B/n} is the empirical
+between-chain variance.
+
+If the chains have converged, then both estimates are
+unbiased. Otherwise the first method will \emph{underestimate} the
+variance, since the individual chains have not had time to range all
+over the stationary distribution, and the second method will
+\emph{overestimate} the variance, since the starting points were chosen
+to be overdispersed.
+
+The convergence diagnostic is based on the assumption that the
+target distribution is normal. A Bayesian credible interval can
+be constructed using a t-distribution with mean
+\deqn{\widehat{\mu}=\mbox{Sample mean of all chains
+combined}}{mu.hat = Sample mean of all chains combined}
+and variance
+\deqn{\widehat{V}=\widehat{\sigma}^2 + \frac{B}{mn}}{V.hat=sigma.hat2 + B/(mn)}
+and degrees of freedom estimated by the method of moments
+\deqn{d = \frac{2*\widehat{V}^2}{\mbox{Var}(\widehat{V})}}{d = 2*V.hat^2/Var(V.hat)}
+Use of the t-distribution accounts for the fact that the mean
+and variance of the posterior distribution are estimated.
+
+The convergence diagnostic itself is
+\deqn{R=\sqrt{\frac{(d+3) \widehat{V}}{(d+1)W}}}{R=sqrt((d+3) V.hat /((d+1)W)}
+Values substantially above 1 indicate lack of convergence.  If the
+chains have not converged, Bayesian credible intervals based on the
+t-distribution are too wide, and have the potential to shrink by this
+factor if the MCMC run is continued.
 }
-\author{
-%%  ~~who you are~~
-}
+
 \note{
-%%  ~~further notes~~
+The multivariate a version of Gelman and Rubin's diagnostic was
+proposed by Brooks and Gelman (1998). Unlike the univariate proportional
+scale reduction factor, the multivariate version does not include an
+adjustment for the estimated number of degrees of freedom.
 }
 
-%% ~Make other sections like Warning with \section{Warning }{....} ~
+\references{
+Gelman, A and Rubin, DB (1992) Inference from iterative simulation
+using multiple sequences, \emph{Statistical Science}, \bold{7}, 457-511.
 
-\seealso{
-%% ~~objects to See Also as \code{\link{help}}, ~~~
+Brooks, SP. and Gelman, A. (1998) General methods for monitoring
+convergence of iterative simulations. \emph{Journal of Computational and
+Graphical Statistics}, \bold{7}, 434-455.
 }
-\examples{
-##---- Should be DIRECTLY executable !! ----
-##-- ==>  Define data, use random,
-##--	or do  help(data=index)  for the standard data sets.
 
-## The function is currently defined as
-function (x, confidence = 0.95, transform = FALSE, autoburnin = TRUE, 
-    multivariate = TRUE) 
-{
-    x <- as.mcmc.list(x)
-    if (nchain(x) < 2) 
-        stop("You need at least two chains")
-    if (autoburnin && start(x) < end(x)/2) 
-        x <- window(x, start = end(x)/2 + 1)
-    Niter <- niter(x)
-    Nchain <- nchain(x)
-    Nvar <- nvar(x)
-    xnames <- varnames(x)
-    if (transform) 
-        x <- gelman.transform(x)
-    x <- lapply(x, as.matrix)
-    xbar <- matrix(sapply(x, apply, 2, mean, simplify = TRUE), 
-        nrow = Nvar, ncol = Nchain)
-    muhat <- apply(xbar, 1, mean)
-    Si2 <- array(sapply(x, var, simplify = TRUE), dim = c(Nvar, 
-        Nvar, Nchain))
-    W <- apply(Si2, c(1, 2), mean)
-    Ssq <- diag(W)
-    s2 <- matrix(apply(Si2, 3, diag), nrow = Nvar, ncol = Nchain)
-    var.s2 <- apply(s2, 1, var)/Nchain
-    tau2i <- sapply(x, gettau)
-    tau2 <- apply(tau2i, 1, mean)
-    tau2var <- apply(tau2i, 1, var)/Nchain
-    cov.s2t2 <- sapply(1:Nvar, function(index) {
-        cov(x = tau2i[index, ], y = s2[index, ])
-    })/Nchain
-    sigsq <- (Niter - 1) * Ssq/Niter + tau2/Niter
-    V <- sigsq + tau2/(Niter * Nchain)
-    var.V <- ((Niter - 1)/Niter)^2 * var.s2/Nchain + +((Nchain + 
-        1)/(Nchain * Niter))^2 * tau2var/Nchain + +cov.s2t2/Nchain
-    df.V <- (2 * V^2)/var.V
-    df.adj <- (df.V + 3)/(df.V + 1)
-    B.df <- Nchain - 1
-    W.df <- (2 * Ssq^2)/var.s2
-    R2.fixed <- (Niter - 1)/Niter
-    R2.random <- (1 + 1/Nchain) * (1/Niter) * (tau2/Ssq)
-    R2.estimate <- R2.fixed + R2.random
-    R2.upper <- R2.fixed + qf((1 + confidence)/2, B.df, W.df) * 
-        R2.random
-    psrf <- cbind(sqrt(df.adj * R2.estimate), sqrt(df.adj * R2.upper))
-    dimnames(psrf) <- list(xnames, c("Point est.", "Upper C.I."))
-    out <- list(psrf = psrf)
-    class(out) <- "gelman.diag"
-    out
-  }
+\author{
+Christina Knudson
 }
-% Add one or more standard keywords, see file 'KEYWORDS' in the
-% R documentation directory.
-\keyword{ ~kwd1 }% use one of  RShowDoc("KEYWORDS")
-\keyword{ ~kwd2 }% __ONLY ONE__ keyword per line
+
+ 
+\keyword{  htest }
+

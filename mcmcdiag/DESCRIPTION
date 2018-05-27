@@ -1,9 +1,15 @@
 Package: mcmcdiag
 Type: Package
-Title: What the package does (short line)
+Title: Markov Chain Monte Carlo Convergence Diagnostics
 Version: 1.0
 Date: 2018-05-27
-Author: Who wrote it
-Maintainer: Who to complain to <yourfault@somewhere.net>
-Description: More about what it does (maybe more than one line)
-License: What license is it under?
+Authors@R: c(person("Christina P.", "Knudson", role = c("aut", "cre"),
+    email = "knud8583@stthomas.edu"), person("Dootika", "Vats", role = c("aut", "cre"),
+email = "dootika.vats@gmail.com"))
+Maintainer: Christina Knudson <knud8583@stthomas.edu>
+Description: Calculates a revised Gelman-Rubin diagnostic for convergence of Markov chain sequences.
+License: GPL (>= 2)
+Depends: R (>= 3.1.1), mcmc
+Imports: stats
+ByteCompile: TRUE
+Repository: CRAN
