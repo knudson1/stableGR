@@ -67,7 +67,7 @@ function (x, confidence = 0.95, transform = FALSE, autoburnin = FALSE,
     # Seventh, calculate the variance of V.
 	var.V <- ((Niter - 1)/Niter)^2 * var.s2 + 
 		+ ((Nchain + 1)/(Nchain * Niter))^2 * tau2var  +  
-		+ cov.s2t2 / Nchain
+		+ 2 * (Nchain + 1) * (Niter -1) * cov.s2t2 / (Nchain^2 * Niter^2)
 
 	# Eight, calculate degrees of freedom for our T dist.
     df.V <- (2 * V^2)/var.V 

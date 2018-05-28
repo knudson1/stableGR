@@ -65,7 +65,7 @@ all.equal(altcov, thecov) #just to be sure!!
 
 # Variance of Vhat
 m <- 2
-varv <- ((N-1)/N)^2 * varssq + ((m+1)/(m*N))^2 * vartausq + thecov/2
+varv <- ((N-1)/N)^2 * varssq + ((m+1)/(m*N))^2 * vartausq + 2*(m+1)*(N-1)*thecov/(m^2 * N^2)
 # checked, looks great
 
 # Calculate df for the T distribution
