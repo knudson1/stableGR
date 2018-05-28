@@ -1,13 +1,15 @@
 #####################################
-### gelman.bm incorporates batch means variance estimates
+### Function gelman.bm incorporates batch means variance estimates
 ### into the Gelman-Rubin diagnostic framework 
 ### x: a list of chains
 ### the rest of the arguments are leftover from gelman.diag
+### Returns the potential scale reduction factor (psrf) 
+### for each variable. Note psrf = sqrt(R-hat).
 #####################################
 
 gelman.bm <-
 function (x, confidence = 0.95, transform = FALSE, autoburnin = FALSE, 
-    multivariate = TRUE) 
+    multivariate = TRUE, method = "bm") 
 {
     x <- as.mcmc.list(x)
     if (nchain(x) < 2) 
@@ -47,7 +49,7 @@ function (x, confidence = 0.95, transform = FALSE, autoburnin = FALSE,
 	# Third, calculate tau^2 and its variance for each variable. 
 	# This replaces the GR b.
 	# Sample variance of the sample means (between chain vars) calculated using batch means.
-    tau2i <- sapply(x, gettau)*Niter # For each chain
+    tau2i <- sapply(x, gettau, method = method)*Niter # For each chain
 	tau2 <- apply(tau2i, 1, mean)  # Average over the chains
 	tau2var <- apply(tau2i, 1, var)/Nchain # Calculate the variance of our estimate
 
@@ -75,7 +77,7 @@ function (x, confidence = 0.95, transform = FALSE, autoburnin = FALSE,
 
 	arrr <- V * df.adj / Ssq
 	psrf <- sqrt(arrr)
-	list(psrf = psrf, Rhat = arrr)
+	list(psrf = psrf)
 
     #B.df <- Nchain - 1 # Not using this now. for confidence regions in R2. 
 	# Let's check out coverage probabilities for R2.
@@ -95,7 +97,7 @@ function (x, confidence = 0.95, transform = FALSE, autoburnin = FALSE,
 }
 
 
-gettau <- function(x1) {(mcse.mat(x1)[ ,2])^2 }
+gettau <- function(x1, method) {(mcse.mat(x1, method = method)[ ,2])^2 }
 
 mcse.mat <- mcmcse:::mcse.mat
 gelman.transform <- coda:::gelman.transform

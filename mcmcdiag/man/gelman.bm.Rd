@@ -1,9 +1,9 @@
 \name{gelman.bm}
 \alias{gelman.bm}
 
-\title{Gelman-Rubin diagnostic with batch means}
+\title{A Gelman-Rubin diagnostic with batch means}
 
-\description{Uses batch means to calculate a convergence diagnostic in the spirit Gelman-Rubin.
+\description{This function uses batch means to calculate a convergence diagnostic for Markov chain Monte Carlo in the spirit of Gelman-Rubin.
 
  The `potential scale reduction factor' is calculated for each variable in
 \code{x}, together with upper and lower confidence limits. Approximate
@@ -19,7 +19,7 @@ distribution of the variable under examination is normal. Hence the
 
 \usage{
 gelman.bm(x, confidence = 0.95, transform = FALSE, 
-	autoburnin = FALSE, multivariate = TRUE)
+	autoburnin = FALSE, multivariate = TRUE, method = "bm")
 }
 
 \arguments{
@@ -39,6 +39,13 @@ appropriate, will be applied.}
 \item{multivariate}{a logical flag indicating whether the multivariate
 potential scale reduction factor should be calculated for multivariate
 chains}
+ \item{method}{the method used to compute the standard
+  error of the chains. This is one of \dQuote{\code{bm}} (batch means,
+  the default), \dQuote{\code{obm}} (overlapping batch
+  means), \dQuote{\code{tukey}} (spectral variance method
+  with a Tukey-Hanning window), or \dQuote{\code{bartlett}}
+  (spectral variance method with a Bartlett window).}
+
 }
 
 
@@ -47,13 +54,9 @@ chains}
 
   An object of class \code{gelman.diag}. This is a list with the
   following elements:
-  \item{psrf}{A list containing the point estimates of the potential
-  scale reduction factor (labelled \code{Point est.})  and their upper
-  confidence limits (labelled \code{Upper C.I.}).}
-  \item{mpsrf}{The point estimate of the multivariate potential scale reduction
-  factor. This is NULL if there is only one variable in \code{x}.}
-  The \code{gelman.diag} class has its own \code{print} method.
-}
+  \item{psrf}{A vector containing the point estimates of the potential
+  scale reduction factor.}
+  }
 
 
 \section{Theory}{ THIS SHOULD BE UPDATED.
@@ -63,8 +66,7 @@ convergence of MCMC output in which \eqn{m > 1} parallel chains are run
 with starting values that are overdispersed relative to the posterior
 distribution. Convergence is diagnosed when the chains have `forgotten'
 their initial values, and the output from all chains is
-indistinguishable.  The \code{gelman.diag} diagnostic is applied to a
-single variable from the chain. It is based a comparison of within-chain
+indistinguishable.  The \code{gelman.bm} diagnostic is applied to each variable from the chain. It is based a comparison of within-chain
 and between-chain variances, and is similar to a classical analysis of
 variance.
 
@@ -103,7 +105,7 @@ t-distribution are too wide, and have the potential to shrink by this
 factor if the MCMC run is continued.
 }
 
-\note{
+\note{ THIS SHOULD BE UPDATED! 
 The multivariate a version of Gelman and Rubin's diagnostic was
 proposed by Brooks and Gelman (1998). Unlike the univariate proportional
 scale reduction factor, the multivariate version does not include an
@@ -111,6 +113,10 @@ adjustment for the estimated number of degrees of freedom.
 }
 
 \references{
+  Flegal, J. M. and Jones, G. L. (2010) Batch means and
+  spectral variance estimators in Markov chain Monte Carlo.
+  \emph{The Annals of Statistics}, \bold{38}, 1034--1070.
+
 Gelman, A and Rubin, DB (1992) Inference from iterative simulation
 using multiple sequences, \emph{Statistical Science}, \bold{7}, 457-511.
 
