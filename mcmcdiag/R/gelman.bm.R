@@ -85,8 +85,8 @@ function (x, confidence = 0.95, transform = FALSE, autoburnin = FALSE,
 	psrf <- sqrt(arrr)
 
 	if(multivariate == TRUE  && Nvar > 1){
-		Ti <- lapply(x, getT, method = method) # For each chain
-		Tee <- matrix(Reduce("+", Ti)  / Nchain, nrow = Nvar)
+		Ti <- lapply(x, getT, method = method)  # For each chain
+		Tee <- matrix(Reduce("+", Ti) *Niter / Nchain, nrow = Nvar)
 
 		firstpiece <- (Niter-1)/Niter
 		secondpiece <- (Nchain+1)/(Nchain*Niter)
@@ -100,7 +100,7 @@ function (x, confidence = 0.95, transform = FALSE, autoburnin = FALSE,
 		thirdpiece <- (detT/detSinv)^(1/Nvar)
 
 
-		mpsrf <- firstpiece + secondpiece*thirdpiece
+		mpsrf <- sqrt(firstpiece + secondpiece*thirdpiece)
 
 	}
 
@@ -113,8 +113,9 @@ function (x, confidence = 0.95, transform = FALSE, autoburnin = FALSE,
 
 
 gettau <- function(x1, method) {(mcse.mat(x1, method = method)[ ,2])^2 }
-getT <- function(x, method) {mcse.multi(x)$cov}
+getT <- function(x, method) {mcse.multi(x, method = method)$cov}
 
 mcse.mat <- mcmcse:::mcse.mat
+mcse.mult <- mcmcse:::mcse.multi
 gelman.transform <- coda:::gelman.transform
 

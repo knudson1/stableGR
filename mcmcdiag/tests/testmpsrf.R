@@ -1,0 +1,62 @@
+set.seed(10)
+library(mvtnorm)
+library(mcmcse)
+library(coda)
+library(mcmcdiag)
+
+################ 
+# Start by making a few chains to work with
+
+# Details on the chain construction
+p <- 5
+N <- 100
+tail.ind <- floor(N*.80):N
+foo <- matrix(.50, nrow=p, ncol=p)
+sigma <- foo^(abs(col(foo)-row(foo)))
+mu <- sample(10:20, p)
+mu2 <- mu[p]
+
+# Create the chains
+mvn_gibbs <- mcmcdiag:::mvn_gibbs
+out.gibbs1 <- mvn_gibbs(N = N, mu = mu, sigma = sigma, p = p)
+out.gibbs2 <- mvn_gibbs(N = N, mu = mu, sigma = sigma, p = p)
+
+# Convert to MCMC objects
+out1 <- mcmc(out.gibbs1)
+out2 <- mcmc(out.gibbs2)
+obj <- mcmc.list(out1, out2)
+
+################ 
+# Perform unit test using the two chains in obj
+
+(withfun <- gelman.bm(obj)$mpsrf)
+
+
+# Calculate Tmat for each chain
+(Tmat1 <- mcse.multi(out1)$cov*N)
+(Tmat2 <- mcse.multi(out2)$cov*N)
+(That <- .5*(Tmat1 + Tmat2)) #good
+
+#Calc Smat
+cov1 <- var(out1)
+cov2 <- var(out2)
+(Smat <- .5*(cov1 + cov2)) #good
+
+#calculate determinants
+(Teigen <- eigen(That)$values)
+(Seigen <- eigen(Smat)$values)
+detT <- (prod(Teigen))^(1/p)
+detS <- (prod(Seigen))^(1/p)
+detratio <- detT/detS #good
+
+Nchain <- nchain(obj)
+all.equal(2, Nchain)
+
+rhat <- (N-1)/N + (Nchain +1)/(Nchain * N) *(detratio)^(1/p)
+rhat
+
+byhand <- sqrt(rhat)
+byhand
+
+all.equal(byhand, withfun)
+
