@@ -56,7 +56,8 @@ chains}
   following elements:
   \item{psrf}{A vector containing the point estimates of the potential
   scale reduction factor.}
-  }
+    \item{mpsrf}{A scalar point estimate of the multivariate potential
+  scale reduction factor.}}
 
 
 \section{Theory}{ THIS SHOULD BE UPDATED.
@@ -106,7 +107,7 @@ factor if the MCMC run is continued.
 }
 
 \note{ THIS SHOULD BE UPDATED! 
-The multivariate a version of Gelman and Rubin's diagnostic was
+The multivariate version of Gelman and Rubin's diagnostic was
 proposed by Brooks and Gelman (1998). Unlike the univariate proportional
 scale reduction factor, the multivariate version does not include an
 adjustment for the estimated number of degrees of freedom.
