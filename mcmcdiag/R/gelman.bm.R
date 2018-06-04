@@ -83,13 +83,37 @@ function (x, confidence = 0.95, transform = FALSE, autoburnin = FALSE,
 
 	arrr <- V * df.adj / Ssq
 	psrf <- sqrt(arrr)
-	list(psrf = psrf)
+
+	if(multivariate == TRUE  && Nvar > 1){
+		Ti <- lapply(x, getT, method = method) # For each chain
+		Tee <- matrix(Reduce("+", Ti)  / Nchain, nrow = Nvar)
+
+		firstpiece <- (Niter-1)/Niter
+		secondpiece <- (Nchain+1)/(Nchain*Niter)
+
+		eigenS <- eigen(W,symmetric=TRUE)$values
+		detSinv <- exp(mean(log(eigenS)))
+
+		eigenT <- eigen(Tee, symmetric = TRUE)$values
+		detT <- (prod(eigenT))^(1/Nvar)
+
+		thirdpiece <- (detT/detSinv)^(1/Nvar)
+
+
+		mpsrf <- firstpiece + secondpiece*thirdpiece
+
+	}
+
+
+
+	list(psrf = psrf, mpsrf = mpsrf)
 
    
 }
 
 
 gettau <- function(x1, method) {(mcse.mat(x1, method = method)[ ,2])^2 }
+getT <- function(x, method) {mcse.multi(x)$cov}
 
 mcse.mat <- mcmcse:::mcse.mat
 gelman.transform <- coda:::gelman.transform
