@@ -23,7 +23,7 @@ gelman.bm(x, confidence = 0.95, transform = FALSE,
 }
 
 \arguments{
-\item{x}{An \code{mcmc.list} object with more than one chain,
+\item{x}{an \code{mcmc.list} object with more than one chain,
 and with starting values that are overdispersed with respect to the
 posterior distribution.}
 \item{confidence}{the coverage probability of the confidence interval for the
