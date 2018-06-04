@@ -1,0 +1,94 @@
+
+R version 3.4.4 (2018-03-15) -- "Someone to Lean On"
+Copyright (C) 2018 The R Foundation for Statistical Computing
+Platform: x86_64-pc-linux-gnu (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> set.seed(10)
+> library(mvtnorm)
+> library(mcmcse)
+mcmcse: Monte Carlo Standard Errors for MCMC
+Version 1.3-2 created on 2017-07-03.
+copyright (c) 2012, James M. Flegal, University of California, Riverside
+                    John Hughes, University of Colorado, Denver
+                    Dootika Vats, University of Warwick
+                    Ning Dai, University of Minnesota
+ For citation information, type citation("mcmcse").
+ Type help("mcmcse-package") to get started.
+
+> library(coda)
+> library(mcmcdiag)
+> 
+> ################ 
+> # Start by making a few chains 
+> #
+> # Details on the chain construction
+> p <- 5
+> N <- 100
+> tail.ind <- floor(N*.80):N
+> foo <- matrix(.50, nrow=p, ncol=p)
+> sigma <- foo^(abs(col(foo)-row(foo)))
+> mu <- sample(10:20, p)
+> mu2 <- mu[p]
+> 
+> # Create the chain
+> mvn_gibbs <- mcmcdiag:::mvn_gibbs
+> out.gibbs1 <- mvn_gibbs(N = N, mu = mu, sigma = sigma, p = p)
+> 
+> # Convert to MCMC objects
+> out1 <- mcmc(out.gibbs1)
+> obj <- mcmc.list(out1)
+> 
+> # Calculate psrfs with gelman.bm
+> results1 <- gelman.bm(obj)
+> 
+> ##############################################
+> # Calculate psrfs by for this chain by hand
+> # Isolate the first component of the  chain
+> chain1 <- out1[ ,1]
+> 
+> # Calculate tau^2 for each chain
+> tausq1 <- (mcse(chain1)$se)^2 * N 
+> (tausq <- tausq1 )
+[1] 3.931615
+> #checked, right
+> 
+> # Calulate s^2 for each chain
+> sampvar1 <- var(chain1)
+> (ssquared <- sampvar1 )
+[1] 3.432704
+> #checked, right
+> 
+> # Calculate sigma^2 estimate
+> sigsq <- ((N-1) * ssquared + tausq)/N
+> # checked, right
+> 
+> # Calculate Vhat 
+> Vhat <- sigsq + tausq/(N )
+> 
+> 
+> dfchunk <- 1
+> 
+> # Calculate the diagnostic
+> Rhat <- Vhat * dfchunk / ssquared
+> 
+> that <- sqrt(Rhat)
+> 
+> all.equal(as.numeric(that[1]) , as.numeric(results1$psrf[1]))
+[1] TRUE
+> 
+> 
+> proc.time()
+   user  system elapsed 
+  0.612   0.036   0.645 
