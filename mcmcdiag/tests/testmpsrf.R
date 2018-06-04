@@ -60,3 +60,26 @@ byhand
 
 all.equal(byhand, withfun)
 
+################ ################ ################
+# Perform unit test using a SINGLE chain (just in case)
+onechain <- mcmc.list(out1)
+(withfun <- gelman.bm(onechain)$mpsrf)
+
+#calculate determinants
+(Teigen <- eigen(Tmat1)$values)
+(Seigen <- eigen(cov1)$values)
+detT <- (prod(Teigen))^(1/p)
+detS <- (prod(Seigen))^(1/p)
+detratio <- detT/detS #good
+
+Nchain <- nchain(onechain)
+all.equal(1, Nchain)
+
+rhat <- (N-1)/N + (Nchain +1)/(Nchain * N) *(detratio)^(1/p)
+rhat
+
+byhand <- sqrt(rhat)
+byhand
+
+all.equal(byhand, withfun)
+

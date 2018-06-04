@@ -117,7 +117,37 @@ copyright (c) 2012, James M. Flegal, University of California, Riverside
 > all.equal(byhand, withfun)
 [1] TRUE
 > 
+> ################ ################ ################
+> # Perform unit test using a SINGLE chain (just in case)
+> onechain <- mcmc.list(out1)
+> (withfun <- gelman.bm(onechain)$mpsrf)
+[1] 1.018694
+> 
+> #calculate determinants
+> (Teigen <- eigen(Tmat1)$values)
+[1] 2943.510194  298.039365   71.460695   29.055929    8.011478
+> (Seigen <- eigen(cov1)$values)
+[1] 16.2237863  1.9864059  0.8914145  0.6876928  0.2646439
+> detT <- (prod(Teigen))^(1/p)
+> detS <- (prod(Seigen))^(1/p)
+> detratio <- detT/detS #good
+> 
+> Nchain <- nchain(onechain)
+> all.equal(1, Nchain)
+[1] TRUE
+> 
+> rhat <- (N-1)/N + (Nchain +1)/(Nchain * N) *(detratio)^(1/p)
+> rhat
+[1] 1.037738
+> 
+> byhand <- sqrt(rhat)
+> byhand
+[1] 1.018694
+> 
+> all.equal(byhand, withfun)
+[1] TRUE
+> 
 > 
 > proc.time()
    user  system elapsed 
-  0.736   0.036   0.768 
+  0.796   0.036   0.837 
