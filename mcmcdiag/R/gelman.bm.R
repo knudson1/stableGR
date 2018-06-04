@@ -12,15 +12,13 @@ function (x, confidence = 0.95, transform = FALSE, autoburnin = FALSE,
     multivariate = TRUE, method = "bm") 
 {
     x <- as.mcmc.list(x)
-    if (nchain(x) < 2) 
-        stop("You need at least two chains")
     if (autoburnin && start(x) < end(x)/2) 
         x <- window(x, start = end(x)/2 + 1)
 
 	# Define some notation.
-    Niter <- niter(x)  #number of iterations per chains. We also call this n.
-    Nchain <- nchain(x) #number of chains. We also call this m.
-    Nvar <- nvar(x) #number of variables
+    Niter <- niter(x)  # number of iterations per chains. We also call this n.
+    Nchain <- nchain(x) # number of chains. We also call this m.
+    Nvar <- nvar(x) # number of variables
     xnames <- varnames(x)
 
 	# Transform to logit or log if asked and if applicable.
@@ -64,36 +62,30 @@ function (x, confidence = 0.95, transform = FALSE, autoburnin = FALSE,
 	# Sixth, calculateV, the scale of the t distribution.    
 	V <- sigsq +  tau2/(Niter * Nchain) 
 
-    # Seventh, calculate the variance of V.
-	var.V <- ((Niter - 1)/Niter)^2 * var.s2 + 
-		+ ((Nchain + 1)/(Nchain * Niter))^2 * tau2var  +  
-		+ 2 * (Nchain + 1) * (Niter -1) * cov.s2t2 / (Nchain^2 * Niter^2)
+	df.adj <- 1
 
-	# Eight, calculate degrees of freedom for our T dist.
-    df.V <- (2 * V^2)/var.V 
-    df.adj <- (df.V + 3)/(df.V + 1) 
-	# Adjustment keeps SRF finite. 
+    if(Nchain > 1){
+	    # Seventh, calculate the variance of V.
+		var.V <- ((Niter - 1)/Niter)^2 * var.s2 + 
+			+ ((Nchain + 1)/(Nchain * Niter))^2 * tau2var  +  
+			+ 2 * (Nchain + 1) * (Niter -1) * cov.s2t2 / (Nchain^2 * Niter^2)
+
+		# Eight, calculate degrees of freedom for our T dist.
+
+		df.V <- (2 * V^2)/var.V 
+   		df.adj <- (df.V + 3)/(df.V + 1) 
+		# Adjustment keeps SRF finite. 
+	}
+
+
+
 
 
 	arrr <- V * df.adj / Ssq
 	psrf <- sqrt(arrr)
 	list(psrf = psrf)
 
-    #B.df <- Nchain - 1 # Not using this now. for confidence regions in R2. 
-	# Let's check out coverage probabilities for R2.
-    #W.df <- (2 * Ssq^2)/var.s2 #not needed for now (division of 2 chisqs --> F dist)
-	
-    #R2.fixed <- (Niter - 1)/Niter #all part of eqn (20)
-    #R2.random <- (1 + 1/Nchain) * (1/Niter) * (tau2/Ssq) #all part of eqn (20)
-    #R2.estimate <- R2.fixed + R2.random #all part of eqn (20)
-    #R2.upper <- R2.fixed + qf((1 + confidence)/2, B.df, W.df) * 
-    #R2.random #this is the upper confidence bound on R
-    #psrf <- cbind(sqrt(df.adj * R2.estimate), sqrt(df.adj * R2.upper))
-
-    #dimnames(psrf) <- list(xnames, c("Point est.", "Upper C.I."))
-    #out <- list(psrf = psrf)
-    #class(out) <- "gelman.diag"
-    #out
+   
 }
 
 
