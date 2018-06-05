@@ -86,18 +86,18 @@ function (x, confidence = 0.95, transform = FALSE, autoburnin = FALSE,
 
 	if(multivariate == TRUE  && Nvar > 1){
 		Ti <- lapply(x, getT, method = method)  # For each chain
-		Tee <- matrix(Reduce("+", Ti) *Niter / Nchain, nrow = Nvar)
+		Tee <- matrix(Reduce("+", Ti)  / Nchain, nrow = Nvar)
 
 		firstpiece <- (Niter-1)/Niter
 		secondpiece <- (Nchain+1)/(Nchain*Niter)
 
-		eigenS <- eigen(W,symmetric=TRUE)$values
+		eigenS <- eigen(W, symmetric=TRUE, only.values = TRUE)$values
 		detSinv <- exp(mean(log(eigenS)))
 
-		eigenT <- eigen(Tee, symmetric = TRUE)$values
+		eigenT <- eigen(Tee, symmetric = TRUE, only.values = TRUE)$values
 		detT <- (prod(eigenT))^(1/Nvar)
 
-		thirdpiece <- (detT/detSinv)^(1/Nvar)
+		thirdpiece <- (detT/detSinv)
 
 
 		mpsrf <- sqrt(firstpiece + secondpiece*thirdpiece)

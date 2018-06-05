@@ -33,8 +33,8 @@ obj <- mcmc.list(out1, out2)
 
 
 # Calculate Tmat for each chain
-(Tmat1 <- mcse.multi(out1)$cov*N)
-(Tmat2 <- mcse.multi(out2)$cov*N)
+(Tmat1 <- mcse.multi(out1)$cov)
+(Tmat2 <- mcse.multi(out2)$cov)
 (That <- .5*(Tmat1 + Tmat2)) #good
 
 #Calc Smat
@@ -45,8 +45,8 @@ cov2 <- var(out2)
 #calculate determinants
 (Teigen <- eigen(That)$values)
 (Seigen <- eigen(Smat)$values)
-detT <- (prod(Teigen))^(1/p)
-detS <- (prod(Seigen))^(1/p)
+detT <- (prod(Teigen))
+detS <- (prod(Seigen))
 detratio <- detT/detS #good
 
 Nchain <- nchain(obj)
@@ -68,8 +68,8 @@ onechain <- mcmc.list(out1)
 #calculate determinants
 (Teigen <- eigen(Tmat1)$values)
 (Seigen <- eigen(cov1)$values)
-detT <- (prod(Teigen))^(1/p)
-detS <- (prod(Seigen))^(1/p)
+detT <- (prod(Teigen))
+detS <- (prod(Seigen))
 detratio <- detT/detS #good
 
 Nchain <- nchain(onechain)
