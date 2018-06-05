@@ -56,7 +56,7 @@ function (x, confidence = 0.95, transform = FALSE, df = TRUE, autoburnin = FALSE
 
 	df.adj <- 1
 
-    if(Nchain > 1){
+    if(Nchain > 1 & df){
 
 		tau2var <- apply(tau2i, 1, var)/Nchain # Calculate the variance of our estimate
 
@@ -84,7 +84,7 @@ function (x, confidence = 0.95, transform = FALSE, df = TRUE, autoburnin = FALSE
 	}
 
 
-    if(df == FALSE) {df.adj <- 1}
+    #if(df == FALSE) {df.adj <- 1}
 
 
 	arrr <- V * df.adj / Ssq
