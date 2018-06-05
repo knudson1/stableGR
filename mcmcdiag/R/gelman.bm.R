@@ -8,7 +8,7 @@
 #####################################
 
 gelman.bm <-
-function (x, confidence = 0.95, transform = FALSE, autoburnin = FALSE, 
+function (x, confidence = 0.95, transform = FALSE, df = TRUE, autoburnin = FALSE, 
     multivariate = TRUE, method = "bm") 
 {
     x <- as.mcmc.list(x)
@@ -78,7 +78,7 @@ function (x, confidence = 0.95, transform = FALSE, autoburnin = FALSE,
 	}
 
 
-
+    if(df == FALSE) {df.adj <- 1}
 
 
 	arrr <- V * df.adj / Ssq
