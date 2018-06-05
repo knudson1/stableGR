@@ -19,7 +19,7 @@ distribution of the variable under examination is normal. Hence the
 
 \usage{
 gelman.bm(x, confidence = 0.95, transform = FALSE, df = TRUE,
-	autoburnin = FALSE, multivariate = TRUE, method = "bm")
+	mapping = "determinant", autoburnin = FALSE, multivariate = TRUE, method = "bm")
 }
 
 \arguments{
@@ -33,6 +33,9 @@ potential scale reduction factor}
 distribution. If set to TRUE, a log transform or logit transform, as
 appropriate, will be applied.}
 \item{df}{a logical flag indicating whether a t-distribution's degrees of freedom should be used to calculate the Gelman-Rubin diagnostic in the univariate case. }
+\item{mapping}{the function used to map the covariance matrix to a scalar. This is one of 
+\dQuote{\code{determinant}} (determinant of the covariance matrix, 
+  the default) or \dQuote{\code{maxeigen}} (the largest eigenvalue of the covariance matrix).}
 
 \item{autoburnin}{a logical flag indicating whether only the second half
   of the series should be used in the computation.  If set to TRUE

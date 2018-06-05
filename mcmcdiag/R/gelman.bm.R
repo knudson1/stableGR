@@ -8,7 +8,8 @@
 #####################################
 
 gelman.bm <-
-function (x, confidence = 0.95, transform = FALSE, df = TRUE, autoburnin = FALSE, 
+function (x, confidence = 0.95, transform = FALSE, df = TRUE,  
+    mapping = "determinant", autoburnin = FALSE, 
     multivariate = TRUE, method = "bm") 
 {
     x <- as.mcmc.list(x)
@@ -97,14 +98,19 @@ function (x, confidence = 0.95, transform = FALSE, df = TRUE, autoburnin = FALSE
 		firstpiece <- (Niter-1)/Niter
 		secondpiece <- (Nchain+1)/(Nchain*Niter)
 
-		eigenS <- eigen(W, symmetric=TRUE, only.values = TRUE)$values
-		detSinv <- exp(mean(log(eigenS)))
-
-		eigenT <- eigen(Tee, symmetric = TRUE, only.values = TRUE)$values
-		detT <- (prod(eigenT))^(1/Nvar)
-
-		thirdpiece <- (detT/detSinv)
-
+        if(mapping == "determinant"){
+    		eigenS <- eigen(W, symmetric=TRUE, only.values = TRUE)$values
+    		bottom <- exp(mean(log(eigenS)))
+    
+    		eigenT <- eigen(Tee, symmetric = TRUE, only.values = TRUE)$values
+    		top <- (prod(eigenT))^(1/Nvar)
+    
+    		thirdpiece <- (top/bottom)
+        }
+        else{
+            Sinv <- qr.solve(W)
+            thirdpiece <- max(eigen(Sinv %*% Tee, symmetric = FALSE, only.values = TRUE)$values)
+        }
 
 		mpsrf <- sqrt(firstpiece + secondpiece*thirdpiece)
 
