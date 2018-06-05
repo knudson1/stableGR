@@ -41,31 +41,37 @@ function (x, confidence = 0.95, transform = FALSE, df = TRUE, autoburnin = FALSE
     Ssq <- diag(W) # Isolate the variances, throw away covariances.
 	# For each chain, find sample variance for each variable. 
 	s2 <- matrix(apply(Si2, 3, diag), nrow = Nvar, ncol = Nchain)
-	# Variance of the variances, divided by m chains. 
-    var.s2 <- apply(s2, 1, var)/Nchain # Known as var.w in GR.
 
 	# Third, calculate tau^2 and its variance for each variable. 
 	# This replaces the GR b.
 	# Sample variance of the sample means (between chain vars) calculated using batch means.
     tau2i <- sapply(x, gettau, method = method)*Niter # For each chain
 	tau2 <- apply(tau2i, 1, mean)  # Average over the chains
-	tau2var <- apply(tau2i, 1, var)/Nchain # Calculate the variance of our estimate
 
-	# Fourth, calculate cov(tau^2, s^2). Calculate it for each chain, then average.
-	# This replaces cov(w,b) from GR. w = s^2 but tau^2 != b.
-	cov.s2t2 <- sapply(1:Nvar, function(index) {cov(x = tau2i[index, ], y = s2[index, ])}) 
-    # cov(s^2, tau^2) = sample cov(s^2, tau^2) 
-
-	# Fifth, calculate the estimate of sigma^2.
+	# Calculate the estimate of sigma^2.
 	sigsq <- (Niter - 1) * Ssq/Niter + tau2 / Niter 
 
-	# Sixth, calculateV, the scale of the t distribution.    
+	# Calculate V, the scale of the t distribution.    
 	V <- sigsq +  tau2/(Niter * Nchain) 
 
 	df.adj <- 1
 
     if(Nchain > 1){
-	    # Seventh, calculate the variance of V.
+
+		tau2var <- apply(tau2i, 1, var)/Nchain # Calculate the variance of our estimate
+
+		# Calculate cov(tau^2, s^2). Calculate it for each chain, then average.
+		# This replaces cov(w,b) from GR. w = s^2 but tau^2 != b.
+		cov.s2t2 <- sapply(1:Nvar, function(index) {cov(x = tau2i[index, ], y = s2[index, ])}) 
+		# cov(s^2, tau^2) = sample cov(s^2, tau^2) 
+
+
+
+		# Variance of the variances, divided by m chains. 
+		var.s2 <- apply(s2, 1, var)/Nchain # Known as var.w in GR.
+
+
+	    # Calculate the variance of V.
 		var.V <- ((Niter - 1)/Niter)^2 * var.s2 + 
 			+ ((Nchain + 1)/(Nchain * Niter))^2 * tau2var  +  
 			+ 2 * (Nchain + 1) * (Niter -1) * cov.s2t2 / (Nchain^2 * Niter^2)

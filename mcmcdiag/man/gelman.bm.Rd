@@ -18,7 +18,7 @@ distribution of the variable under examination is normal. Hence the
 }
 
 \usage{
-gelman.bm(x, confidence = 0.95, transform = FALSE, 
+gelman.bm(x, confidence = 0.95, transform = FALSE, df = TRUE,
 	autoburnin = FALSE, multivariate = TRUE, method = "bm")
 }
 
@@ -32,6 +32,8 @@ potential scale reduction factor}
 \code{x} should be transformed to improve the normality of the
 distribution. If set to TRUE, a log transform or logit transform, as
 appropriate, will be applied.}
+\item{df}{a logical flag indicating whether a t-distribution's degrees of freedom should be used to calculate the Gelman-Rubin diagnostic in the univariate case. }
+
 \item{autoburnin}{a logical flag indicating whether only the second half
   of the series should be used in the computation.  If set to TRUE
    and \code{start(x)} is less than \code{end(x)/2} then start
