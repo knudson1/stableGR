@@ -19,7 +19,8 @@ distribution of the variable under examination is normal. Hence the
 
 \usage{
 gelman.bm(x, confidence = 0.95, transform = FALSE, df = TRUE,
-	mapping = "determinant", autoburnin = FALSE, multivariate = TRUE, method = "bm")
+	mapping = "determinant", autoburnin = FALSE, multivariate = TRUE, 
+	method = "bm", blather = FALSE)
 }
 
 \arguments{
@@ -51,6 +52,8 @@ chains}
   with a Tukey-Hanning window), or \dQuote{\code{bartlett}}
   (spectral variance method with a Bartlett window).}
 
+\item{blather}{a logical flag indicating whether to include additional output.}
+
 }
 
 
@@ -62,7 +65,9 @@ chains}
   \item{psrf}{A vector containing the point estimates of the potential
   scale reduction factor.}
     \item{mpsrf}{A scalar point estimate of the multivariate potential
-  scale reduction factor.}}
+  scale reduction factor.}
+	\item{blather}{Either \code{FALSE} or a list containing intermediate calculations.}
+}
 
 
 \section{Theory}{ THIS SHOULD BE UPDATED.

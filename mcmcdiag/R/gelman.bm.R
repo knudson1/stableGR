@@ -10,7 +10,7 @@
 gelman.bm <-
 function (x, confidence = 0.95, transform = FALSE, df = TRUE,  
     mapping = "determinant", autoburnin = FALSE, 
-    multivariate = TRUE, method = "bm") 
+    multivariate = TRUE, method = "bm", blather = FALSE) 
 {
     x <- as.mcmc.list(x)
     if (autoburnin && start(x) < end(x)/2) 
@@ -117,8 +117,12 @@ function (x, confidence = 0.95, transform = FALSE, df = TRUE,
 	}
 
 
+	if(blather){
+		blather <- list(muhat = muhat, method = method, Niter = Niter, Nchain = Nchain, Nvar = Nvar,
+			tausq = tau2, ssq <- s2, sigsq = sigsq, df.adj = df.adj, S = W, Tee = Tee)
+	}
 
-	list(psrf = psrf, mpsrf = mpsrf)
+	list(psrf = psrf, mpsrf = mpsrf, blather = blather)
 
    
 }
@@ -138,6 +142,8 @@ gettau <- function(x1, method, Niter, Nvar)
 	}
 	return(asym.var)
 }
+
+
 getT <- function(x, method, Niter, Nvar) 
 {
 

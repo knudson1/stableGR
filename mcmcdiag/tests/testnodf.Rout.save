@@ -99,6 +99,9 @@ $psrf
 $mpsrf
 [1] 1.001554
 
+$blather
+[1] FALSE
+
 > withfunc$psrf[1]
 [1] 1.002525
 > all.equal(as.numeric(withfunc$psrf[1]), that)
@@ -107,4 +110,4 @@ $mpsrf
 > 
 > proc.time()
    user  system elapsed 
-  0.688   0.048   0.740 
+  0.736   0.012   0.746 
