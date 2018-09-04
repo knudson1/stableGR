@@ -131,15 +131,16 @@ function (x, confidence = 0.95, transform = FALSE, df = TRUE,
 gettau <- function(x1, method, Niter, Nvar) 
 {
 	asym.var <- numeric(length = Nvar)
-	if(method == "bm")
-	{
-		asym.var <- (mcse.mat(x1, method = method)[ ,2])^2 
-	}
-	if(method == "wbm")
-	{
-		bn <- floor(sqrt(Niter))
-		asym.var <- 2*(mcse.mat(x1, method = "bm")[ ,2])^2  - (mcse.mat(x1, method = "bm", size = ceiling(bn/2))[ ,2])^2 
-	}
+	asym.var <- (mcse.mat(x1, method = method)[ ,2])^2 
+# 	if(method == "bm")
+# 	{
+# 		asym.var <- (mcse.mat(x1, method = method)[ ,2])^2 
+# 	}
+# 	if(method == "wbm")
+# 	{
+# 		bn <- floor(sqrt(Niter))
+# 		asym.var <- 2*(mcse.mat(x1, method = "bm")[ ,2])^2  - (mcse.mat(x1, method = "bm", size = ceiling(bn/2))[ ,2])^2 
+# 	}
 	return(asym.var)
 }
 
@@ -148,16 +149,16 @@ getT <- function(x, method, Niter, Nvar)
 {
 
 	asym.var <- matrix(0, nrow = Nvar, ncol = Nvar)
-
-	if(method == "bm")
-	{
-		asym.var <- mcse.multi(x, method = "bm")$cov
-	}
-	if(method == "wbm")
-	{
-		bn <- floor(sqrt(Niter))
-		asym.var <- 2*mcse.multi(x, method = "bm")$cov - mcse.multi(x, method = "bm", size = ceiling(bn/2))$cov
-	}
+	asym.var <- mcse.multi(x, method = method)$cov
+# 	if(method == "bm")
+# 	{
+# 		asym.var <- mcse.multi(x, method = "bm")$cov
+# 	}
+# 	if(method == "wbm")
+# 	{
+# 		bn <- floor(sqrt(Niter))
+# 		asym.var <- 2*mcse.multi(x, method = "bm")$cov - mcse.multi(x, method = "bm", size = ceiling(bn/2))$cov
+# 	}
 	return(asym.var)
 
 }
