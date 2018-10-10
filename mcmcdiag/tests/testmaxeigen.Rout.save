@@ -19,7 +19,7 @@ Type 'q()' to quit R.
 > library(mvtnorm)
 > library(mcmcse)
 mcmcse: Monte Carlo Standard Errors for MCMC
-Version 1.3-2 created on 2017-07-03.
+Version 1.3-3 created on 2018-03-09.
 copyright (c) 2012, James M. Flegal, University of California, Riverside
                     John Hughes, University of Colorado, Denver
                     Dootika Vats, University of Warwick
@@ -35,7 +35,7 @@ copyright (c) 2012, James M. Flegal, University of California, Riverside
 > 
 > # Details on the chain construction
 > p <- 5
-> N <- 100
+> N <- 10000
 > tail.ind <- floor(N*.80):N
 > foo <- matrix(.50, nrow=p, ncol=p)
 > sigma <- foo^(abs(col(foo)-row(foo)))
@@ -55,43 +55,18 @@ copyright (c) 2012, James M. Flegal, University of California, Riverside
 > ################ 
 > # Perform unit test using the two chains in obj
 > 
-> (withfun <- gelman.bm(obj, mapping = "maxeigen")$mpsrf)
-[1] 1.014886
+> withfun <- gelman.bm(obj, mapping = "maxeigen")$mpsrf
 > 
 > 
 > # Calculate Tmat for each chain
-> (Tmat1 <- mcse.multi(out1)$cov)
-         [,1]     [,2]     [,3]     [,4]     [,5]
-[1,] 3.931615 3.089774 4.815531 5.050575 4.740111
-[2,] 3.089774 5.679977 6.155139 4.868168 4.219237
-[3,] 4.815531 6.155139 8.280292 7.465686 6.628091
-[4,] 5.050575 4.868168 7.465686 8.533979 7.655314
-[5,] 4.740111 4.219237 6.628091 7.655314 7.074915
-> (Tmat2 <- mcse.multi(out2)$cov)
-         [,1]     [,2]     [,3]     [,4]     [,5]
-[1,] 2.784123 1.471638 2.517276 3.453939 3.222515
-[2,] 1.471638 1.215168 1.885352 2.416210 1.939184
-[3,] 2.517276 1.885352 4.645511 5.737407 5.110837
-[4,] 3.453939 2.416210 5.737407 7.449463 6.869830
-[5,] 3.222515 1.939184 5.110837 6.869830 6.941361
-> (That <- .5*(Tmat1 + Tmat2)) #good
-         [,1]     [,2]     [,3]     [,4]     [,5]
-[1,] 3.357869 2.280706 3.666403 4.252257 3.981313
-[2,] 2.280706 3.447572 4.020246 3.642189 3.079210
-[3,] 3.666403 4.020246 6.462901 6.601547 5.869464
-[4,] 4.252257 3.642189 6.601547 7.991721 7.262572
-[5,] 3.981313 3.079210 5.869464 7.262572 7.008138
+> Tmat1 <- mcse.multi(out1, method = "lug")$cov
+> Tmat2 <- mcse.multi(out2, method = "lug")$cov
+> That <- .5*(Tmat1 + Tmat2) #good
 > 
 > #Calc Smat
 > cov1 <- var(out1)
 > cov2 <- var(out2)
-> (Smat <- .5*(cov1 + cov2)) #good
-         [,1]     [,2]     [,3]     [,4]     [,5]
-[1,] 3.345112 2.525048 3.140874 3.138200 1.652262
-[2,] 2.525048 2.824435 3.058963 2.828375 1.518839
-[3,] 3.140874 3.058963 4.647584 4.425101 2.262446
-[4,] 3.138200 2.828375 4.425101 5.267420 3.015366
-[5,] 1.652262 1.518839 2.262446 3.015366 3.033524
+> Smat <- .5*(cov1 + cov2) #good
 > 
 > Sinv <- qr.solve(Smat)
 > thingy <- Sinv %*% That
@@ -102,16 +77,10 @@ copyright (c) 2012, James M. Flegal, University of California, Riverside
 [1] TRUE
 > 
 > rhat <- (N-1)/N + (Nchain +1)/(Nchain * N) * maxeigen
-> rhat
-[1] 1.029993
-> 
 > byhand <- sqrt(rhat)
-> byhand
-[1] 1.014886
-> 
 > all.equal(byhand, withfun)
 [1] TRUE
 > 
 > proc.time()
    user  system elapsed 
-  0.716   0.032   0.745 
+  7.582   0.022   7.592 

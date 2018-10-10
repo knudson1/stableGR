@@ -37,13 +37,13 @@ chain2 <- out2[ ,1]
 # Calculate tau^2 for each chain
 tausq1 <- (mcse(chain1, method = "lug")$se)^2 * N 
 tausq2 <- (mcse(chain2, method = "lug")$se)^2 * N
-(tausq <- .5 * (tausq1 + tausq2))
+tausq <- .5 * (tausq1 + tausq2)
 #checked, right
 
 # Calulate s^2 for each chain
 sampvar1 <- var(chain1)
 sampvar2 <- var(chain2)
-(ssquared <- .5 * (sampvar1 + sampvar2))
+ssquared <- .5 * (sampvar1 + sampvar2)
 #checked, right
 
 # Calculate sigma^2 estimate
@@ -60,8 +60,7 @@ that <- sqrt(Rhat)
 
 
 
-(withfunc <- gelman.bm(obj, method = "lug"))
-withfunc$psrf[1]
+withfunc <- gelman.bm(obj, method = "lug")
 all.equal(as.numeric(withfunc$psrf[1]), that)
 
 

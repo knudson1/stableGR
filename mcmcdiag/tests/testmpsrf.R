@@ -9,7 +9,7 @@ library(mcmcdiag)
 
 # Details on the chain construction
 p <- 5
-N <- 100
+N <- 10000
 tail.ind <- floor(N*.80):N
 foo <- matrix(.50, nrow=p, ncol=p)
 sigma <- foo^(abs(col(foo)-row(foo)))
@@ -29,22 +29,22 @@ obj <- mcmc.list(out1, out2)
 ################ 
 # Perform unit test using the two chains in obj
 
-(withfun <- gelman.bm(obj)$mpsrf)
+withfun <- gelman.bm(obj)$mpsrf
 
 
 # Calculate Tmat for each chain
-(Tmat1 <- mcse.multi(out1)$cov)
-(Tmat2 <- mcse.multi(out2)$cov)
-(That <- .5*(Tmat1 + Tmat2)) #good
+Tmat1 <- mcse.multi(out1, method = "lug")$cov
+Tmat2 <- mcse.multi(out2, method = "lug")$cov
+That <- .5*(Tmat1 + Tmat2) #good
 
 #Calc Smat
 cov1 <- var(out1)
 cov2 <- var(out2)
-(Smat <- .5*(cov1 + cov2)) #good
+Smat <- .5*(cov1 + cov2) #good
 
 #calculate determinants
-(Teigen <- eigen(That)$values)
-(Seigen <- eigen(Smat)$values)
+Teigen <- eigen(That)$values
+Seigen <- eigen(Smat)$values
 detT <- (prod(Teigen))
 detS <- (prod(Seigen))
 detratio <- detT/detS #good
@@ -53,21 +53,18 @@ Nchain <- nchain(obj)
 all.equal(2, Nchain)
 
 rhat <- (N-1)/N + (Nchain +1)/(Nchain * N) *(detratio)^(1/p)
-rhat
-
 byhand <- sqrt(rhat)
-byhand
 
 all.equal(byhand, withfun)
 
 ################ ################ ################
 # Perform unit test using a SINGLE chain (just in case)
 onechain <- mcmc.list(out1)
-(withfun <- gelman.bm(onechain)$mpsrf)
+withfun <- gelman.bm(onechain)$mpsrf
 
 #calculate determinants
-(Teigen <- eigen(Tmat1)$values)
-(Seigen <- eigen(cov1)$values)
+Teigen <- eigen(Tmat1)$values
+Seigen <- eigen(cov1)$values
 detT <- (prod(Teigen))
 detS <- (prod(Seigen))
 detratio <- detT/detS #good
@@ -76,10 +73,6 @@ Nchain <- nchain(onechain)
 all.equal(1, Nchain)
 
 rhat <- (N-1)/N + (Nchain +1)/(Nchain * N) *(detratio)^(1/p)
-rhat
-
 byhand <- sqrt(rhat)
-byhand
-
 all.equal(byhand, withfun)
 

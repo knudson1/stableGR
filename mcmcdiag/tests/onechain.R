@@ -34,12 +34,12 @@ chain1 <- out1[ ,1]
 
 # Calculate tau^2 for each chain
 tausq1 <- (mcse(chain1, method = "lug")$se)^2 * N 
-(tausq <- tausq1 )
+tausq <- tausq1 
 #checked, right
 
 # Calulate s^2 for each chain
 sampvar1 <- var(chain1)
-(ssquared <- sampvar1 )
+ssquared <- sampvar1 
 #checked, right
 
 # Calculate sigma^2 estimate
