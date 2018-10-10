@@ -9,7 +9,7 @@ library(mcmcdiag)
 #
 # Details on the chain construction
 p <- 5
-N <- 100
+N <- 1000
 tail.ind <- floor(N*.80):N
 foo <- matrix(.50, nrow=p, ncol=p)
 sigma <- foo^(abs(col(foo)-row(foo)))
@@ -33,7 +33,7 @@ results1 <- gelman.bm(obj)
 chain1 <- out1[ ,1]
 
 # Calculate tau^2 for each chain
-tausq1 <- (mcse(chain1)$se)^2 * N 
+tausq1 <- (mcse(chain1, method = "lug")$se)^2 * N 
 (tausq <- tausq1 )
 #checked, right
 
@@ -46,14 +46,10 @@ sampvar1 <- var(chain1)
 sigsq <- ((N-1) * ssquared + tausq)/N
 # checked, right
 
-# Calculate Vhat 
-Vhat <- sigsq + tausq/(N )
 
-
-dfchunk <- 1
 
 # Calculate the diagnostic
-Rhat <- Vhat * dfchunk / ssquared
+Rhat <- sigsq / ssquared
 
 that <- sqrt(Rhat)
 
