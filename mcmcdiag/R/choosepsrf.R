@@ -1,5 +1,7 @@
-#' Calculates a Gelman Rubin diagnostic threshold
+#' Calculates a Gelman Rubin diagnostic threshold.
+#'
 #' When the sample diagnostic reaches this threshold, the chain has converged.
+#'
 #' @param p dimension of the estimation problem
 #' @param m number of chains
 #' @param epsilon relative precision level

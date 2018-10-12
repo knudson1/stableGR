@@ -2,8 +2,7 @@
 % Please edit documentation in R/choosepsrf.R
 \name{choosepsrf}
 \alias{choosepsrf}
-\title{Calculates a Gelman Rubin diagnostic threshold
-When the sample diagnostic reaches this threshold, the chain has converged.}
+\title{Calculates a Gelman Rubin diagnostic threshold.}
 \usage{
 choosepsrf(p, epsilon, m, alpha = 0.05)
 }
@@ -20,6 +19,5 @@ choosepsrf(p, epsilon, m, alpha = 0.05)
 The psrf threshold to be reached for convergence.
 }
 \description{
-Calculates a Gelman Rubin diagnostic threshold
 When the sample diagnostic reaches this threshold, the chain has converged.
 }
