@@ -4,20 +4,30 @@
 \alias{choosepsrf}
 \title{Calculates a Gelman Rubin diagnostic threshold.}
 \usage{
-choosepsrf(p, epsilon, m, alpha = 0.05)
+choosepsrf(p, epsilon = 0.05, delta = NULL, m, alpha = 0.05)
 }
 \arguments{
 \item{p}{dimension of the estimation problem}
 
 \item{epsilon}{relative precision level}
 
+\item{delta}{desired delta value}
+
 \item{m}{number of chains}
 
 \item{alpha}{significance level}
 }
 \value{
-The psrf threshold to be reached for convergence.
+\item{psrf}{The psrf threshold to be reached for convergence.}
+
+\item{epsilon}{The epsilon value used to calculate the psrf threshold.}
+
+\item{delta}{The delta value used to calculate the psrf threshold.}
 }
 \description{
-When the sample diagnostic reaches this threshold, the chain has converged.
+When the sample diagnostic reaches the psrf threshold calculated in this function, the chain has converged.
+}
+\examples{
+choosepsrf(1, delta = .1, m = 5, alpha = .05)
+choosepsrf(1, epsilon = .05, m = 5, alpha = .05)
 }
