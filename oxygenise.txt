@@ -1,0 +1,3 @@
+# to create rd files if the headers are oxygenated
+library(roxygen2)
+roxygenise("mcmcdiag")
