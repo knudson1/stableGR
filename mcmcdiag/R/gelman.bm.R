@@ -59,6 +59,8 @@ function (x, confidence = 0.95, transform = FALSE,
 	  blatherout <- list(muhat = muhat, method = method, Niter = Niter, Nchain = Nchain, Nvar = Nvar,
 	                  tausq = tau2, ssq <- s2, sigsq = sigsq) }
 
+	mpsrf <- multivariate
+	
 	if(multivariate == TRUE  && Nvar > 1){
 		Ti <- lapply(x, getT, method = method)  # For each chain
 		Tee <- matrix(Reduce("+", Ti)  / Nchain, nrow = Nvar)
@@ -81,14 +83,15 @@ function (x, confidence = 0.95, transform = FALSE,
 
 		mpsrf <- sqrt(firstpiece + secondpiece*thirdpiece)
 
+		if(blather){
+		  blatherout$S <- W 
+		  blatherout$Tee <- Tee
+		  blather <- blatherout
+		}
 	}
 
 
-	if(blather){
-		blatherout$S <- W 
-		blatherout$Tee <- Tee
-		blather <- blatherout
-	}
+
 
 	list(psrf = psrf, mpsrf = mpsrf, means = muhat, blather = blather)
 
