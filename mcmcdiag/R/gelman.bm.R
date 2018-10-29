@@ -54,6 +54,10 @@ function (x, confidence = 0.95, transform = FALSE,
 
 	arrr <- sigsq / Ssq
 	psrf <- sqrt(arrr)
+	
+	if(blather){
+	  blatherout <- list(muhat = muhat, method = method, Niter = Niter, Nchain = Nchain, Nvar = Nvar,
+	                  tausq = tau2, ssq <- s2, sigsq = sigsq) }
 
 	if(multivariate == TRUE  && Nvar > 1){
 		Ti <- lapply(x, getT, method = method, Niter = Niter, Nvar = Nvar)  # For each chain
@@ -70,8 +74,7 @@ function (x, confidence = 0.95, transform = FALSE,
     		top <- (prod(eigenT))^(1/Nvar)
     
     		thirdpiece <- (top/bottom)
-        }
-        else{
+        }else{
             Sinv <- qr.solve(W)
             thirdpiece <- max(eigen(Sinv %*% Tee, symmetric = FALSE, only.values = TRUE)$values)
         }
@@ -82,8 +85,9 @@ function (x, confidence = 0.95, transform = FALSE,
 
 
 	if(blather){
-		blather <- list(muhat = muhat, method = method, Niter = Niter, Nchain = Nchain, Nvar = Nvar,
-			tausq = tau2, ssq <- s2, sigsq = sigsq, S = W, Tee = Tee)
+		blatherout$S <- W 
+		blatherout$Tee <- Tee
+		blather <- blatherout
 	}
 
 	list(psrf = psrf, mpsrf = mpsrf, means = muhat, blather = blather)
@@ -92,7 +96,7 @@ function (x, confidence = 0.95, transform = FALSE,
 }
 
 
-gettau <- function(x1, method, Niter, Nvar) 
+gettau <- function(x1, method, Niter=NULL, Nvar) 
 {
 	asym.var <- numeric(length = Nvar)
 	asym.var <- (mcse.mat(x1, method = method)[ ,2])^2 
