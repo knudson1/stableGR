@@ -65,6 +65,7 @@ chains}
   scale reduction factor.}
     \item{mpsrf}{A scalar point estimate of the multivariate potential
   scale reduction factor.}
+      \item{means}{A vector containing the sample means based on the chains provided.}
 	\item{blather}{Either \code{FALSE} or a list containing intermediate calculations.}
 }
 

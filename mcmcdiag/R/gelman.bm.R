@@ -86,7 +86,7 @@ function (x, confidence = 0.95, transform = FALSE,
 			tausq = tau2, ssq <- s2, sigsq = sigsq, S = W, Tee = Tee)
 	}
 
-	list(psrf = psrf, mpsrf = mpsrf, blather = blather)
+	list(psrf = psrf, mpsrf = mpsrf, means = muhat, blather = blather)
 
    
 }
