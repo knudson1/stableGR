@@ -55,6 +55,8 @@ function (x, confidence = 0.95, transform = FALSE,
 	arrr <- sigsq / Ssq
 	psrf <- sqrt(arrr)
 	
+	blatherout <- blather
+	
 	if(blather){
 	  blatherout <- list(muhat = muhat, method = method, Niter = Niter, Nchain = Nchain, Nvar = Nvar,
 	                  tausq = tau2, ssq <- s2, sigsq = sigsq) }
@@ -86,14 +88,13 @@ function (x, confidence = 0.95, transform = FALSE,
 		if(blather){
 		  blatherout$S <- W 
 		  blatherout$Tee <- Tee
-		  blather <- blatherout
 		}
 	}
 
 
 
 
-	list(psrf = psrf, mpsrf = mpsrf, means = muhat, blather = blather)
+	list(psrf = psrf, mpsrf = mpsrf, means = muhat, blather = blatherout)
 
    
 }
