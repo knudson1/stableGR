@@ -111,20 +111,22 @@ gettau <- function(x1, method, Niter, Nvar)
 
 getT <- function(x, method, Niter, Nvar) 
 {
+	#asym.var <- matrix(0, nrow = Nvar, ncol = Nvar)
+	foo <- mcse.multi(x, method = method)
+	Tee <- adjust_matrix(foo$cov, N = foo$nsim)
+	Tee
+}
 
-	asym.var <- matrix(0, nrow = Nvar, ncol = Nvar)
-	asym.var <- mcse.multi(x, method = method)$cov
-# 	if(method == "bm")
-# 	{
-# 		asym.var <- mcse.multi(x, method = "bm")$cov
-# 	}
-# 	if(method == "wbm")
-# 	{
-# 		bn <- floor(sqrt(Niter))
-# 		asym.var <- 2*mcse.multi(x, method = "bm")$cov - mcse.multi(x, method = "bm", size = ceiling(bn/2))$cov
-# 	}
-	return(asym.var)
-
+adjust_matrix <- function(mat, N, epsilon = sqrt(log(N)/dim(mat)[2]), b = 1/2)
+{
+  mat.adj <- mat
+  adj <- epsilon*N^(-b)
+  vars <- diag(mat)
+  corr <- cov2cor(mat)
+  eig <- eigen(corr)
+  adj.eigs <- pmax(eig$values, adj)
+  mat.adj <- diag(vars^(1/2))%*% eig$vectors %*% diag(adj.eigs) %*% t(eig$vectors) %*% diag(vars^(1/2))
+  return(mat.adj)
 }
 
 mcse.mat <- mcmcse:::mcse.mat

@@ -3,4 +3,6 @@ export(choosepsrf)
 
 import(mvtnorm, mcmc, mcmcse, coda)
 importFrom("stats", "cov", "end", "start", "var", "window")
+importFrom("stats", "cov2cor")
+
 
