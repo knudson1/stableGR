@@ -46,7 +46,7 @@ function (x, confidence = 0.95, transform = FALSE,
 	# Third, calculate tau^2 and its variance for each variable. 
 	# This replaces the GR b.
 	# Sample variance of the sample means (between chain vars) calculated using batch means.
-    tau2i <- matrix(sapply(x, gettau, method = method, Niter = Niter, Nvar = Nvar)*Niter,  ncol = Nchain) # For each chain
+    tau2i <- matrix(sapply(x, gettau, method = method)*Niter,  ncol = Nchain) # For each chain
 	tau2 <- apply(tau2i, 1, mean)  # Average over the chains
 
 	# Calculate the estimate of sigma^2.
@@ -60,7 +60,7 @@ function (x, confidence = 0.95, transform = FALSE,
 	                  tausq = tau2, ssq <- s2, sigsq = sigsq) }
 
 	if(multivariate == TRUE  && Nvar > 1){
-		Ti <- lapply(x, getT, method = method, Niter = Niter, Nvar = Nvar)  # For each chain
+		Ti <- lapply(x, getT, method = method)  # For each chain
 		Tee <- matrix(Reduce("+", Ti)  / Nchain, nrow = Nvar)
 
 		firstpiece <- (Niter-1)/Niter
@@ -96,26 +96,15 @@ function (x, confidence = 0.95, transform = FALSE,
 }
 
 
-gettau <- function(x1, method, Niter=NULL, Nvar) 
+gettau <- function(x1, method) 
 {
-	asym.var <- numeric(length = Nvar)
-	asym.var <- (mcse.mat(x1, method = method)[ ,2])^2 
-# 	if(method == "bm")
-# 	{
-# 		asym.var <- (mcse.mat(x1, method = method)[ ,2])^2 
-# 	}
-# 	if(method == "wbm")
-# 	{
-# 		bn <- floor(sqrt(Niter))
-# 		asym.var <- 2*(mcse.mat(x1, method = "bm")[ ,2])^2  - (mcse.mat(x1, method = "bm", size = ceiling(bn/2))[ ,2])^2 
-# 	}
-	return(asym.var)
+	(mcse.mat(x1, method = method)[ ,2])^2 
+
 }
 
 
-getT <- function(x, method, Niter, Nvar) 
+getT <- function(x, method) 
 {
-	#asym.var <- matrix(0, nrow = Nvar, ncol = Nvar)
 	foo <- mcse.multi(x, method = method)
 	Tee <- adjust_matrix(foo$cov, N = foo$nsim)
 	Tee
