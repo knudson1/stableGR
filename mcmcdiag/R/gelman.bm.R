@@ -38,7 +38,7 @@ function (x, confidence = 0.95, transform = FALSE,
 	# Second, calculate overall sample variance for each variable.
 	# Calculate vcov matrix for variables in each chain. List length = nchain.
     Si2 <- array(sapply(x, var, simplify = TRUE), dim = c(Nvar, Nvar, Nchain)) 
-    W <- apply(Si2, c(1, 2), mean) # Average the vcov matrices across chains.
+    W <- apply(Si2, c(1, 2), mean) # Average the vcov matrices across chains. #aka S
     Ssq <- diag(W) # Isolate the variances, throw away covariances.
 	# For each chain, find sample variance for each variable. 
 	s2 <- matrix(apply(Si2, 3, diag), nrow = Nvar, ncol = Nchain)
@@ -46,7 +46,7 @@ function (x, confidence = 0.95, transform = FALSE,
 	# Third, calculate tau^2 and its variance for each variable. 
 	# This replaces the GR b.
 	# Sample variance of the sample means (between chain vars) calculated using batch means.
-    tau2i <- matrix(sapply(x, gettau, method = method)*Niter,  ncol = Nchain) # For each chain
+  tau2i <- matrix(sapply(x, gettau, method = method)*Niter,  ncol = Nchain) # For each chain
 	tau2 <- apply(tau2i, 1, mean)  # Average over the chains
 
 	# Calculate the estimate of sigma^2.
@@ -68,26 +68,28 @@ function (x, confidence = 0.95, transform = FALSE,
 		Tee <- matrix(Reduce("+", Ti)  / Nchain, nrow = Nvar)
 
 		firstpiece <- (Niter-1)/Niter
-		secondpiece <- (Nchain+1)/(Nchain*Niter)
+		secondpiece <- Niter
+		mango <- qr.solve(W, Tee) #S^{-1}T
+		eigs <- eigen(mango, symmetric = TRUE, only.values = TRUE)$values
+		
+		thirdpiecedet <- exp(mean(log(eigs)))
+		thirdpiecemax <- max(eigs)
+		
+		mpsrfdet <- sqrt(firstpiece + secondpiece*thirdpiecedet)
+		mpsrfmax <- sqrt(firstpiece + secondpiece*thirdpiecemax)		
+		
 
-        if(mapping == "determinant"){
-    		eigenS <- eigen(W, symmetric=TRUE, only.values = TRUE)$values
-    		bottom <- exp(mean(log(eigenS)))
-    
-    		eigenT <- eigen(Tee, symmetric = TRUE, only.values = TRUE)$values
-    		top <- (prod(eigenT))^(1/Nvar)
-    
-    		thirdpiece <- (top/bottom)
-        }else{
-            Sinv <- qr.solve(W)
-            thirdpiece <- max(eigen(Sinv %*% Tee, symmetric = FALSE, only.values = TRUE)$values)
+        if(mapping == "determinant"){ mpsrf <- mpsrfdet
+        }else{ mpsrf <- mpsrfmax
         }
 
-		mpsrf <- sqrt(firstpiece + secondpiece*thirdpiece)
 
 		if(blather){
 		  blatherout$S <- W 
 		  blatherout$Tee <- Tee
+		  blatherout$eigenvalues <- eigs
+		  blatherout$mpsrfdet <- mpsrfdet
+		  blatherout$mpsrfmax <- mpsrfmax
 		}
 	}
 
