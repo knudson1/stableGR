@@ -63,16 +63,16 @@ function (x, confidence = 0.95, transform = FALSE,
 
 	mpsrf <- multivariate
 	
-	if(multivariate == TRUE  && Nvar > 1){
+	if(multivariate && Nvar > 1){
 		Ti <- lapply(x, getT, method = method)  # For each chain
 		Tee <- matrix(Reduce("+", Ti)  / Nchain, nrow = Nvar)
 
 		firstpiece <- (Niter-1)/Niter
-		secondpiece <- Niter
-		mango <- qr.solve(W, Tee) #S^{-1}T
+		secondpiece <- 1/Niter
+		mango <- solve(W, Tee) #S^{-1}T
 		eigs <- eigen(mango, symmetric = TRUE, only.values = TRUE)$values
 		
-		thirdpiecedet <- exp(mean(log(eigs)))
+		thirdpiecedet <- (prod(eigs))^(1/Nvar)
 		thirdpiecemax <- max(eigs)
 		
 		mpsrfdet <- sqrt(firstpiece + secondpiece*thirdpiecedet)
