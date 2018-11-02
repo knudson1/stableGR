@@ -29,31 +29,35 @@ obj <- mcmc.list(out1, out2)
 ################ 
 # Perform unit test using the two chains in obj
 
-withfun <- gelman.bm(obj)$mpsrf
-
+outwithfun <- gelman.bm(obj, blather = TRUE)
+withfun <- outwithfun$mpsrf
+blather <- outwithfun$blather
 
 # Calculate Tmat for each chain
 Tmat1 <- mcse.multi(out1, method = "lug")$cov
 Tmat2 <- mcse.multi(out2, method = "lug")$cov
-That <- .5*(Tmat1 + Tmat2) #good
+That <- .5*(Tmat1 + Tmat2) 
+all.equal(That, blather$Tee)
 
 #Calc Smat
 cov1 <- var(out1)
 cov2 <- var(out2)
-Smat <- .5*(cov1 + cov2) #good
+Smat <- .5*(cov1 + cov2) 
+all.equal(Smat, blather$S)
 
 #calculate determinants
-Teigen <- eigen(That)$values
-Seigen <- eigen(Smat)$values
-detT <- (prod(Teigen))
-detS <- (prod(Seigen))
-detratio <- detT/detS #good
+#Teigen <- eigen(That)$values
+#Seigen <- eigen(Smat)$values
+#detT <- (prod(Teigen))
+#detS <- (prod(Seigen))
+detratio <- det(That)/det(Smat) 
+all.equal(detratio, det(solve(blather$S, blather$Tee)))
 
 Nchain <- nchain(obj)
 all.equal(2, Nchain)
 
-rhat <- (N-1)/N + (Nchain +1)/(Nchain * N) *(detratio)^(1/p)
-byhand <- sqrt(rhat)
+top <- (N-1) + ((detratio)^(1/p))
+byhand <- sqrt(top/N)
 
 all.equal(byhand, withfun)
 
@@ -72,7 +76,7 @@ detratio <- detT/detS #good
 Nchain <- nchain(onechain)
 all.equal(1, Nchain)
 
-rhat <- (N-1)/N + (Nchain +1)/(Nchain * N) *(detratio)^(1/p)
+rhat <- (N-1)/N + ((detratio)^(1/p))/N
 byhand <- sqrt(rhat)
 all.equal(byhand, withfun)
 

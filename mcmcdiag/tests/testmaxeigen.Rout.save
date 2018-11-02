@@ -76,11 +76,11 @@ copyright (c) 2012, James M. Flegal, University of California, Riverside
 > all.equal(2, Nchain)
 [1] TRUE
 > 
-> rhat <- (N-1)/N + (Nchain +1)/(Nchain * N) * maxeigen
+> rhat <- (N-1)/N +  maxeigen/N
 > byhand <- sqrt(rhat)
 > all.equal(byhand, withfun)
 [1] TRUE
 > 
 > proc.time()
    user  system elapsed 
-  7.582   0.022   7.592 
+  8.093   0.023   8.104 

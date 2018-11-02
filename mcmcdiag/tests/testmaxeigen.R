@@ -49,6 +49,6 @@ maxeigen <- max(eigen(thingy)$values)
 Nchain <- nchain(obj)
 all.equal(2, Nchain)
 
-rhat <- (N-1)/N + (Nchain +1)/(Nchain * N) * maxeigen
+rhat <- (N-1)/N +  maxeigen/N
 byhand <- sqrt(rhat)
 all.equal(byhand, withfun)

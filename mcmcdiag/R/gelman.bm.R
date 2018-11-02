@@ -70,7 +70,7 @@ function (x, confidence = 0.95, transform = FALSE,
 		firstpiece <- (Niter-1)/Niter
 		secondpiece <- 1/Niter
 		mango <- solve(W, Tee) #S^{-1}T
-		eigs <- eigen(mango, symmetric = TRUE, only.values = TRUE)$values
+		eigs <- eigen(mango, symmetric = FALSE, only.values = TRUE)$values
 		
 		thirdpiecedet <- (prod(eigs))^(1/Nvar)
 		thirdpiecemax <- max(eigs)
