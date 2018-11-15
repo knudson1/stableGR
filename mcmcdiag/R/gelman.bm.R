@@ -66,6 +66,7 @@ function (x, confidence = 0.95, transform = FALSE,
 	if(multivariate && Nvar > 1){
 		Ti <- lapply(x, getT, method = method)  # For each chain
 		Tee <- matrix(Reduce("+", Ti)  / Nchain, nrow = Nvar)
+		Tee <- adjust_matrix(Tee, Niter)
 
 		firstpiece <- (Niter-1)/Niter
 		secondpiece <- 1/Niter
@@ -111,9 +112,10 @@ gettau <- function(x1, method)
 
 getT <- function(x, method) 
 {
-	foo <- mcse.multi(x, method = method)
-	Tee <- adjust_matrix(foo$cov, N = foo$nsim)
-	Tee
+  mcse.multi(x, method = method)$cov
+  # foo <- mcse.multi(x, method = method)
+	# Tee <- adjust_matrix(foo$cov, N = foo$nsim)
+	# Tee
 }
 
 adjust_matrix <- function(mat, N, epsilon = sqrt(log(N)/dim(mat)[2]), b = 1/2)
