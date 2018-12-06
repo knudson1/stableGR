@@ -1,4 +1,4 @@
-\name{gelman.bm}
+﻿\name{gelman.bm}
 \alias{gelman.bm}
 
 \title{A Gelman-Rubin diagnostic with batch means}
@@ -6,12 +6,11 @@
 \description{This function uses batch means estimators to calculate a convergence diagnostic for Markov chain Monte Carlo in the spirit of Gelman-Rubin.
 
  A univariate `potential scale reduction factor' (PSRF) is calculated for each variable in
-\code{x}. For multivariate chains, a multivariate PSRF is calculated to take into account the interdependence of the chain's components.  The psrfs decreases to 1 as the chain length increases. When the PSRF̂ becomes sufficiently close to 1, the sample collected by the Markov chain has converged to to the target distribution  onvergence.
+\code{x}. For multivariate chains, a multivariate PSRF is calculated to take into account the interdependence of the chain's components.  The psrfs decreases to 1 as the chain length increases. When the PSRF becomes sufficiently close to 1, the sample collected by the Markov chain has converged to to the target distribution  onvergence.
 }
 
 \usage{
-gelman.bm(x, confidence = 0.95,  
-	mapping = "determinant",  multivariate = TRUE, 
+gelman.bm(x, mapping = "determinant",  multivariate = TRUE, 
 	method = "lug", blather = FALSE)
 }
 
@@ -19,8 +18,6 @@ gelman.bm(x, confidence = 0.95,
 \item{x}{an \code{mcmc.list} object with more than one chain,
 and with starting values that are overdispersed with respect to the
 posterior distribution.}
-\item{confidence}{the coverage probability of the confidence interval for the
-potential scale reduction factor}
 \item{mapping}{the function used to map the covariance matrix to a scalar. This is one of 
 \dQuote{\code{determinant}} (determinant of the covariance matrix, 
   the default) or \dQuote{\code{maxeigen}} (the largest eigenvalue of the covariance matrix).}
@@ -56,7 +53,7 @@ chains}
 
 \section{Theory}{ The univariate  potential scale reduction factor (PSRF) was first Gelman and Rubin (1992)
 
-The univariate PSRF is the square root of the ratio of two estimators for the target variance. The PSRF decreases to 1 as the chain length increases; when the PSRF̂ becomes sufficiently close to 1, the sample collected by the Markov chain has converged to to the target distribution.}
+The univariate PSRF is the square root of the ratio of two estimators for the target variance. The PSRF decreases to 1 as the chain length increases; when the PSRF becomes sufficiently close to 1, the sample collected by the Markov chain has converged to to the target distribution.}
 
 
 \references{

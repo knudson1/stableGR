@@ -8,8 +8,7 @@
 #####################################
 
 gelman.bm <-
-function (x, confidence = 0.95, 
-    mapping = "determinant",  
+function (x, mapping = "determinant",  
     multivariate = TRUE, method = "lug", blather = FALSE) 
 {
     x <- as.mcmc.list(x)
