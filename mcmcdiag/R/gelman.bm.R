@@ -8,13 +8,11 @@
 #####################################
 
 gelman.bm <-
-function (x, confidence = 0.95, transform = FALSE,  
-    mapping = "determinant", autoburnin = FALSE, 
+function (x, confidence = 0.95, 
+    mapping = "determinant",  
     multivariate = TRUE, method = "lug", blather = FALSE) 
 {
     x <- as.mcmc.list(x)
-    if (autoburnin && start(x) < end(x)/2) 
-        x <- window(x, start = end(x)/2 + 1)
 
 	# Define some notation.
     Niter <- niter(x)  # number of iterations per chains. We also call this n.
@@ -22,9 +20,6 @@ function (x, confidence = 0.95, transform = FALSE,
     Nvar <- nvar(x) # number of variables
     xnames <- varnames(x)
 
-	# Transform to logit or log if asked and if applicable.
-    if (transform) 
-        x <- gelman.transform(x) 
 
 	# Since x is a list of markov chains, turn each into matrix.
     x <- lapply(x, as.matrix) 

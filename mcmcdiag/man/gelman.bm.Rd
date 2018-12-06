@@ -6,12 +6,12 @@
 \description{This function uses batch means estimators to calculate a convergence diagnostic for Markov chain Monte Carlo in the spirit of Gelman-Rubin.
 
  A univariate `potential scale reduction factor' (PSRF) is calculated for each variable in
-\code{x}. For multivariate chains, a multivariate PSRF is calculated to take into account the interdependence of the chain's components.  The psrfs decreases to 1 as the chain length increases. When the psrf ̂ becomes sufficiently close to 1, the sample collected by the Markov chain has converged to to the target distribution  onvergence.
+\code{x}. For multivariate chains, a multivariate PSRF is calculated to take into account the interdependence of the chain's components.  The psrfs decreases to 1 as the chain length increases. When the PSRF̂ becomes sufficiently close to 1, the sample collected by the Markov chain has converged to to the target distribution  onvergence.
 }
 
 \usage{
-gelman.bm(x, confidence = 0.95, transform = FALSE, 
-	mapping = "determinant", autoburnin = FALSE, multivariate = TRUE, 
+gelman.bm(x, confidence = 0.95,  
+	mapping = "determinant",  multivariate = TRUE, 
 	method = "lug", blather = FALSE)
 }
 
@@ -21,18 +21,10 @@ and with starting values that are overdispersed with respect to the
 posterior distribution.}
 \item{confidence}{the coverage probability of the confidence interval for the
 potential scale reduction factor}
-\item{transform}{a logical flag indicating whether variables in
-\code{x} should be transformed to improve the normality of the
-distribution. If set to TRUE, a log transform or logit transform, as
-appropriate, will be applied.}
 \item{mapping}{the function used to map the covariance matrix to a scalar. This is one of 
 \dQuote{\code{determinant}} (determinant of the covariance matrix, 
   the default) or \dQuote{\code{maxeigen}} (the largest eigenvalue of the covariance matrix).}
 
-\item{autoburnin}{a logical flag indicating whether only the second half
-  of the series should be used in the computation.  If set to TRUE
-   and \code{start(x)} is less than \code{end(x)/2} then start
-  of series will be adjusted so that only second half of series is used.}
 \item{multivariate}{a logical flag indicating whether the multivariate
 potential scale reduction factor should be calculated for multivariate
 chains}
