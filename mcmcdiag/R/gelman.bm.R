@@ -7,18 +7,41 @@
 ### for each variable. Note psrf = sqrt(R-hat).
 #####################################
 
+#' A Gelman-Rubin diagnostic with batch means
+#' 
+#' This function uses batch means estimators to calculate a convergence diagnostic for Markov chain Monte Carlo in the spirit of Gelman-Rubin. A univariate `potential scale reduction factor' (PSRF) is calculated for each variable in \code{x}. For multivariate chains, a multivariate PSRF is calculated to take into account the interdependence of the chain's components.  The PSRFs decreases to 1 as the chain length increases. When the PSRF becomes sufficiently close to 1, the sample collected by the Markov chain has converged to to the target distribution
+#'
+#' @param x an \code{mcmc.list} object with more than one chain, and with starting values that are overdispersed with respect to the posterior distribution.
+#' @param mapping the function used to map the covariance matrix to a scalar. This is one of \dQuote{\code{determinant}} (determinant of the covariance matrix, the default) or \dQuote{\code{maxeigen}} (the largest eigenvalue of the covariance matrix).
+#' @param multivariate a logical flag indicating whether the multivariate potential scale reduction factor should be calculated for multivariate chains
+#' @param method the method used to compute the standard error of the chains. This is one of \dQuote{\code{bm}} (batch means, the default), \dQuote{\code{obm}} (overlapping batch means), \dQuote{\code{tukey}} (spectral variance method with a Tukey-Hanning window), or \dQuote{\code{bartlett}} (spectral variance method with a Bartlett window)
+#' @param autoburnin a logical flag indicating whether only the second half of the series should be used in the computation.  If set to TRUE and \code{start(x)} is less than \code{end(x)/2} then start of series will be adjusted so that only second half of series is used.
+#' @param blather a logical flag indicating whether to include additional output
+#'
+#' @return  \item{psrf}{A vector containing the point estimates of the potential scale reduction factor.}
+#' @return \item{mpsrf}{A scalar point estimate of the multivariate potential scale reduction factor.}
+#' @return \item{means}{A vector containing the sample means based on the chains provided.}
+#' @return \item{blather}{Either \code{FALSE} or a list containing intermediate calculations.}
+#'
+#' @section Theory: Gelman and Rubin (1992) and Brooks and Gelman (1998) first constructed the univariate and multivariate potential scale reduction factors (PSRF), respectively, used to diagnose Markov chain convergence. The function \code{gelman.bm} stabilizes the PSRF and improves the PSRF's efficiency by incorporating batch means estimators for the target variance. The PSRF decreases to 1 as the chain length increases; when the PSRF becomes sufficiently close to 1, the sample collected by the Markov chain has converged to to the target distribution. A PSRF convergence threshold can be calculated using \code{choosepsrf}.
+#'
+#' @export
+#'
+#' @examples
 gelman.bm <-
 function (x, mapping = "determinant",  
-    multivariate = TRUE, method = "lug", blather = FALSE) 
+    multivariate = TRUE, method = "lug", autoburnin = FALSE, blather = FALSE) 
 {
     x <- as.mcmc.list(x)
+    
+    if (autoburnin && start(x) < end(x)/2) 
+      x <- window(x, start = end(x)/2 + 1)
 
 	# Define some notation.
     Niter <- niter(x)  # number of iterations per chains. We also call this n.
     Nchain <- nchain(x) # number of chains. We also call this m.
     Nvar <- nvar(x) # number of variables
     xnames <- varnames(x)
-
 
 	# Since x is a list of markov chains, turn each into matrix.
     x <- lapply(x, as.matrix) 
