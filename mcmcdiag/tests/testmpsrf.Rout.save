@@ -55,7 +55,7 @@ copyright (c) 2012, James M. Flegal, University of California, Riverside
 > ################ 
 > # Perform unit test using the two chains in obj
 > 
-> outwithfun <- gelman.bm(obj, blather = TRUE)
+> outwithfun <- gr.diag(obj, blather = TRUE)
 > withfun <- outwithfun$mpsrf
 > blather <- outwithfun$blather
 > 
@@ -95,7 +95,7 @@ copyright (c) 2012, James M. Flegal, University of California, Riverside
 > ################ ################ ################
 > # Perform unit test using a SINGLE chain (just in case)
 > onechain <- mcmc.list(out1)
-> withfun <- gelman.bm(onechain)$mpsrf
+> withfun <- gr.diag(onechain)$mpsrf
 > 
 > #calculate determinants
 > Teigen <- eigen(Tmat1)$values

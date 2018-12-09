@@ -1,4 +1,4 @@
-export(gelman.bm)
+export(gr.diag)
 export(choosepsrf)
 
 import(mvtnorm, mcmc, mcmcse, coda)

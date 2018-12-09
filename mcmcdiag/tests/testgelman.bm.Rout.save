@@ -86,7 +86,7 @@ copyright (c) 2012, James M. Flegal, University of California, Riverside
 > 
 > 
 > 
-> withfunc <- gelman.bm(obj, method = "lug")
+> withfunc <- gr.diag(obj, method = "lug")
 > all.equal(as.numeric(withfunc$psrf[1]), that)
 [1] TRUE
 > 

@@ -60,7 +60,7 @@ that <- sqrt(Rhat)
 
 
 
-withfunc <- gelman.bm(obj, method = "lug")
+withfunc <- gr.diag(obj, method = "lug")
 all.equal(as.numeric(withfunc$psrf[1]), that)
 
 

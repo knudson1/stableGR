@@ -24,8 +24,8 @@ out.gibbs1 <- mvn_gibbs(N = N, mu = mu, sigma = sigma, p = p)
 out1 <- mcmc(out.gibbs1)
 obj <- mcmc.list(out1)
 
-# Calculate psrfs with gelman.bm
-results1 <- gelman.bm(obj)
+# Calculate psrfs with gr.diag
+results1 <- gr.diag(obj)
 
 ##############################################
 # Calculate psrfs by for this chain by hand

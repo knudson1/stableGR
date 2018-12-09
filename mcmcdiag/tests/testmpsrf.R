@@ -29,7 +29,7 @@ obj <- mcmc.list(out1, out2)
 ################ 
 # Perform unit test using the two chains in obj
 
-outwithfun <- gelman.bm(obj, blather = TRUE)
+outwithfun <- gr.diag(obj, blather = TRUE)
 withfun <- outwithfun$mpsrf
 blather <- outwithfun$blather
 
@@ -64,7 +64,7 @@ all.equal(byhand, withfun)
 ################ ################ ################
 # Perform unit test using a SINGLE chain (just in case)
 onechain <- mcmc.list(out1)
-withfun <- gelman.bm(onechain)$mpsrf
+withfun <- gr.diag(onechain)$mpsrf
 
 #calculate determinants
 Teigen <- eigen(Tmat1)$values

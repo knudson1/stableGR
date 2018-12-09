@@ -29,7 +29,7 @@ obj <- mcmc.list(out1, out2)
 ################ 
 # Perform unit test using the two chains in obj
 
-withfun <- gelman.bm(obj, mapping = "maxeigen")$mpsrf
+withfun <- gr.diag(obj, mapping = "maxeigen")$mpsrf
 
 
 # Calculate Tmat for each chain

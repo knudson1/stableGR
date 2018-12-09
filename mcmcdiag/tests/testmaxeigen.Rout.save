@@ -55,7 +55,7 @@ copyright (c) 2012, James M. Flegal, University of California, Riverside
 > ################ 
 > # Perform unit test using the two chains in obj
 > 
-> withfun <- gelman.bm(obj, mapping = "maxeigen")$mpsrf
+> withfun <- gr.diag(obj, mapping = "maxeigen")$mpsrf
 > 
 > 
 > # Calculate Tmat for each chain
