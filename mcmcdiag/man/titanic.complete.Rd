@@ -1,10 +1,10 @@
-\name{titanic_comp}
+\name{titanic.complete}
 \docType{data}
-\alias{titanic_comp}
+\alias{titanic.complete}
 \title{Titanic passenger data}
 \description{Data about the Titanic passenger, complete cases only.}
 
-\usage{data(titanic_comp)}
+\usage{data(titanic.complete)}
 \format{
   A data frame with the following columns:
 
@@ -23,6 +23,6 @@
 
 \references{https://www.kaggle.com/c/titanic/data}
 \examples{
-data(titanic_comp)
+data(titanic.complete)
 }
 
