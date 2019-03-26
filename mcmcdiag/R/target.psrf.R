@@ -3,9 +3,9 @@
 #' When the sample diagnostic reaches the psrf threshold calculated in this function, the chain has converged.
 #'
 #' @param p dimension of the estimation problem
-#' @param m number of chains
-#' @param delta desired delta value
 #' @param epsilon relative precision level
+#' @param delta desired delta value
+#' @param m number of chains
 #' @param alpha significance level
 #' @return \item{psrf}{The psrf threshold to be reached for convergence.} 
 #' @return \item{epsilon}{The epsilon value used to calculate the psrf threshold.}
