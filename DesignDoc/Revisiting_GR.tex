@@ -1,0 +1,119 @@
+\documentclass[12pt]{article}
+
+%%%% Packages to be used
+\usepackage{geometry}
+\usepackage{graphicx}
+% \graphicspath {{./../CleanSims/}}
+\usepackage{amsmath, amssymb, amsfonts, amsthm, float}  
+\usepackage{enumerate, color, framed, float, multirow}
+\usepackage{comment, longtable, caption, subcaption, appendix}
+\usepackage[sort,longnamesfirst]{natbib}
+\usepackage{setspace, parskip}
+\usepackage{placeins}
+
+%%% Don't break up inline equations
+% \binoppenalty=\maxdimen
+% \relpenalty=\maxdimen
+
+
+%%% Page Setup 
+% \geometry{hmargin=3.5cm,vmargin={3cm,3cm},nohead,footskip=0.5in}
+\renewcommand{\baselinestretch}{1.25}
+\setlength{\baselineskip}{0.5in} \setlength{\parskip}{.05in}
+
+
+\allowdisplaybreaks
+
+%%% Table stretch
+\renewcommand{\arraystretch}{1.2}
+\setlength{\tabcolsep}{5pt}
+
+%%% My Custom Commands
+\newcommand{\pcite}[1]{\citeauthor{#1}'s \citeyearpar{#1}}
+
+\newcommand{\ds}{\displaystyle}
+\newcommand{\E}{\text{E}}
+\newcommand{\Var}{\text{Var}}
+\newcommand{\X}{\mathsf{X}}
+\newcommand{\Y}{\mathsf{Y}}
+\newcommand{\B}{\mathcal{B}}
+\newcommand{\real}{{\mathbb R}}
+\newcommand{\N}{{\mathbb N}}
+
+
+
+\newcommand\numberthis{\addtocounter{equation}{1}\tag{\theequation}}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{defi}{Definition}
+\newtheorem{propo}{Proposition}
+\newtheorem{lemma}{Lemma}
+\newtheorem{corollary}{Corollary}
+
+
+\theoremstyle{remark}
+\newtheorem{cond}{Condition}
+\newtheorem{remark}{Remark}
+\newtheorem{assum}{Assumption}
+\newtheorem{example}{Example}
+
+
+
+\begin{document}
+\title{Revisiting the Gelman-Rubin Diagnostic}
+\date{\today}
+\author{Christina Knudson}
+\maketitle
+
+
+\section{Introduction} % (fold)
+\label{sec:introduction}
+
+The Gelman-Rubin (GR) diagnostic has been one of the most popular diagnostics for MCMC convergence. The GR diagnostic framework relies on  $m$  parallel chains ($m \geq 1$), each run for $n$ steps. The GR statistic (denoted $\hat{R}$) is the square root of the ratio of two estimators for the target variance.  In finite samples, the numerator overestimates this variance and the denominator underestimates it. Each estimator converges to the target variance, meaning that $\hat{R}$ converges to 1 as $n$ increases. When $\hat{R}$ becomes sufficiently close to 1, the GR diagnostic declares convergence. 
+
+
+
+
+
+% section motivating_example (end)
+
+
+
+
+
+
+\section{Effective Sample Size} % (fold)
+\label{sec:choosing_delta}
+
+For an estimator, Effective Sample Size (ESS) is the number of independent samples with the same standard error as a correlated sample. 
+
+The following is an expression for the lugsail-based psrf $\hat{R}^p_L$ for $m$  chains, each of length $n$ with  p components.
+\begin{align*}
+	\hat{R}^p_L &= \sqrt{ \left(\dfrac{n-1}{n} \right) + \dfrac{m}{\widehat{\text{ESS}}_L}},
+\end{align*}
+Rearranging this yields an estimator of effective sample size:
+\begin{align*}
+\widehat{\text{ESS}}_L = \dfrac{m}{\left( \hat{R}^p_L \right)^2 -  \left(\dfrac{n-1}{n} \right)}.
+\end{align*}
+
+
+\begin{remark}
+	\label{rem:minimum_effort}
+\cite{vats:fleg:jones:2018} explain that a minimum simulation effort must be set to safeguard from premature termination due to early bad estimates of $\sigma^2$. We concur and  suggest  a minimum simulation effort of $n = M_{\alpha, \epsilon,p}$. \\
+\end{remark}
+
+\noindent \textbf{To Do}
+Add the following to gr.diag
+\begin{itemize}
+\item Add ESS calculation, make it another thing outputted.
+\item Compare ESS to output of target.psrf and tell them whether this is sufficient for convergence. If unsufficient, calculate how many more samples needed.
+\end{itemize}
+Use
+\begin{align*}
+\dfrac{n_1}{n_1.eff} \approx \dfrac{n_2}{n_2.eff}
+\end{align*}
+\bibliographystyle{apalike}
+\bibliography{mcref}
+\end{document}
+
+
