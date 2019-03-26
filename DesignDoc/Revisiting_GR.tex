@@ -102,18 +102,34 @@ Rearranging this yields an estimator of effective sample size:
 \cite{vats:fleg:jones:2018} explain that a minimum simulation effort must be set to safeguard from premature termination due to early bad estimates of $\sigma^2$. We concur and  suggest  a minimum simulation effort of $n = M_{\alpha, \epsilon,p}$. \\
 \end{remark}
 
-\noindent \textbf{To Do}
-Add the following to gr.diag
+\section{To Do} % (fold)
+
+Add the following to gr.diag:
 \begin{itemize}
+ \renewcommand{\labelitemi}{$\square$}
 \item Add ESS calculation, make it another thing outputted.
-\item Compare ESS to output of target.psrf and tell them whether this is sufficient for convergence. If unsufficient, calculate how many more samples needed.
+\item Compare ESS to output of target.psrf and tell them whether this is sufficient for convergence. If unsufficient, calculate how many more samples needed using
 \end{itemize}
-Use
+
 \begin{align*}
-\dfrac{n_1}{n_1.eff} \approx \dfrac{n_2}{n_2.eff}
+\dfrac{n_1}{n_{1 \text{eff}}} \approx \dfrac{n_2}{n_{2 \text{eff}}}.
 \end{align*}
+
+General:
+\begin{itemize}
+ \renewcommand{\labelitemi}{$\square$}
+\item Clean up documentation
+\item Add an example to gr.diag
+\end{itemize}
+
+
+
+
+
+
 \bibliographystyle{apalike}
 \bibliography{mcref}
 \end{document}
+
 
 
