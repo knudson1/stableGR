@@ -104,22 +104,25 @@ Rearranging this yields an estimator of effective sample size:
 
 \section{To Do} % (fold)
 
-Add the following to gr.diag:
+
 \begin{itemize}
  \renewcommand{\labelitemi}{$\square$}
-\item Add ESS calculation, make it another thing outputted.
-\item Compare ESS to output of target.psrf and tell them whether this is sufficient for convergence. If unsufficient, calculate how many more samples needed using
-\end{itemize}
+\item[$\blacksquare$]  Add ESS calculation (now in \texttt{gr.diag} and \texttt{n.eff}).
+\item Add to \texttt{n.eff}. Compare ESS to output of target.psrf and tell them whether this is sufficient for convergence. If unsufficient, calculate how many more samples needed using
+
 
 \begin{align*}
-\dfrac{n_1}{n_{1 \text{eff}}} \approx \dfrac{n_2}{n_{2 \text{eff}}}.
+\dfrac{n_1}{n_{1 \text{eff}}} \approx \dfrac{n_2}{n_{2 \text{eff}}} \Longrightarrow \dfrac{n_1}{n_{1 \text{eff}}} \; n_{2 \text{eff}} \approx n_2,
 \end{align*}
+where $n_1$ is their current sample size, ${n_{1 \text{eff}}}$ is their current effective sample size, and ${n_{2 \text{eff}}}$ is their target effective sample size. 
 
-General:
-\begin{itemize}
+
  \renewcommand{\labelitemi}{$\square$}
 \item Clean up documentation
-\item Add an example to gr.diag
+\item Add an example to \texttt{gr.diag} and \texttt{n.eff}
+\item Check citations
+\item Check descriptions and theory
+\item Read through manual (pdf version)
 \end{itemize}
 
 
