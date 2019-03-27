@@ -1,12 +1,12 @@
-#' Calculates a Gelman Rubin diagnostic threshold.
+#' Calculates a Gelman Rubin diagnostic threshold using lugsail variance estimators.
 #'
 #' When the sample diagnostic reaches the psrf threshold calculated in this function, the chain has converged.
 #'
-#' @param p dimension of the estimation problem
-#' @param epsilon relative precision level
-#' @param delta desired delta value
-#' @param m number of chains
-#' @param alpha significance level
+#' @param p dimension of the estimation problem.
+#' @param epsilon relative precision level.
+#' @param delta desired delta value.
+#' @param m number of chains.
+#' @param alpha significance level.
 #' 
 #' @return \item{psrf}{The psrf threshold to be reached for convergence.} 
 #' @return \item{epsilon}{The epsilon value used to calculate the psrf threshold.}
@@ -16,6 +16,8 @@
 #' 
 #' @section References:
 #' Vats, D. and Knudson, C. Revisiting the Gelman-Rubin Diagnostic.	arXiv:1812.09384 
+#' 
+#' Vats, D. and Flegal, J. Lugsail lag windows and their application to MCMC. arXiv: 1809.04541.
 #' 
 #' Flegal, J. M. and Jones, G. L. (2010) Batch means and spectral variance estimators in Markov chain Monte Carlo. \emph{The Annals of Statistics}, \bold{38}, 1034--1070. \cr
 #' Gelman, A and Rubin, DB (1992) Inference from iterative simulation using multiple sequences, \emph{Statistical Science}, \bold{7}, 457-511. \cr

@@ -1,5 +1,6 @@
 export(gr.diag)
 export(target.psrf)
+export(n.eff)
 
 
 import(mvtnorm, mcmc, mcmcse, coda)

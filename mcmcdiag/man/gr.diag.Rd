@@ -8,17 +8,17 @@ gr.diag(x, mapping = "determinant", multivariate = TRUE,
   method = "lug", autoburnin = FALSE, blather = FALSE)
 }
 \arguments{
-\item{x}{an \code{mcmc.list} object with more than one chain, and with starting values that are overdispersed with respect to the posterior distribution.}
+\item{x}{an \code{mcmc.list} object with more than one chain, with starting values that are overdispersed with respect to the posterior distribution.}
 
 \item{mapping}{the function used to map the covariance matrix to a scalar. This is one of \dQuote{\code{determinant}} (determinant of the covariance matrix, the default) or \dQuote{\code{maxeigen}} (the largest eigenvalue of the covariance matrix).}
 
-\item{multivariate}{a logical flag indicating whether the multivariate potential scale reduction factor should be calculated for multivariate chains}
+\item{multivariate}{a logical flag indicating whether the multivariate potential scale reduction factor should be calculated for multivariate chains.}
 
-\item{method}{the method used to compute the standard error of the chains. This is one of \dQuote{\code{bm}} (batch means, the default), \dQuote{\code{obm}} (overlapping batch means), \dQuote{\code{tukey}} (spectral variance method with a Tukey-Hanning window), or \dQuote{\code{bartlett}} (spectral variance method with a Bartlett window)}
+\item{method}{the method used to compute the standard error of the chains. This is one of \dQuote{\code{lug}} (lugsail, the default), \dQuote{\code{bm}} (batch means), \dQuote{\code{obm}} (overlapping batch means), \dQuote{\code{tukey}} (spectral variance method with a Tukey-Hanning window), or \dQuote{\code{bartlett}} (spectral variance method with a Bartlett window).}
 
 \item{autoburnin}{a logical flag indicating whether only the second half of the series should be used in the computation.  If set to TRUE and \code{start(x)} is less than \code{end(x)/2} then start of series will be adjusted so that only second half of series is used.}
 
-\item{blather}{a logical flag indicating whether to include additional output}
+\item{blather}{a logical flag indicating whether to include additional output.}
 }
 \value{
 \item{psrf}{A vector containing the point estimates of the potential scale reduction factor.}
@@ -36,9 +36,9 @@ This function uses batch means estimators to calculate a convergence diagnostic 
 }
 \section{Theory}{
  Gelman and Rubin (1992) and Brooks and Gelman (1998) first constructed the univariate and 
-multivariate potential scale reduction factors (PSRF), respectively, used to diagnose Markov chain 
+multivariate potential scale reduction factors (PSRF), respectively,  to diagnose Markov chain 
 convergence. The function \code{gr.diag} stabilizes the PSRF and improves the PSRF's efficiency by 
-incorporating batch means estimators for the target variance. The PSRF decreases to 1 as the chain length
+incorporating lugsail estimators for the target variance. The PSRF decreases to 1 as the chain length
  increases; when the PSRF becomes sufficiently close to 1, the sample collected by the Markov chain has 
  converged to to the target distribution. A PSRF convergence threshold can be calculated using 
  \code{choosepsrf}.
@@ -46,7 +46,9 @@ incorporating batch means estimators for the target variance. The PSRF decreases
 
 \section{References}{
 
-Vats, D. and Knudson, C. Revisiting the Gelman-Rubin Diagnostic.	arXiv:1812.09384 
+Vats, D. and Knudson, C. Revisiting the Gelman-Rubin Diagnostic.	arXiv:1812.09384. 
+
+Vats, D. and Flegal, J. Lugsail lag windows and their application to MCMC. arXiv: 1809.04541.
 
 Flegal, J. M. and Jones, G. L. (2010) Batch means and spectral variance estimators in Markov chain Monte Carlo. \emph{The Annals of Statistics}, \bold{38}, 1034--1070. \cr
 Gelman, A and Rubin, DB (1992) Inference from iterative simulation using multiple sequences, \emph{Statistical Science}, \bold{7}, 457-511. \cr
