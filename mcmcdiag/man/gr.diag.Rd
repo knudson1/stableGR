@@ -27,6 +27,8 @@ gr.diag(x, mapping = "determinant", multivariate = TRUE,
 
 \item{means}{A vector containing the sample means based on the chains provided.}
 
+\item{n.eff}{A scalar point estimate of the effective sample size.}
+
 \item{blather}{Either \code{FALSE} or a list containing intermediate calculations.}
 }
 \description{

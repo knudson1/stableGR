@@ -12,6 +12,7 @@
 #' @return  \item{psrf}{A vector containing the point estimates of the potential scale reduction factor.}
 #' @return \item{mpsrf}{A scalar point estimate of the multivariate potential scale reduction factor.}
 #' @return \item{means}{A vector containing the sample means based on the chains provided.}
+#' @return \item{n.eff}{A scalar point estimate of the effective sample size.}
 #' @return \item{blather}{Either \code{FALSE} or a list containing intermediate calculations.}
 #'
 #' @section Theory: Gelman and Rubin (1992) and Brooks and Gelman (1998) first constructed the univariate and 
@@ -83,6 +84,9 @@ function (x, mapping = "determinant",
 	  blatherout <- list(muhat = muhat, method = method, Niter = Niter, Nchain = Nchain, Nvar = Nvar,
 	                  tausq = tau2, ssq <- s2, sigsq = sigsq) }
 
+	denom <- arrr - ((Niter-1)/Niter)
+	n.eff <- Nchain/denom
+	
 	mpsrf <- multivariate
 	
 	if(multivariate && Nvar > 1){
@@ -106,6 +110,8 @@ function (x, mapping = "determinant",
         }else{ mpsrf <- mpsrfmax
         }
 
+		denom <- mpsrf^2 - ((Niter-1)/Niter)
+		n.eff <- Nchain/denom
 
 		if(blather){
 		  blatherout$S <- W 
@@ -118,8 +124,7 @@ function (x, mapping = "determinant",
 
 
 
-
-	list(psrf = psrf, mpsrf = mpsrf, means = muhat, blather = blatherout)
+	list(psrf = psrf, mpsrf = mpsrf, means = muhat, n.eff = n.eff, blather = blatherout)
 
    
 }

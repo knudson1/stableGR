@@ -46,5 +46,4 @@ Brooks, SP. and Gelman, A. (1998) General methods for monitoring convergence of 
 target.psrf(1, delta = .1, m = 5, alpha = .05)
 target.psrf(1, epsilon = .05, m = 5, alpha = .05)
 
-
 }
