@@ -118,9 +118,10 @@ Rearranging this yields an estimator of effective sample size:
 
 
 \begin{align*}
-\dfrac{n_1}{n_{1 \text{eff}}} \approx \dfrac{n_2}{n_{2 \text{eff}}} \Longrightarrow \dfrac{n_1}{n_{1 \text{eff}}} \; n_{2 \text{eff}} \approx n_2,
+\dfrac{n_\text{current}}{n_{ \text{current eff}}} \approx \dfrac{n_{\text{target}}}{n_{ \text{target eff}}}
+\;\;\;  \Longrightarrow \;\;\;
+ \dfrac{n_1 \; n_{ \text{target eff}}}{n_{1 \text{eff}}}  \approx n_{\text{target}}.
 \end{align*}
-where $n_1$ is their current sample size, ${n_{1 \text{eff}}}$ is their current effective sample size, and ${n_{2 \text{eff}}}$ is their target effective sample size. 
 \item Add more options: add the ability to change the defaults for \texttt{gr.diag} and \texttt{target.psrf}. 
 \end{enumerate}
 
