@@ -3,6 +3,9 @@
 #' For an estimator, effective sample size is the number of independent samples with the same standard error as a correlated sample. This function calculates effective sample size for a set of Markov chains using lugsail variance estimators. This also determines whether the Markov chains have converged. If they have not, this function approximates the number of samples needed.
 #'
 #' @param x an \code{mcmc.list} object with more than one chain,  with starting values that are overdispersed with respect to the posterior distribution.
+#' @param epsilon relative precision level.
+#' @param delta desired delta value.
+#' @param alpha significance level.
 #' @param ... arguments to be passed to \code{gr.diag}.
 #'
 #' @return \item{n.eff}{a scalar point estimate of the effective sample size.}
@@ -24,7 +27,7 @@
 #'
 
 
-n.eff <- function(x, ...){ 
+n.eff <- function(x, epsilon = .05, delta = NULL, alpha=.05, ...){ 
 
 
   
@@ -34,7 +37,7 @@ n.eff <- function(x, ...){
   currentESS <- out$n.eff
   p <- nvar(x)
   m <- nchain(x)
-  targ <- target.psrf(p=p, m=m)
+  targ <- target.psrf(p = p, m = m, epsilon = epsilon, delta = delta, alpha = alpha)
   targetESS <- RtoESS(targ$psrf, m)
   converged <- FALSE
   if(currentESS >= targetESS){ converged <- TRUE}

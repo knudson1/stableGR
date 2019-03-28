@@ -4,10 +4,16 @@
 \alias{n.eff}
 \title{Effective sample size}
 \usage{
-n.eff(x, ...)
+n.eff(x, epsilon = 0.05, delta = NULL, alpha = 0.05, ...)
 }
 \arguments{
 \item{x}{an \code{mcmc.list} object with more than one chain,  with starting values that are overdispersed with respect to the posterior distribution.}
+
+\item{epsilon}{relative precision level.}
+
+\item{delta}{desired delta value.}
+
+\item{alpha}{significance level.}
 
 \item{...}{arguments to be passed to \code{gr.diag}.}
 }

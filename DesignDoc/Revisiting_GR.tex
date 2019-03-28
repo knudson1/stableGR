@@ -110,7 +110,7 @@ Rearranging this yields an estimator of effective sample size:
 \begin{itemize}
  \renewcommand{\labelitemi}{$\square$}
 \item[$\blacksquare$]  Add ESS calculation (now in \texttt{gr.diag} and \texttt{n.eff}).
-\item Add to \texttt{n.eff}. 
+\item[$\blacksquare$]  Add to \texttt{n.eff}. 
 \begin{enumerate}
 \item Call \texttt{target.psrf} using the info in their \texttt{mcmc.list} using  defaults.
 \item Compare ESS to output of target.psrf and tell them whether this is sufficient for convergence.
@@ -122,10 +122,12 @@ Rearranging this yields an estimator of effective sample size:
 \;\;\;  \Longrightarrow \;\;\;
  \dfrac{n_{\text{current}} \; n_{ \text{target eff}}}{n_{ \text{current eff}}}  \approx n_{\text{target}}.
 \end{align*}
-\item Add more options: add the ability to change the defaults for \texttt{gr.diag} and \texttt{target.psrf}. 
+\item Added args of target.psrf.
 \end{enumerate}
 
- \renewcommand{\labelitemi}{$\square$}
+\item Figure out how to send some arguments from ellipsis of \texttt{n.eff} to \texttt{gr.diag} and others to \texttt{target.psrf}. 
+
+
 \item Clean up documentation
 \item Add an example to \texttt{gr.diag} and \texttt{n.eff}
 \item Check citations
