@@ -96,7 +96,9 @@ Rearranging this yields an estimator of effective sample size:
 \widehat{\text{ESS}}_L = \dfrac{m}{\left( \hat{R}^p_L \right)^2 -  \left(\dfrac{n-1}{n} \right)}.
 \end{align*}
 
-
+\begin{remark}
+\textbf{Doots!!} I remember we discussed and mentioned that the total ESS is not just the sum of the individual chains' ESSs. But this kind of is. So... am I using the wrong equation?
+\end{remark}
 \begin{remark}
 	\label{rem:minimum_effort}
 \cite{vats:fleg:jones:2018} explain that a minimum simulation effort must be set to safeguard from premature termination due to early bad estimates of $\sigma^2$. We concur and  suggest  a minimum simulation effort of $n = M_{\alpha, \epsilon,p}$. \\
@@ -108,14 +110,19 @@ Rearranging this yields an estimator of effective sample size:
 \begin{itemize}
  \renewcommand{\labelitemi}{$\square$}
 \item[$\blacksquare$]  Add ESS calculation (now in \texttt{gr.diag} and \texttt{n.eff}).
-\item Add to \texttt{n.eff}. Compare ESS to output of target.psrf and tell them whether this is sufficient for convergence. If unsufficient, calculate how many more samples needed using
+\item Add to \texttt{n.eff}. 
+\begin{enumerate}
+\item Call \texttt{target.psrf} using the info in their \texttt{mcmc.list} using  defaults.
+\item Compare ESS to output of target.psrf and tell them whether this is sufficient for convergence.
+\item If insufficient, calculate how many more samples needed using
 
 
 \begin{align*}
 \dfrac{n_1}{n_{1 \text{eff}}} \approx \dfrac{n_2}{n_{2 \text{eff}}} \Longrightarrow \dfrac{n_1}{n_{1 \text{eff}}} \; n_{2 \text{eff}} \approx n_2,
 \end{align*}
 where $n_1$ is their current sample size, ${n_{1 \text{eff}}}$ is their current effective sample size, and ${n_{2 \text{eff}}}$ is their target effective sample size. 
-
+\item Add more options: add the ability to change the defaults for \texttt{gr.diag} and \texttt{target.psrf}. 
+\end{enumerate}
 
  \renewcommand{\labelitemi}{$\square$}
 \item Clean up documentation
