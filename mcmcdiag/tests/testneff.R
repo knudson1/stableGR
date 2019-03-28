@@ -61,7 +61,12 @@ temp <- gr.diag(babyobj)$psrf
 denom <- temp^2 - ((N-1)/N)
 m <- length(babyobj)
 byhand <- m/denom
+melon <- n.eff(babyobj)
+all.equal(melon$n.eff, byhand)
+melon$converged
 
-all.equal(n.eff(babyobj)$n.eff, byhand)
-
-
+################ ################ 
+set.seed(1234)
+banana <- mcmc(rnorm(1000))
+banana <- mcmc.list(banana)
+n.eff(banana)$converged == FALSE

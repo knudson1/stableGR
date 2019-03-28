@@ -91,12 +91,19 @@ copyright (c) 2012, James M. Flegal, University of California, Riverside
 > denom <- temp^2 - ((N-1)/N)
 > m <- length(babyobj)
 > byhand <- m/denom
-> 
-> all.equal(n.eff(babyobj)$n.eff, byhand)
+> melon <- n.eff(babyobj)
+> all.equal(melon$n.eff, byhand)
+[1] TRUE
+> melon$converged
 [1] TRUE
 > 
-> 
+> ################ ################ 
+> set.seed(1234)
+> banana <- mcmc(rnorm(1000))
+> banana <- mcmc.list(banana)
+> n.eff(banana)$converged == FALSE
+[1] TRUE
 > 
 > proc.time()
    user  system elapsed 
- 11.474   0.036  11.498 
+ 11.465   0.032  11.487 

@@ -5,7 +5,10 @@
 #' @param x an \code{mcmc.list} object with more than one chain,  with starting values that are overdispersed with respect to the posterior distribution.
 #' @param ... arguments to be passed to \code{gr.diag}.
 #'
-#' @return \item{n.eff}{A scalar point estimate of the effective sample size.}
+#' @return \item{n.eff}{a scalar point estimate of the effective sample size.}
+#' @return \item{converged}{a logical indicating whether the sample has converged.}
+#' @return \item{n.target}{NULL (if the chain has converged) or a scalar estimate of the chain length required for convergence, assuming the number of chains is unchanged.  }
+#' @return \item{n.more}{NULL (if the chain has converged) or a scalar estimate of number of additional samples required for convergence (per chain), assuming the number of chains is unchanged.  }
 #'
 #'
 #' @section References:
@@ -22,8 +25,33 @@
 
 
 n.eff <- function(x, ...){ 
+
+
+  
   out <- gr.diag(x, ...)
-  list(n.eff = out$n.eff)
+  
+  # prepare and do comparison to our goal
+  currentESS <- out$n.eff
+  p <- nvar(x)
+  m <- nchain(x)
+  targ <- target.psrf(p=p, m=m)
+  targetESS <- RtoESS(targ$psrf, m)
+  converged <- FALSE
+  if(currentESS >= targetESS){ converged <- TRUE}
+  
+  # if the sample hasn't converged, approximate the sample size that would result in convergence
+  ntarget <- nmore <- NULL
+  if(converged == FALSE){
+    ncurrent <- niter(x)
+    ntarget <- ceiling(ncurrent*targetESS/currentESS)
+    nmore <- ceiling(ntarget - ncurrent)
+  }  
+  
+  list(n.eff = currentESS, converged = converged, n.target = ntarget, n.more = nmore)
 }
 
-gr.diag <- mcmcdiag:::gr.diag
+RtoESS <- function(arrr,  m){
+  m/(arrr^2 - 1)
+}
+
+

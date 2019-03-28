@@ -12,7 +12,13 @@ n.eff(x, ...)
 \item{...}{arguments to be passed to \code{gr.diag}.}
 }
 \value{
-\item{n.eff}{A scalar point estimate of the effective sample size.}
+\item{n.eff}{a scalar point estimate of the effective sample size.}
+
+\item{converged}{a logical indicating whether the sample has converged.}
+
+\item{n.target}{NULL (if the chain has converged) or a scalar estimate of the chain length required for convergence, assuming the number of chains is unchanged.  }
+
+\item{n.more}{NULL (if the chain has converged) or a scalar estimate of number of additional samples required for convergence (per chain), assuming the number of chains is unchanged.  }
 }
 \description{
 For an estimator, effective sample size is the number of independent samples with the same standard error as a correlated sample. This function calculates effective sample size for a set of Markov chains using lugsail variance estimators. This also determines whether the Markov chains have converged. If they have not, this function approximates the number of samples needed.
