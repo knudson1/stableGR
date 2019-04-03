@@ -104,7 +104,7 @@ Rearranging this yields an estimator of effective sample size:
 \cite{vats:fleg:jones:2018} explain that a minimum simulation effort must be set to safeguard from premature termination due to early bad estimates of $\sigma^2$. We concur and  suggest  a minimum simulation effort of $n = M_{\alpha, \epsilon,p}$. \\
 \end{remark}
 
-\section{To Do} % (fold)
+\textbf{To Do} % (fold)
 
 
 \begin{itemize}
@@ -124,16 +124,46 @@ Rearranging this yields an estimator of effective sample size:
 \end{align*}
 \item Added args of target.psrf.
 \end{enumerate}
+\item Create two functions: one to calculate $\hat{S}$ and another for $\hat{T}_L$. These two functions will be in the package but not exported. 
+\item Rewrite \texttt{n.eff} to call these functions (rather than calling \texttt{gr.diag}).
 
-\item Figure out how to send some arguments from ellipsis of \texttt{n.eff} to \texttt{gr.diag} and others to \texttt{target.psrf}. 
+%\item Figure out how to send some arguments from ellipsis of \texttt{n.eff} to \texttt{gr.diag} and others to \texttt{target.psrf}. 
+\item Add an example.
+
+\end{itemize}
 
 
+
+
+
+
+\section{\textbf{Package building}}
+\textbf{To do:}
+\begin{itemize}
+ \renewcommand{\labelitemi}{$\square$}
 \item Clean up documentation
-\item Add an example to \texttt{gr.diag} and \texttt{n.eff}
+\item Add an example to \texttt{gr.diag} 
 \item Check citations
 \item Check descriptions and theory
 \item Read through manual (pdf version)
 \end{itemize}
+
+
+
+\section{\textbf{Moving away from coda}}
+
+Due to known coding errors (e.g. the miscalculated confidence interval for $\hat{R}$) and issues with \texttt{coda}, we would like to change our package (functions including \texttt{n.eff} and \texttt{gr.diag}) to no longer rely on \texttt{coda}. An incomplete list of ways we rely on  \texttt{coda}: 
+
+\begin{itemize}
+ \renewcommand{\labelitemi}{$\square$}
+\item Users are required to input an \texttt{mcmc.list} in our current version. We should replace this with a list such that each object in the list is a matrix representing a single Markov chain: each row is one iteration and each column is one variable)
+\item An \texttt{mcmclist} has \texttt{mcmc} objects. We will replace each mcmc object with a matrix (as described in the previous bullet). We need to keep in mind that \texttt{mcmc} performs several input checks, so we will need to perform our own checks. For example, we will need to check that all objects are of class matrix, and that the dims of each object in the list are identical. (do.call might be useful for this?)
+
+\item Our code calls \texttt{niter} to find \texttt{n}; we can replace this with the number of rows in the first object of the list. I choose the first since all the objects should have the same dims so it wouldn't matter which we choose. We know we will have at least one Markov chain so we will have a first.
+\item We call \texttt{nvar} to find \texttt{p}; we can replace this with the number of columns in the first object of the list. See note in previous bullet.
+\end{itemize}
+
+
 
 
 
