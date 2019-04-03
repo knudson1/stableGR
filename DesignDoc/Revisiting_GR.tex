@@ -82,10 +82,12 @@ The Gelman-Rubin (GR) diagnostic has been one of the most popular diagnostics fo
 
 
 
-\section{Effective Sample Size} % (fold)
+\section{Effective sample size} % (fold)
 \label{sec:choosing_delta}
 
-For an estimator, Effective Sample Size (ESS) is the number of independent samples with the same standard error as a correlated sample. 
+For an estimator, effective sample size (ESS) is the number of independent samples with the same standard error as a correlated sample. 
+
+\subsection{\texttt{n.eff} version 1.0}
 
 The following is an expression for the lugsail-based psrf $\hat{R}^p_L$ for $m$  chains, each of length $n$ with  p components.
 \begin{align*}
@@ -97,23 +99,20 @@ Rearranging this yields an estimator of effective sample size:
 \end{align*}
 
 \begin{remark}
-\textbf{Doots!!} I remember we discussed and mentioned that the total ESS is not just the sum of the individual chains' ESSs. But this kind of is. So... am I using the wrong equation?
-\end{remark}
-\begin{remark}
 	\label{rem:minimum_effort}
-\cite{vats:fleg:jones:2018} explain that a minimum simulation effort must be set to safeguard from premature termination due to early bad estimates of $\sigma^2$. We concur and  suggest  a minimum simulation effort of $n = M_{\alpha, \epsilon,p}$. \\
+Vats et al (2018) explain that a minimum simulation effort must be set to safeguard from premature termination due to early bad estimates of $\sigma^2$. We concur and  suggest  a minimum simulation effort of $n = M_{\alpha, \epsilon,p}$. \\
 \end{remark}
 
-\textbf{To Do} % (fold)
+\textbf{Completed work} % (fold)
 
 
 \begin{itemize}
  \renewcommand{\labelitemi}{$\square$}
-\item[$\blacksquare$]  Add ESS calculation (now in \texttt{gr.diag} and \texttt{n.eff}).
-\item[$\blacksquare$]  Add to \texttt{n.eff}. 
+\item[$\blacksquare$]  Added ESS calculation (now in \texttt{gr.diag} and \texttt{n.eff}).
+\item[$\blacksquare$]  Added to \texttt{n.eff}. 
 \begin{enumerate}
-\item Call \texttt{target.psrf} using the info in their \texttt{mcmc.list} using  defaults.
-\item Compare ESS to output of target.psrf and tell them whether this is sufficient for convergence.
+\item Called \texttt{target.psrf} using the info in their \texttt{mcmc.list} using  defaults.
+\item Compared ESS to output of target.psrf and tell them whether this is sufficient for convergence.
 \item If insufficient, calculate how many more samples needed using
 
 
@@ -124,6 +123,25 @@ Rearranging this yields an estimator of effective sample size:
 \end{align*}
 \item Added args of target.psrf.
 \end{enumerate}
+\end{itemize}
+
+The way version 1.0 works: first ESS is calculated using the univariate psrf. Then, if the user says \texttt{multivariate = TRUE} and if \texttt{Nvar>1} (meaning it really is a multivariate chain), then we enter an \texttt{if} statement where a bunch of stuff is calculated (including a new mpsrf-based ESS, which then replaces the univariate psrf-based ESS).
+
+\subsection{\texttt{n.eff} version 2.0} % (fold)
+Version 2.0 of \texttt{n.eff} is all about NOT calling \texttt{gr.diag}, as that function performs calculations irrelevent to \texttt{n.eff}. Replacing version 1.0 with version 2.0 requires a bit of care: we want to use the univariate info in the univariate setting and the multivariate info in the multivariate setting.
+
+Relevant univariate equation: \\
+
+Relevant multivariate equation:
+
+\begin{align*}
+m n \left( \dfrac{\text{det}(\hat{S})}{\text{det}(\hat{T}_L)} \right)^{1/p}
+\end{align*}
+
+To create version 2.0 of \texttt{n.eff}, the following work must be done:
+
+\begin{itemize}
+ \renewcommand{\labelitemi}{$\square$}
 \item Create two functions: one to calculate $\hat{S}$ and another for $\hat{T}_L$. These two functions will be in the package but not exported. 
 \item Rewrite \texttt{n.eff} to call these functions (rather than calling \texttt{gr.diag}).
 
@@ -131,7 +149,6 @@ Rearranging this yields an estimator of effective sample size:
 \item Add an example.
 
 \end{itemize}
-
 
 
 
