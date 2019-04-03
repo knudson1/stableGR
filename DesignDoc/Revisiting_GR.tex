@@ -161,6 +161,8 @@ Due to known coding errors (e.g. the miscalculated confidence interval for $\hat
 
 \item Our code calls \texttt{niter} to find \texttt{n}; we can replace this with the number of rows in the first object of the list. I choose the first since all the objects should have the same dims so it wouldn't matter which we choose. We know we will have at least one Markov chain so we will have a first.
 \item We call \texttt{nvar} to find \texttt{p}; we can replace this with the number of columns in the first object of the list. See note in previous bullet.
+\item \texttt{varnames} is currently pointlessly called
+\item \texttt{nchain} currently is used to determine the number of chains. This is easy enough to replace: just use \texttt{length} of the list.
 \end{itemize}
 
 
