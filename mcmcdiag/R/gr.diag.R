@@ -93,7 +93,7 @@ function (x, mapping = "determinant",  multivariate = TRUE, method = "lug",
 	mpsrf <- multivariate
 	
 	if(multivariate && Nvar > 1){
-		Ti <- lapply(x, getT, method = method)  # For each chain
+		Ti <- lapply(x, getT, method = method, size = size)  # For each chain
 		Tee <- matrix(Reduce("+", Ti)  / Nchain, nrow = Nvar)
 		Tee <- adjust_matrix(Tee, Niter)
 
