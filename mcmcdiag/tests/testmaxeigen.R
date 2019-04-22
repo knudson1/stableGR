@@ -47,7 +47,7 @@ Sinv <- qr.solve(Smat)
 thingy <- Sinv %*% That
 maxeigen <- max(eigen(thingy)$values)
 
-Nchain <- nchain(obj)
+Nchain <- length(obj)
 all.equal(2, Nchain)
 
 rhat <- (N-1)/N +  maxeigen/N
