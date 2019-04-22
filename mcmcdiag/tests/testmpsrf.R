@@ -1,7 +1,6 @@
 set.seed(10)
 library(mvtnorm)
 library(mcmcse)
-library(coda)
 library(mcmcdiag)
 
 ################ 
