@@ -49,11 +49,11 @@ function (x, mapping = "determinant",  multivariate = TRUE, method = "lug",
   
     # make sure we have a list of matrices
     if(class(x) != "list") stop("Input x must be a list of matrices.")
-    if(lapply(x, class) != "matrix") stop("Each item in list x must be a matrix.")
+    Nchain <- length(x) # number of chains. We also call this m.
+    if(all.equal(lapply(x, class), as.list(rep("matrix", Nchain))) == FALSE) stop("Each item in list x must be a matrix.")
     
     # Define some notation.
     Niter <- nrow(x[[1]])  # number of iterations per chains. We also call this n.
-    Nchain <- length(x) # number of chains. We also call this m.
     Nvar <- ncol(x[[1]]) # number of variables
     xnames <- colnames(x[[1]])
 
