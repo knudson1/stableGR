@@ -10,7 +10,7 @@ Description: Uses batch means to calculate a Gelman-Rubin-inspired convergence d
  Markov chain Monte Carlo. 
 License: GPL (>= 2)
 Depends: R (>= 3.1.1)
-Imports: mcmc, mvtnorm, coda, mcmcse
+Imports: mcmc, mvtnorm, mcmcse
 ByteCompile: TRUE
 Repository: CRAN
 RoxygenNote: 6.1.1
