@@ -184,5 +184,4 @@ adjust_matrix <- function(mat, N, epsilon = sqrt(log(N)/dim(mat)[2]), b = 1/2)
 
 mcse.mat <- mcmcse:::mcse.mat
 mcse.multi <- mcmcse:::mcse.multi
-gelman.transform <- coda:::gelman.transform
 
