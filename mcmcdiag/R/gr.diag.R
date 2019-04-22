@@ -6,6 +6,7 @@
 #' @param mapping the function used to map the covariance matrix to a scalar. This is one of \dQuote{\code{determinant}} (determinant of the covariance matrix, the default) or \dQuote{\code{maxeigen}} (the largest eigenvalue of the covariance matrix).
 #' @param multivariate a logical flag indicating whether the multivariate potential scale reduction factor should be calculated for multivariate chains.
 #' @param method the method used to compute the standard error of the chains. This is one of \dQuote{\code{lug}} (lugsail, the default), \dQuote{\code{bm}} (batch means), \dQuote{\code{obm}} (overlapping batch means), \dQuote{\code{tukey}} (spectral variance method with a Tukey-Hanning window), or \dQuote{\code{bartlett}} (spectral variance method with a Bartlett window).
+#' @param size can take character values of \dQuote{sqroot} and \dQuote{cuberoot} or any numeric value between 1 and n. Size represents the batch size in \dQuote{\code{bm}} (batch means) and the truncation point in \dQuote{\code{bartlett}} and \dQuote{\code{tukey}}. sqroot means size is floor(n^(1/2) and cuberoot means size is floor(n^(1/3)).
 #' @param autoburnin a logical flag indicating whether only the second half of the series should be used in the computation.  If set to TRUE and \code{start(x)} is less than \code{end(x)/2} then start of series will be adjusted so that only second half of series is used.
 #' @param blather a logical flag indicating whether to include additional output.
 #'
@@ -37,8 +38,8 @@
 #'
 
 gr.diag <-
-function (x, mapping = "determinant",  
-    multivariate = TRUE, method = "lug", autoburnin = FALSE, blather = FALSE) 
+function (x, mapping = "determinant",  multivariate = TRUE, method = "lug", 
+          size = "sqroot", autoburnin = FALSE, blather = FALSE) 
 {
     x <- as.mcmc.list(x)
     
@@ -139,7 +140,7 @@ gettau <- function(x1, method)
 }
 
 
-getT <- function(x, method = "lug", size = "sqroot") 
+getT <- function(x, method, size) 
 {
   mcse.multi(x, method = method, size = size)$cov
   # foo <- mcse.multi(x, method = method)
