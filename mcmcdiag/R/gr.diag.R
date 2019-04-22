@@ -88,7 +88,7 @@ function (x, mapping = "determinant",  multivariate = TRUE, method = "lug",
 
 	arrr <- sigsq / Ssq
 	psrf <- sqrt(arrr)
-	names(psrf) <- xnames
+	#names(psrf) <- xnames
 	
 	
 	blatherout <- blather
