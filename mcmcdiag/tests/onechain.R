@@ -31,7 +31,7 @@ results1 <- gr.diag(obj)
 ##############################################
 # Calculate psrfs by for this chain by hand
 # Isolate the first component of the  chain
-chain1 <- out1[ ,1]
+chain1 <- out.gibbs1[ ,1]
 
 # Calculate tau^2 for each chain
 tausq1 <- (mcse(chain1, method = "lug")$se)^2 * N 

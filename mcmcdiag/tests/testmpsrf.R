@@ -35,14 +35,14 @@ withfun <- outwithfun$mpsrf
 blather <- outwithfun$blather
 
 # Calculate Tmat for each chain
-Tmat1 <- mcse.multi(out1, method = "lug")$cov
-Tmat2 <- mcse.multi(out2, method = "lug")$cov
+Tmat1 <- mcse.multi(out.gibbs1, method = "lug")$cov
+Tmat2 <- mcse.multi(out.gibbs2, method = "lug")$cov
 That <- .5*(Tmat1 + Tmat2) 
 all.equal(That, blather$Tee)
 
 #Calc Smat
-cov1 <- var(out1)
-cov2 <- var(out2)
+cov1 <- var(out.gibbs1)
+cov2 <- var(out.gibbs2)
 Smat <- .5*(cov1 + cov2) 
 all.equal(Smat, blather$S)
 
@@ -74,7 +74,7 @@ detT <- (prod(Teigen))
 detS <- (prod(Seigen))
 detratio <- detT/detS #good
 
-Nchain <- nchain(onechain)
+Nchain <- length(onechain)
 all.equal(1, Nchain)
 
 rhat <- (N-1)/N + ((detratio)^(1/p))/N

@@ -24,9 +24,9 @@ out.gibbs2 <- mvn_gibbs(N = N, mu = mu, sigma = sigma, p = p)
 obj <- list(out.gibbs1, out.gibbs2)
 
 # Convert to MCMC objects
-out1 <- mcmc(out.gibbs1)
-out2 <- mcmc(out.gibbs2)
-obj <- mcmc.list(out1, out2)
+#out1 <- mcmc(out.gibbs1)
+#out2 <- mcmc(out.gibbs2)
+#obj <- mcmc.list(out1, out2)
 
 ################ 
 # Perform unit test using the two chains in obj
@@ -35,13 +35,13 @@ withfun <- gr.diag(obj, mapping = "maxeigen")$mpsrf
 
 
 # Calculate Tmat for each chain
-Tmat1 <- mcse.multi(out1, method = "lug")$cov
-Tmat2 <- mcse.multi(out2, method = "lug")$cov
+Tmat1 <- mcse.multi(out.gibbs1, method = "lug")$cov
+Tmat2 <- mcse.multi(out.gibbs2, method = "lug")$cov
 That <- .5*(Tmat1 + Tmat2) #good
 
 #Calc Smat
-cov1 <- var(out1)
-cov2 <- var(out2)
+cov1 <- var(out.gibbs1)
+cov2 <- var(out.gibbs2)
 Smat <- .5*(cov1 + cov2) #good
 
 Sinv <- qr.solve(Smat)
