@@ -2,7 +2,7 @@
 #' 
 #' This function uses batch means estimators to calculate a convergence diagnostic for Markov chain Monte Carlo in the spirit of Gelman-Rubin. A univariate `potential scale reduction factor' (PSRF) is calculated for each variable in \code{x}. For multivariate chains, a multivariate PSRF is calculated to take into account the interdependence of the chain's components.  The PSRFs decreases to 1 as the chain length increases. When the PSRF becomes sufficiently close to 1, the sample collected by the Markov chain has converged to to the target distribution
 #'
-#' @param x an \code{mcmc.list} object with more than one chain, with starting values that are overdispersed with respect to the posterior distribution.
+#' @param x a list of matrices, where each matrix represents one Markov chain. Each row represents one step of the chain. Each column represents one variable. A list with a single matrix (chain) is allowed. Optionally, this can be an \code{mcmclist} object. The starting values of the chain(s) should be overdispersed with respect to the posterior distribution.
 #' @param mapping the function used to map the covariance matrix to a scalar. This is one of \dQuote{\code{determinant}} (determinant of the covariance matrix, the default) or \dQuote{\code{maxeigen}} (the largest eigenvalue of the covariance matrix).
 #' @param multivariate a logical flag indicating whether the multivariate potential scale reduction factor should be calculated for multivariate chains.
 #' @param method the method used to compute the standard error of the chains. This is one of \dQuote{\code{lug}} (lugsail, the default), \dQuote{\code{bm}} (batch means), \dQuote{\code{obm}} (overlapping batch means), \dQuote{\code{tukey}} (spectral variance method with a Tukey-Hanning window), or \dQuote{\code{bartlett}} (spectral variance method with a Bartlett window).
@@ -41,19 +41,27 @@ gr.diag <-
 function (x, mapping = "determinant",  multivariate = TRUE, method = "lug", 
           size = "sqroot", autoburnin = FALSE, blather = FALSE) 
 {
-    x <- as.mcmc.list(x)
+    # in case
+    x <- as.list(x)
+    x <- lapply(x, as.matrix)
+
+    # some checks
+    # check that each chain has some number of iterations
+    if(do.call(all.equal, lapply(x, ncol)) == FALSE) stop("Each Markov chain must have the same number of columns")
+    
+    # check that each chain has some number of iterations
+    if(do.call(all.equal, lapply(x,nrow)) == FALSE) stop("Each Markov chain must have the same number of rows")
+    
     
     if (autoburnin && start(x) < end(x)/2) 
       x <- window(x, start = end(x)/2 + 1)
 
 	# Define some notation.
-    Niter <- niter(x)  # number of iterations per chains. We also call this n.
-    Nchain <- nchain(x) # number of chains. We also call this m.
-    Nvar <- nvar(x) # number of variables
-    xnames <- varnames(x)
+    Niter <- nrow(x[[1]])  # number of iterations per chains. We also call this n.
+    Nchain <- length(x) # number of chains. We also call this m.
+    Nvar <- ncol(x[[1]]) # number of variables
+    xnames <- colnames(x[[1]])
 
-	# Since x is a list of markov chains, turn each into matrix.
-    x <- lapply(x, as.matrix) 
 
 	# First, calculate sample means.
 	# Calculate column means for each chain.
@@ -80,6 +88,8 @@ function (x, mapping = "determinant",  multivariate = TRUE, method = "lug",
 
 	arrr <- sigsq / Ssq
 	psrf <- sqrt(arrr)
+	names(psrf) <- xnames
+	
 	
 	blatherout <- blather
 	
@@ -125,7 +135,7 @@ function (x, mapping = "determinant",  multivariate = TRUE, method = "lug",
 		}
 	}
 
-
+  names(muhat) <- xnames
 
 	list(psrf = psrf, mpsrf = mpsrf, means = muhat, n.eff = n.eff, blather = blatherout)
 
