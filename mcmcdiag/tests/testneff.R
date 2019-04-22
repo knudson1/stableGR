@@ -23,10 +23,6 @@ out.gibbs2 <- mvn_gibbs(N = N, mu = mu, sigma = sigma, p = p)
 
 obj <- list(out.gibbs1, out.gibbs2)
 
-# Convert to MCMC objects
-#out1 <- mcmc(out.gibbs1)
-#out2 <- mcmc(out.gibbs2)
-#obj <- mcmc.list(out1, out2)
 
 ################ ################ 
 # Perform unit test using the two chains in obj
@@ -56,9 +52,9 @@ all.equal(outA$n.eff, outB$n.eff)
 
 ################ ################ 
 # make sure this works for univariate
-babyout1 <- out1[,1]
-babyout2 <- out2[,1]
-babyobj <- mcmc.list(babyout1, babyout2)
+babyout1 <- matrix(out.gibbs1[,1], ncol = 1)
+babyout2 <- matrix(out.gibbs2[,1], ncol = 1)
+babyobj <- list(babyout1, babyout2)
 temp <- gr.diag(babyobj)$psrf
 denom <- temp^2 - ((N-1)/N)
 m <- length(babyobj)
@@ -69,6 +65,5 @@ melon$converged
 
 ################ ################ 
 set.seed(1234)
-banana <- mcmc(rnorm(1000))
-banana <- mcmc.list(banana)
+banana <- list(matrix(rnorm(1000), ncol = 1))
 n.eff(banana)$converged == FALSE

@@ -35,8 +35,8 @@ n.eff <- function(x, epsilon = .05, delta = NULL, alpha=.05, ...){
   
   # prepare and do comparison to our goal
   currentESS <- out$n.eff
-  p <- nvar(x)
-  m <- nchain(x)
+  p <- ncol(x[[1]])
+  m <- length(x)
   targ <- target.psrf(p = p, m = m, epsilon = epsilon, delta = delta, alpha = alpha)
   targetESS <- RtoESS(targ$psrf, m)
   converged <- FALSE
@@ -45,7 +45,7 @@ n.eff <- function(x, epsilon = .05, delta = NULL, alpha=.05, ...){
   # if the sample hasn't converged, approximate the sample size that would result in convergence
   ntarget <- nmore <- NULL
   if(converged == FALSE){
-    ncurrent <- niter(x)
+    ncurrent <- nrow(x[[1]])
     ntarget <- ceiling(ncurrent*targetESS/currentESS)
     nmore <- ceiling(ntarget - ncurrent)
   }  
