@@ -20,10 +20,6 @@ mu2 <- mu[p]
 mvn_gibbs <- mcmcdiag:::mvn_gibbs
 out.gibbs1 <- mvn_gibbs(N = N, mu = mu, sigma = sigma, p = p)
 out.gibbs2 <- mvn_gibbs(N = N, mu = mu, sigma = sigma, p = p)
-# Convert to MCMC objects
-#out1 <- mcmc(out.gibbs1)
-#out2 <- mcmc(out.gibbs2)
-#obj <- mcmc.list(out1, out2)
 
 obj <- list(out.gibbs1, out.gibbs2)
 ################ 
@@ -32,8 +28,8 @@ obj <- list(out.gibbs1, out.gibbs2)
 
 # Write the psrf for the specific obj chains
 # Isolate the first component of the two chains
-chain1 <- out1[ ,1]
-chain2 <- out2[ ,1]
+chain1 <- out.gibbs1[ ,1]
+chain2 <- out.gibbs2[ ,1]
 
 # Calculate tau^2 for each chain
 tausq1 <- (mcse(chain1, method = "lug")$se)^2 * N 
