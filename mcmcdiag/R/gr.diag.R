@@ -41,26 +41,36 @@ gr.diag <-
 function (x, mapping = "determinant",  multivariate = TRUE, method = "lug", 
           size = "sqroot", autoburnin = FALSE, blather = FALSE) 
 {
-    # in case
-    x <- as.list(x)
-    x <- lapply(x, as.matrix)
-
-    # some checks
-    # check that each chain has some number of iterations
-    if(do.call(all.equal, lapply(x, ncol)) == FALSE) stop("Each Markov chain must have the same number of columns")
+    # in case input is of type mcmc.list, change it to a list of matrices
+    if(class(x) == "mcmc.list") {
+      x <- as.list(x)
+      x <- lapply(x, as.matrix)
+    }
+  
+    # make sure we have a list of matrices
+    if(class(x) != "list") stop("Input x must be a list of matrices.")
+    if(lapply(x, class) != "matrix") stop("Each item in list x must be a matrix.")
     
-    # check that each chain has some number of iterations
-    if(do.call(all.equal, lapply(x,nrow)) == FALSE) stop("Each Markov chain must have the same number of rows")
-    
-    
-    if (autoburnin && start(x) < end(x)/2) 
-      x <- window(x, start = end(x)/2 + 1)
-
-	# Define some notation.
+    # Define some notation.
     Niter <- nrow(x[[1]])  # number of iterations per chains. We also call this n.
     Nchain <- length(x) # number of chains. We also call this m.
     Nvar <- ncol(x[[1]]) # number of variables
     xnames <- colnames(x[[1]])
+
+    # if multiple chains, ensure consistency in nrows, ncols
+    if(Nchain > 1){    
+      # check that each chain has some number of iterations
+      if(do.call(all.equal, lapply(x, ncol)) == FALSE) stop("Each Markov chain must have the same number of columns")
+      
+      # check that each chain has some number of iterations
+      if(do.call(all.equal, lapply(x,nrow)) == FALSE) stop("Each Markov chain must have the same number of rows")
+      }
+    
+    if (autoburnin && start(x) < end(x)/2) 
+      {x <- window(x, start = end(x)/2 + 1)
+      Niter <- nrow(x[[1]])
+      }
+
 
 
 	# First, calculate sample means.
