@@ -5,10 +5,11 @@
 \title{A Gelman-Rubin diagnostic with batch means}
 \usage{
 gr.diag(x, mapping = "determinant", multivariate = TRUE,
-  method = "lug", size = "sqroot", autoburnin = FALSE, blather = FALSE)
+  method = "lug", size = "sqroot", autoburnin = FALSE,
+  blather = FALSE)
 }
 \arguments{
-\item{x}{an \code{mcmc.list} object with more than one chain, with starting values that are overdispersed with respect to the posterior distribution.}
+\item{x}{a list of matrices, where each matrix represents one Markov chain. Each row represents one step of the chain. Each column represents one variable. A list with a single matrix (chain) is allowed. Optionally, this can be an \code{mcmclist} object. The starting values of the chain(s) should be overdispersed with respect to the posterior distribution.}
 
 \item{mapping}{the function used to map the covariance matrix to a scalar. This is one of \dQuote{\code{determinant}} (determinant of the covariance matrix, the default) or \dQuote{\code{maxeigen}} (the largest eigenvalue of the covariance matrix).}
 
@@ -21,8 +22,6 @@ gr.diag(x, mapping = "determinant", multivariate = TRUE,
 \item{autoburnin}{a logical flag indicating whether only the second half of the series should be used in the computation.  If set to TRUE and \code{start(x)} is less than \code{end(x)/2} then start of series will be adjusted so that only second half of series is used.}
 
 \item{blather}{a logical flag indicating whether to include additional output.}
-
-
 }
 \value{
 \item{psrf}{A vector containing the point estimates of the potential scale reduction factor.}
