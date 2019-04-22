@@ -9,7 +9,7 @@ library(mcmcdiag)
 #
 # Details on the chain construction
 p <- 5
-N <- 1000
+N <- 2000
 tail.ind <- floor(N*.80):N
 foo <- matrix(.50, nrow=p, ncol=p)
 sigma <- foo^(abs(col(foo)-row(foo)))
@@ -19,10 +19,11 @@ mu2 <- mu[p]
 # Create the chain
 mvn_gibbs <- mcmcdiag:::mvn_gibbs
 out.gibbs1 <- mvn_gibbs(N = N, mu = mu, sigma = sigma, p = p)
+obj <- list(out.gibbs1)
 
 # Convert to MCMC objects
-out1 <- mcmc(out.gibbs1)
-obj <- mcmc.list(out1)
+#out1 <- mcmc(out.gibbs1)
+#obj <- mcmc.list(out1)
 
 # Calculate psrfs with gr.diag
 results1 <- gr.diag(obj)

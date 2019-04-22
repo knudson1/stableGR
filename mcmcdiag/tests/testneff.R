@@ -21,10 +21,12 @@ mvn_gibbs <- mcmcdiag:::mvn_gibbs
 out.gibbs1 <- mvn_gibbs(N = N, mu = mu, sigma = sigma, p = p)
 out.gibbs2 <- mvn_gibbs(N = N, mu = mu, sigma = sigma, p = p)
 
+obj <- list(out.gibbs1, out.gibbs2)
+
 # Convert to MCMC objects
-out1 <- mcmc(out.gibbs1)
-out2 <- mcmc(out.gibbs2)
-obj <- mcmc.list(out1, out2)
+#out1 <- mcmc(out.gibbs1)
+#out2 <- mcmc(out.gibbs2)
+#obj <- mcmc.list(out1, out2)
 
 ################ ################ 
 # Perform unit test using the two chains in obj

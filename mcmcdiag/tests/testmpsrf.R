@@ -21,10 +21,11 @@ mvn_gibbs <- mcmcdiag:::mvn_gibbs
 out.gibbs1 <- mvn_gibbs(N = N, mu = mu, sigma = sigma, p = p)
 out.gibbs2 <- mvn_gibbs(N = N, mu = mu, sigma = sigma, p = p)
 
+obj <- list(out.gibbs1, out.gibbs2)
 # Convert to MCMC objects
-out1 <- mcmc(out.gibbs1)
-out2 <- mcmc(out.gibbs2)
-obj <- mcmc.list(out1, out2)
+#out1 <- mcmc(out.gibbs1)
+#out2 <- mcmc(out.gibbs2)
+#obj <- mcmc.list(out1, out2)
 
 ################ 
 # Perform unit test using the two chains in obj
@@ -53,7 +54,7 @@ all.equal(Smat, blather$S)
 detratio <- det(That)/det(Smat) 
 all.equal(detratio, det(solve(blather$S, blather$Tee)))
 
-Nchain <- nchain(obj)
+Nchain <- length(obj)
 all.equal(2, Nchain)
 
 top <- (N-1) + ((detratio)^(1/p))
@@ -63,7 +64,7 @@ all.equal(byhand, withfun)
 
 ################ ################ ################
 # Perform unit test using a SINGLE chain (just in case)
-onechain <- mcmc.list(out1)
+onechain <- list(out.gibbs1)
 withfun <- gr.diag(onechain)$mpsrf
 
 #calculate determinants
