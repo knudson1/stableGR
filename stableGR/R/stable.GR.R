@@ -1,4 +1,4 @@
-#' A Gelman-Rubin diagnostic with batch means
+#' A stable Gelman-Rubin diagnostic with batch means
 #' 
 #' This function uses batch means estimators to calculate a convergence diagnostic for Markov chain Monte Carlo in the spirit of Gelman-Rubin. A univariate `potential scale reduction factor' (PSRF) is calculated for each variable in \code{x}. For multivariate chains, a multivariate PSRF is calculated to take into account the interdependence of the chain's components.  The PSRFs decreases to 1 as the chain length increases. When the PSRF becomes sufficiently close to 1, the sample collected by the Markov chain has converged to to the target distribution
 #'
@@ -18,7 +18,7 @@
 #'
 #' @section Theory: Gelman and Rubin (1992) and Brooks and Gelman (1998) first constructed the univariate and 
 #' multivariate potential scale reduction factors (PSRF), respectively,  to diagnose Markov chain 
-#' convergence. The function \code{gr.diag} stabilizes the PSRF and improves the PSRF's efficiency by 
+#' convergence. The function \code{stable.GR} stabilizes the PSRF and improves the PSRF's efficiency by 
 #' incorporating lugsail estimators for the target variance. The PSRF decreases to 1 as the chain length
 #'  increases; when the PSRF becomes sufficiently close to 1, the sample collected by the Markov chain has 
 #'  converged to to the target distribution. A PSRF convergence threshold can be calculated using 
@@ -37,7 +37,7 @@
 #' @export
 #'
 
-gr.diag <-
+stable.GR <-
 function (x, mapping = "determinant",  multivariate = TRUE, method = "lug", 
           size = "sqroot", autoburnin = FALSE, blather = FALSE) 
 {

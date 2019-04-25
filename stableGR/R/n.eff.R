@@ -6,7 +6,7 @@
 #' @param epsilon relative precision level.
 #' @param delta desired delta value.
 #' @param alpha significance level.
-#' @param ... arguments to be passed to \code{gr.diag}.
+#' @param ... arguments to be passed to \code{stable.GR}.
 #'
 #' @return \item{n.eff}{a scalar point estimate of the effective sample size.}
 #' @return \item{converged}{a logical indicating whether the sample has converged.}
@@ -31,7 +31,7 @@ n.eff <- function(x, epsilon = .05, delta = NULL, alpha=.05, ...){
 
 
   
-  out <- gr.diag(x, ...)
+  out <- stable.GR(x, ...)
   
   # prepare and do comparison to our goal
   currentESS <- out$n.eff

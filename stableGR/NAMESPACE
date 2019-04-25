@@ -1,4 +1,4 @@
-export(gr.diag)
+export(stable.GR)
 export(target.psrf)
 export(n.eff)
 

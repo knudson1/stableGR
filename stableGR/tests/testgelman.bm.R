@@ -56,7 +56,7 @@ that <- sqrt(Rhat)
 
 
 
-withfunc <- gr.diag(obj, method = "lug")
+withfunc <- stable.GR(obj, method = "lug")
 all.equal(as.numeric(withfunc$psrf[1]), that)
 
 

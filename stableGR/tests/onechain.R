@@ -24,8 +24,8 @@ obj <- list(out.gibbs1)
 #out1 <- mcmc(out.gibbs1)
 #obj <- mcmc.list(out1)
 
-# Calculate psrfs with gr.diag
-results1 <- gr.diag(obj)
+# Calculate psrfs with stable.GR
+results1 <- stable.GR(obj)
 
 ##############################################
 # Calculate psrfs by for this chain by hand

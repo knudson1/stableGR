@@ -15,7 +15,7 @@ n.eff(x, epsilon = 0.05, delta = NULL, alpha = 0.05, ...)
 
 \item{alpha}{significance level.}
 
-\item{...}{arguments to be passed to \code{gr.diag}.}
+\item{...}{arguments to be passed to \code{stable.GR}.}
 }
 \value{
 \item{n.eff}{a scalar point estimate of the effective sample size.}

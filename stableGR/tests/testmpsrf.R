@@ -25,7 +25,7 @@ obj <- list(out.gibbs1, out.gibbs2)
 ################ 
 # Perform unit test using the two chains in obj
 
-outwithfun <- gr.diag(obj, blather = TRUE)
+outwithfun <- stable.GR(obj, blather = TRUE)
 withfun <- outwithfun$mpsrf
 blather <- outwithfun$blather
 
@@ -60,7 +60,7 @@ all.equal(byhand, withfun)
 ################ ################ ################
 # Perform unit test using a SINGLE chain (just in case)
 onechain <- list(out.gibbs1)
-withfun <- gr.diag(onechain)$mpsrf
+withfun <- stable.GR(onechain)$mpsrf
 
 #calculate determinants
 Teigen <- eigen(Tmat1)$values

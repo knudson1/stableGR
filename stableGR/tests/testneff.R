@@ -26,7 +26,7 @@ obj <- list(out.gibbs1, out.gibbs2)
 ################ ################ 
 # Perform unit test using the two chains in obj
 
-outwithfun <- gr.diag(obj, blather = TRUE)
+outwithfun <- stable.GR(obj, blather = TRUE)
 mpsrf <- outwithfun$mpsrf
 blather <- outwithfun$blather
 m <- length(obj)
@@ -38,14 +38,14 @@ all.equal(byhand, outwithfun$n.eff)
 all.equal(byhand, as.numeric(n.eff(obj)[1]))
  
 ################ ################ 
-# make sure arguments can be passed through n.eff to gr.diag correctly
+# make sure arguments can be passed through n.eff to stable.GR correctly
 ################ 
-outA <- gr.diag(obj, autoburnin = TRUE)
+outA <- stable.GR(obj, autoburnin = TRUE)
 outB <- n.eff(obj, autoburnin = TRUE)
 all.equal(outA$n.eff, outB$n.eff)
 
 ################ 
-outA <- gr.diag(obj, method = "bm")
+outA <- stable.GR(obj, method = "bm")
 outB <- n.eff(obj, method = "bm")
 all.equal(outA$n.eff, outB$n.eff)
 
@@ -54,7 +54,7 @@ all.equal(outA$n.eff, outB$n.eff)
 babyout1 <- matrix(out.gibbs1[,1], ncol = 1)
 babyout2 <- matrix(out.gibbs2[,1], ncol = 1)
 babyobj <- list(babyout1, babyout2)
-temp <- gr.diag(babyobj)$psrf
+temp <- stable.GR(babyobj)$psrf
 denom <- temp^2 - ((N-1)/N)
 m <- length(babyobj)
 byhand <- m/denom
