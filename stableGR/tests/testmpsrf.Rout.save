@@ -75,7 +75,7 @@ copyright (c) 2012, James M. Flegal, University of California, Riverside
 > #detT <- (prod(Teigen))
 > #detS <- (prod(Seigen))
 > detratio <- det(That)/det(Smat) 
-> all.equal(detratio, det(solve(blather$S, blather$Tee)))
+> all.equal(detratio, det(solve(blather$S, blather$AsymVarMatrix)))
 [1] TRUE
 > 
 > Nchain <- length(obj)

@@ -33,7 +33,7 @@ blather <- outwithfun$blather
 Tmat1 <- mcse.multi(out.gibbs1, method = "lug")$cov
 Tmat2 <- mcse.multi(out.gibbs2, method = "lug")$cov
 That <- .5*(Tmat1 + Tmat2) 
-all.equal(That, blather$Tee)
+all.equal(That, blather$AsymVarMatrix)
 
 #Calc Smat
 cov1 <- var(out.gibbs1)
@@ -47,7 +47,7 @@ all.equal(Smat, blather$S)
 #detT <- (prod(Teigen))
 #detS <- (prod(Seigen))
 detratio <- det(That)/det(Smat) 
-all.equal(detratio, det(solve(blather$S, blather$Tee)))
+all.equal(detratio, det(solve(blather$S, blather$AsymVarMatrix)))
 
 Nchain <- length(obj)
 all.equal(2, Nchain)

@@ -41,6 +41,19 @@ stable.GR <-
 function (x, mapping = "determinant",  multivariate = TRUE, method = "lug", 
           size = "sqroot", autoburnin = FALSE, blather = FALSE) 
 {
+  
+  # in case input is an mcmc object (single markov chain), change it to a matrix
+  if(class(x) == "mcmc") {
+    x <- as.matrix(x)
+  }
+  
+  
+  # in case input is a matrix (single markov chain), change it to a list
+  if(class(x) == "matrix") {
+    x <- list(x)
+  }
+  
+  
     # in case input is of type mcmc.list, change it to a list of matrices
     if(class(x) == "mcmc.list") {
       x <- as.list(x)
@@ -104,8 +117,8 @@ function (x, mapping = "determinant",  multivariate = TRUE, method = "lug",
 	blatherout <- blather
 	
 	if(blather){
-	  blatherout <- list(muhat = muhat, method = method, Niter = Niter, Nchain = Nchain, Nvar = Nvar,
-	                  tausq = tau2, ssq <- s2, sigsq = sigsq) }
+	  blatherout <- list(method = method, Niter = Niter, Nchain = Nchain, Nvar = Nvar,
+	                     asymVars = tau2, sigmasq = sigsq) }
 
 	denom <- arrr - ((Niter-1)/Niter)
 	n.eff <- Nchain/denom
@@ -138,10 +151,10 @@ function (x, mapping = "determinant",  multivariate = TRUE, method = "lug",
 
 		if(blather){
 		  blatherout$S <- W 
-		  blatherout$Tee <- Tee
+		  blatherout$AsymVarMatrix <- Tee
 		  blatherout$eigenvalues <- eigs
-		  blatherout$mpsrfdet <- mpsrfdet
-		  blatherout$mpsrfmax <- mpsrfmax
+		  blatherout$mpsrfDet <- mpsrfdet
+		  blatherout$mpsrfMaxEigen <- mpsrfmax
 		}
 	}
 
