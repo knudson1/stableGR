@@ -59,7 +59,7 @@ copyright (c) 2012, James M. Flegal, University of California, Riverside
 > Tmat1 <- mcse.multi(out.gibbs1, method = "lug")$cov
 > Tmat2 <- mcse.multi(out.gibbs2, method = "lug")$cov
 > That <- .5*(Tmat1 + Tmat2) 
-> all.equal(That, blather$Tee)
+> all.equal(That, blather$AsymVarMatrix)
 [1] TRUE
 > 
 > #Calc Smat

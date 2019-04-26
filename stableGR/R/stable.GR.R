@@ -73,10 +73,10 @@ function (x, mapping = "determinant",  multivariate = TRUE, method = "lug",
     # if multiple chains, ensure consistency in nrows, ncols
     if(Nchain > 1){    
       # check that each chain has some number of iterations
-      if(do.call(all.equal, lapply(x, ncol)) == FALSE) stop("Each Markov chain must have the same number of columns")
+      if(all.equal(as.numeric(lapply(x, ncol)), rep(Nvar, Nchain)) != TRUE) stop("Unequal number of parameters between Markov chains. Each Markov chain must have the same number of columns.")
       
       # check that each chain has some number of iterations
-      if(do.call(all.equal, lapply(x,nrow)) == FALSE) stop("Each Markov chain must have the same number of rows")
+      if(all.equal(as.numeric(lapply(x, nrow)), rep(Niter, Nchain)) != TRUE) stop("Unequal sample sizes between Markov chains. Each Markov chain must have the same number of rows.")
       }
     
     if (autoburnin && start(x) < end(x)/2) 

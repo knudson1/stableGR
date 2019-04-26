@@ -37,5 +37,23 @@ Graphical Statistics}, \bold{7}, 434-455.
 
 \keyword{ htest }
 \examples{
+library(stableGR)
+set.seed(100)
+
+p <- 5
+n <- 10000
+
+# Making 3 chains
+chain1 <- matrix(rnorm(p*n), ncol = p, nrow = n)
+chain2 <- matrix(rnorm(p*n), ncol = p, nrow = n)
+chain3 <- matrix(rnorm(p*n), ncol = p, nrow = n)
+
+# find GR diagnostic using all three chains
+x <- list(chain1, chain2, chain3)
+stable.GR(x) 
+
+# find GR diagnostic using a single chain
+stable.GR(chain1)
+
 
 }
