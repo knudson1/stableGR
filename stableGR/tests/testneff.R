@@ -16,9 +16,9 @@ mu <- sample(10:20, p)
 mu2 <- mu[p]
 
 # Create the chains
-mvn_gibbs <- stableGR:::mvn_gibbs
-out.gibbs1 <- mvn_gibbs(N = N, mu = mu, sigma = sigma, p = p)
-out.gibbs2 <- mvn_gibbs(N = N, mu = mu, sigma = sigma, p = p)
+mvn.gibbs <- stableGR:::mvn.gibbs
+out.gibbs1 <- mvn.gibbs(N = N, mu = mu, sigma = sigma, p = p)
+out.gibbs2 <- mvn.gibbs(N = N, mu = mu, sigma = sigma, p = p)
 
 obj <- list(out.gibbs1, out.gibbs2)
 

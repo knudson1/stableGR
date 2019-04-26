@@ -2,7 +2,7 @@
 
 
 
-mvn_gibbs <- function(N = 1e4, mu, sigma, p)
+mvn.gibbs <- function(N = 1e4, mu, sigma, p)
 {
 
   chain <- matrix(0, nrow = N, ncol = p)
