@@ -41,10 +41,6 @@ stable.GR <-
 function (x, mapping = "determinant",  multivariate = TRUE, method = "lug", 
           size = "sqroot", autoburnin = FALSE, blather = FALSE) 
 {
-  
-  mcse.mat <- mcmcse::mcse.mat
-  mcse.multi <- mcmcse::mcse.multi
-
   # make sure markov chains pass various checks
   x <- mcmcchecks(x, autoburnin = autoburnin)
   

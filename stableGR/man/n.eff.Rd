@@ -4,18 +4,25 @@
 \alias{n.eff}
 \title{Effective sample size}
 \usage{
-n.eff(x, epsilon = 0.05, delta = NULL, alpha = 0.05, ...)
+n.eff(x, multivariate = TRUE, method = "lug", size = "sqroot",
+  autoburnin = FALSE, epsilon = 0.05, delta = NULL, alpha = 0.05)
 }
 \arguments{
-\item{x}{an \code{mcmc.list} object with more than one chain,  with starting values that are overdispersed with respect to the posterior distribution.}
+\item{x}{a list of matrices, where each matrix represents one Markov chain. Each row represents one step of the chain. Each column represents one variable. A list with a single matrix (chain) is allowed. Optionally, this can be an \code{mcmclist} object. The starting values of the chain(s) should be overdispersed with respect to the posterior distribution.}
+
+\item{multivariate}{a logical flag indicating whether the effective sample size should be calculated for multivariate chains.}
+
+\item{method}{the method used to compute the standard error of the chains. This is one of \dQuote{\code{lug}} (lugsail, the default), \dQuote{\code{bm}} (batch means), \dQuote{\code{obm}} (overlapping batch means), \dQuote{\code{tukey}} (spectral variance method with a Tukey-Hanning window), or \dQuote{\code{bartlett}} (spectral variance method with a Bartlett window).}
+
+\item{size}{can take character values of \dQuote{sqroot} and \dQuote{cuberoot} or any numeric value between 1 and n. Size represents the batch size in \dQuote{\code{bm}} (batch means) and the truncation point in \dQuote{\code{bartlett}} and \dQuote{\code{tukey}}. sqroot means size is floor(n^(1/2) and cuberoot means size is floor(n^(1/3)).}
+
+\item{autoburnin}{a logical flag indicating whether only the second half of the series should be used in the computation.  If set to TRUE and \code{start(x)} is less than \code{end(x)/2} then start of series will be adjusted so that only second half of series is used.}
 
 \item{epsilon}{relative precision level.}
 
 \item{delta}{desired delta value.}
 
 \item{alpha}{significance level.}
-
-\item{...}{arguments to be passed to \code{stable.GR}.}
 }
 \value{
 \item{n.eff}{a scalar point estimate of the effective sample size.}

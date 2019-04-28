@@ -2,11 +2,14 @@
 #' 
 #' For an estimator, effective sample size is the number of independent samples with the same standard error as a correlated sample. This function calculates effective sample size for a set of Markov chains using lugsail variance estimators. This also determines whether the Markov chains have converged. If they have not, this function approximates the number of samples needed.
 #'
-#' @param x an \code{mcmc.list} object with more than one chain,  with starting values that are overdispersed with respect to the posterior distribution.
+#' @param x a list of matrices, where each matrix represents one Markov chain. Each row represents one step of the chain. Each column represents one variable. A list with a single matrix (chain) is allowed. Optionally, this can be an \code{mcmclist} object. The starting values of the chain(s) should be overdispersed with respect to the posterior distribution.
+#' @param multivariate a logical flag indicating whether the effective sample size should be calculated for multivariate chains.
+#' @param method the method used to compute the standard error of the chains. This is one of \dQuote{\code{lug}} (lugsail, the default), \dQuote{\code{bm}} (batch means), \dQuote{\code{obm}} (overlapping batch means), \dQuote{\code{tukey}} (spectral variance method with a Tukey-Hanning window), or \dQuote{\code{bartlett}} (spectral variance method with a Bartlett window).
+#' @param size can take character values of \dQuote{sqroot} and \dQuote{cuberoot} or any numeric value between 1 and n. Size represents the batch size in \dQuote{\code{bm}} (batch means) and the truncation point in \dQuote{\code{bartlett}} and \dQuote{\code{tukey}}. sqroot means size is floor(n^(1/2) and cuberoot means size is floor(n^(1/3)).
+#' @param autoburnin a logical flag indicating whether only the second half of the series should be used in the computation.  If set to TRUE and \code{start(x)} is less than \code{end(x)/2} then start of series will be adjusted so that only second half of series is used.
 #' @param epsilon relative precision level.
 #' @param delta desired delta value.
 #' @param alpha significance level.
-#' @param ... arguments to be passed to \code{stable.GR}.
 #'
 #' @return \item{n.eff}{a scalar point estimate of the effective sample size.}
 #' @return \item{converged}{a logical indicating whether the sample has converged.}
@@ -27,16 +30,35 @@
 #'
 
 
-n.eff <- function(x, epsilon = .05, delta = NULL, alpha=.05, ...){ 
-
-
+n.eff <- function(x,  multivariate = TRUE, method = "lug", size = "sqroot", 
+                  autoburnin = FALSE, epsilon = .05, delta = NULL, alpha=.05){ 
   
-  out <- stable.GR(x, ...)
+  # make sure markov chains pass various checks
+  x <- mcmcchecks(x, autoburnin = autoburnin)
+  
+  # Define some notation.
+  Niter <- nrow(x[[1]])  # number of iterations per chains. We also call this n.
+  Nvar <- ncol(x[[1]]) # number of variables
+  Nchain <- length(x)
+  
+  #univariate case
+  W <- s.hat(x)
+  Ssq <- diag(W) 
+  tau2 <- asym.var(x, method = method, size = size, autoburnin = FALSE)
+  currentESS <- Nchain * Niter * (Ssq/tau2)^(1/Nvar)  
+  
+    
+  if(multivariate && Nvar > 1){
+    Tee <- asym.var.mat(x, method = method, size = size, autoburnin = FALSE, adjust = TRUE)
+    mango <- solve(Tee, W) #S T^{-1}
+    eigs <- eigen(mango, symmetric = FALSE, only.values = TRUE)$values
+    detpiece <- (prod(eigs))^(1/Nvar)
+    currentESS <- Nchain * Niter * detpiece
+    }
   
   # prepare and do comparison to our goal
-  currentESS <- out$n.eff
-  p <- ncol(x[[1]])
-  m <- length(x)
+  p <- Nvar
+  m <- Nchain
   targ <- target.psrf(p = p, m = m, epsilon = epsilon, delta = delta, alpha = alpha)
   targetESS <- RtoESS(targ$psrf, m)
   converged <- FALSE
