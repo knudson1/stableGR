@@ -40,7 +40,7 @@ asym.var.mat <- function (x, method = "lug", size = "sqroot", autoburnin = FALSE
   
   Ti <- lapply(x, getT, method = method, size = size)  # For each chain
   Tee <- matrix(Reduce("+", Ti)  / Nchain, nrow = Nvar)
-  if(adjust == TRUE) Tee <- adjust_matrix(Tee, Niter)
+  if(adjust == TRUE) Tee <- adjust.matrix(Tee, Niter)
   
   Tee
 

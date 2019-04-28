@@ -1,4 +1,4 @@
-adjust_matrix <- function(mat, N, epsilon = sqrt(log(N)/dim(mat)[2]), b = 1/2)
+adjust.matrix <- function(mat, N, epsilon = sqrt(log(N)/dim(mat)[2]), b = 1/2)
 {
   mat.adj <- mat
   adj <- epsilon*N^(-b)

@@ -57,17 +57,14 @@ function (x, mapping = "determinant",  multivariate = TRUE, method = "lug",
 
 	# First, calculate sample means.
 	# Calculate column means for each chain.
-    xbar <- matrix(sapply(x, apply, 2, mean, simplify = TRUE),nrow = Nvar, ncol = Nchain) 
+  xbar <- matrix(sapply(x, apply, 2, mean, simplify = TRUE),nrow = Nvar, ncol = Nchain) 
 	# Average the means across chains
-    muhat <- apply(xbar, 1, mean) 
+  muhat <- apply(xbar, 1, mean) 
 
 	# Second, calculate overall sample variance for each variable.
 	# Calculate vcov matrix for variables in each chain. List length = nchain.
-    Si2 <- array(sapply(x, var, simplify = TRUE), dim = c(Nvar, Nvar, Nchain)) 
-    W <- apply(Si2, c(1, 2), mean) # Average the vcov matrices across chains. #aka S
-    Ssq <- diag(W) # Isolate the variances, throw away covariances.
-	# For each chain, find sample variance for each variable. 
-	s2 <- matrix(apply(Si2, 3, diag), nrow = Nvar, ncol = Nchain)
+  W <- s.hat(x)
+  Ssq <- diag(W) # Isolate the variances, throw away covariances.
 
 	# Third, calculate tau^2, the sample variance of the sample means (between chain vars)
   tau2 <- asym.var(x, method = method, size = size, autoburnin = FALSE)
