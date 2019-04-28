@@ -141,9 +141,6 @@ gettau <- function(x1, method)
 getT <- function(x, method, size) 
 {
   mcse.multi(x, method = method, size = size)$cov
-  # foo <- mcse.multi(x, method = method)
-	# Tee <- adjust_matrix(foo$cov, N = foo$nsim)
-	# Tee
 }
 
 adjust_matrix <- function(mat, N, epsilon = sqrt(log(N)/dim(mat)[2]), b = 1/2)
