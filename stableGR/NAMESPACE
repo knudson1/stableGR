@@ -1,6 +1,7 @@
 export(stable.GR)
 export(target.psrf)
 export(n.eff)
+export(asym.var)
 
 
 import(mvtnorm, mcmc, mcmcse)
