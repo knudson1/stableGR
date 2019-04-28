@@ -41,6 +41,10 @@ stable.GR <-
 function (x, mapping = "determinant",  multivariate = TRUE, method = "lug", 
           size = "sqroot", autoburnin = FALSE, blather = FALSE) 
 {
+  
+  mcse.mat <- mcmcse::mcse.mat
+  mcse.multi <- mcmcse::mcse.multi
+
   # make sure markov chains pass various checks
   x <- mcmcchecks(x, autoburnin = autoburnin)
   
@@ -65,11 +69,7 @@ function (x, mapping = "determinant",  multivariate = TRUE, method = "lug",
 	# For each chain, find sample variance for each variable. 
 	s2 <- matrix(apply(Si2, 3, diag), nrow = Nvar, ncol = Nchain)
 
-	# Third, calculate tau^2 and its variance for each variable. 
-	# This replaces the GR b.
-	# Sample variance of the sample means (between chain vars) calculated using batch means.
-  #tau2i <- matrix(sapply(x, gettau, method = method)*Niter,  ncol = Nchain) # For each chain
-	#tau2 <- apply(tau2i, 1, mean)  # Average over the chains
+	# Third, calculate tau^2, the sample variance of the sample means (between chain vars)
   tau2 <- asym.var(x, method = method, size = size, autoburnin = FALSE)
 	
 	# Calculate the estimate of sigma^2.
@@ -77,9 +77,7 @@ function (x, mapping = "determinant",  multivariate = TRUE, method = "lug",
 
 	arrr <- sigsq / Ssq
 	psrf <- sqrt(arrr)
-	#names(psrf) <- xnames
-	
-	
+
 	blatherout <- blather
 	
 	if(blather){
@@ -93,9 +91,6 @@ function (x, mapping = "determinant",  multivariate = TRUE, method = "lug",
 	
 	if(multivariate && Nvar > 1){
 	  Tee <- asym.var.mat(x, method = method, size = size, autoburnin = FALSE, adjust = TRUE)
-  		# Ti <- lapply(x, getT, method = method, size = size)  # For each chain
-  		# Tee <- matrix(Reduce("+", Ti)  / Nchain, nrow = Nvar)
-  		# Tee <- adjust_matrix(Tee, Niter)
 
 		firstpiece <- (Niter-1)/Niter
 		secondpiece <- 1/Niter
@@ -132,82 +127,4 @@ function (x, mapping = "determinant",  multivariate = TRUE, method = "lug",
    
 }
 
-
-gettau <- function(x1, method) 
-{
-	(mcse.mat(x1, method = method)[ ,2])^2 
-
-}
-
-
-getT <- function(x, method, size) 
-{
-  mcse.multi(x, method = method, size = size)$cov
-}
-
-adjust_matrix <- function(mat, N, epsilon = sqrt(log(N)/dim(mat)[2]), b = 1/2)
-{
-  mat.adj <- mat
-  adj <- epsilon*N^(-b)
-  #for(i in 1:ncol(mat.adj)){mat.adj[i,i] <- }
-  diag(mat.adj) <- pmax(adj, diag(mat.adj))
-  vars <- diag(mat.adj)
-  corr <- cov2cor(mat.adj)
-  eig <- eigen(corr)
-  adj.eigs <- pmax(eig$values, adj)
-  mat.adj <- diag(vars^(1/2))%*% eig$vectors %*% diag(adj.eigs) %*% t(eig$vectors) %*% diag(vars^(1/2))
-  return(mat.adj)
-}
-
-mcmcchecks <- function(x, autoburnin){
-  
-  # in case input is an mcmc object (single markov chain), change it to a matrix
-  if(class(x) == "mcmc") {
-    x <- as.matrix(x)
-  }
-  
-  
-  # in case input is a matrix (single markov chain), change it to a list
-  if(class(x) == "matrix") {
-    x <- list(x)
-  }
-  
-  
-  # in case input is of type mcmc.list, change it to a list of matrices
-  if(class(x) == "mcmc.list") {
-    x <- as.list(x)
-    x <- lapply(x, as.matrix)
-  }
-  
-  # make sure we have a list of matrices
-  if(class(x) != "list") stop("Input x must be a list of matrices.")
-  Nchain <- length(x) # number of chains. We also call this m.
-  if(all.equal(lapply(x, class), as.list(rep("matrix", Nchain))) == FALSE) stop("Each item in list x must be a matrix.")
-  
-  # Define some notation.
-  Niter <- nrow(x[[1]])  # number of iterations per chains. We also call this n.
-  Nvar <- ncol(x[[1]]) # number of variables
-  xnames <- colnames(x[[1]])
-  
-  # if multiple chains, ensure consistency in nrows, ncols
-  if(Nchain > 1){    
-    # check that each chain has some number of iterations
-    if(all.equal(as.numeric(lapply(x, ncol)), rep(Nvar, Nchain)) != TRUE) stop("Unequal number of parameters between Markov chains. Each Markov chain must have the same number of columns.")
-    
-    # check that each chain has some number of iterations
-    if(all.equal(as.numeric(lapply(x, nrow)), rep(Niter, Nchain)) != TRUE) stop("Unequal sample sizes between Markov chains. Each Markov chain must have the same number of rows.")
-  }
-  
-  
-  if (autoburnin && start(x) < end(x)/2) 
-    {x <- window(x, start = end(x)/2 + 1)
-    Niter <- nrow(x[[1]])
-  }
-  
-  x
-
-}
-
-mcse.mat <- mcmcse:::mcse.mat
-mcse.multi <- mcmcse:::mcse.multi
 
