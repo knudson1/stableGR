@@ -62,6 +62,13 @@ copyright (c) 2012, James M. Flegal, University of California, Riverside
 > tausq <- .5 * (tausq1 + tausq2)
 > #checked, right
 > 
+> coffee <- asym.var(matrix(chain1, ncol=1))
+> all.equal(coffee, tausq1)
+[1] TRUE
+> coffee <- asym.var(matrix(chain2, ncol=1))
+> all.equal(coffee, tausq2)
+[1] TRUE
+> 
 > # Calulate s^2 for each chain
 > sampvar1 <- var(chain1)
 > sampvar2 <- var(chain2)
@@ -91,4 +98,4 @@ copyright (c) 2012, James M. Flegal, University of California, Riverside
 > 
 > proc.time()
    user  system elapsed 
-  7.478   0.037   7.502 
+ 10.317   0.037  10.340 

@@ -68,9 +68,10 @@ function (x, mapping = "determinant",  multivariate = TRUE, method = "lug",
 	# Third, calculate tau^2 and its variance for each variable. 
 	# This replaces the GR b.
 	# Sample variance of the sample means (between chain vars) calculated using batch means.
-  tau2i <- matrix(sapply(x, gettau, method = method)*Niter,  ncol = Nchain) # For each chain
-	tau2 <- apply(tau2i, 1, mean)  # Average over the chains
-
+  #tau2i <- matrix(sapply(x, gettau, method = method)*Niter,  ncol = Nchain) # For each chain
+	#tau2 <- apply(tau2i, 1, mean)  # Average over the chains
+  tau2 <- asym.var(x, method = method, size = size, autoburnin = FALSE)
+	
 	# Calculate the estimate of sigma^2.
 	sigsq <- (Niter - 1) * Ssq/Niter + tau2 / Niter 
 
@@ -91,9 +92,10 @@ function (x, mapping = "determinant",  multivariate = TRUE, method = "lug",
 	mpsrf <- multivariate
 	
 	if(multivariate && Nvar > 1){
-		Ti <- lapply(x, getT, method = method, size = size)  # For each chain
-		Tee <- matrix(Reduce("+", Ti)  / Nchain, nrow = Nvar)
-		Tee <- adjust_matrix(Tee, Niter)
+	  Tee <- asym.var.mat(x, method = method, size = size, autoburnin = FALSE, adjust = TRUE)
+  		# Ti <- lapply(x, getT, method = method, size = size)  # For each chain
+  		# Tee <- matrix(Reduce("+", Ti)  / Nchain, nrow = Nvar)
+  		# Tee <- adjust_matrix(Tee, Niter)
 
 		firstpiece <- (Niter-1)/Niter
 		secondpiece <- 1/Niter
