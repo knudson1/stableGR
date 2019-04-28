@@ -142,7 +142,35 @@ To create version 2.0 of \texttt{n.eff}, the following work must be done:
 
 \begin{itemize}
  \renewcommand{\labelitemi}{$\square$}
-\item Create two functions: one to calculate $\hat{S}$ and another for $\hat{T}_L$. These two functions will be in the package but not exported. 
+\item  asymptotic variances
+\begin{itemize}
+\item write function \checkmark
+\item documentation \checkmark
+\item test $\square$
+\end{itemize}
+
+\item  asymptotic variance matrix
+\begin{itemize}
+\item write function $\square$
+\item documentation $\square$
+\item test $\square$
+\end{itemize}
+
+\item  sample variances s
+\begin{itemize}
+\item write function $\square$
+\item test $\square$
+\end{itemize}
+
+
+\item  sample variance matrix $\hat{S}$
+\begin{itemize}
+\item write function $\square$
+\item test $\square$
+\end{itemize}
+
+
+
 \item Rewrite \texttt{n.eff} to call these functions (rather than calling \texttt{gr.diag}).
 
 %\item Figure out how to send some arguments from ellipsis of \texttt{n.eff} to \texttt{gr.diag} and others to \texttt{target.psrf}. 
