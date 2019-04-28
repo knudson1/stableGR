@@ -16,6 +16,22 @@
 #' @return \item{n.target}{NULL (if the chain has converged) or a scalar estimate of the chain length required for convergence, assuming the number of chains is unchanged.  }
 #' @return \item{n.more}{NULL (if the chain has converged) or a scalar estimate of number of additional samples required for convergence (per chain), assuming the number of chains is unchanged.  }
 #'
+#' @examples 
+#' library(stableGR)
+#' set.seed(100)
+#' p <- 5
+#' n <- 10000
+#'
+#' # Making 3 chains
+#' chain1 <- matrix(rnorm(p*n), ncol = p, nrow = n)
+#' chain2 <- matrix(rnorm(p*n), ncol = p, nrow = n)
+#' chain3 <- matrix(rnorm(p*n), ncol = p, nrow = n)
+#'
+#' # find ESS using all three chains
+#' x <- list(chain1, chain2, chain3)
+#' n.eff(x) 
+
+#'
 #'
 #' @section References:
 #' Vats, D. and Knudson, C. Revisiting the Gelman-Rubin Diagnostic.	arXiv:1812.09384. 

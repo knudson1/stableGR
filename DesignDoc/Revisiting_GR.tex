@@ -82,7 +82,20 @@ The Gelman-Rubin (GR) diagnostic has been one of the most popular diagnostics fo
 
 
 
-\section{Effective sample size} % (fold)
+
+\section{\textbf{Package building}}
+\textbf{To do:}
+\begin{itemize}
+ \renewcommand{\labelitemi}{$\square$}
+\item Clean up documentation
+\item[$\blacksquare$] Add an example to \texttt{stable.gr} 
+\item Check citations
+\item Check descriptions and theory
+\item Read through manual (pdf version)
+\end{itemize}
+
+
+\section{Effective sample size: \checkmark} % (fold)
 \label{sec:choosing_delta}
 
 For an estimator, effective sample size (ESS) is the number of independent samples with the same standard error as a correlated sample. 
@@ -166,10 +179,10 @@ To create version 2.0 of \texttt{n.eff}, the following work must be done:
 
 
 
-\item Rewrite \texttt{n.eff} to call these functions (rather than calling \texttt{gr.diag}).
+\item[$\blacksquare$] Rewrite \texttt{n.eff} to call these functions (rather than calling \texttt{stable.gr}).
 
 %\item Figure out how to send some arguments from ellipsis of \texttt{n.eff} to \texttt{gr.diag} and others to \texttt{target.psrf}. 
-\item Add an example.
+\item[$\blacksquare$] Add an example.
 
 \end{itemize}
 
@@ -177,20 +190,7 @@ To create version 2.0 of \texttt{n.eff}, the following work must be done:
 
 
 
-\section{\textbf{Package building}}
-\textbf{To do:}
-\begin{itemize}
- \renewcommand{\labelitemi}{$\square$}
-\item Clean up documentation
-\item Add an example to \texttt{gr.diag} 
-\item Check citations
-\item Check descriptions and theory
-\item Read through manual (pdf version)
-\end{itemize}
-
-
-
-\section{\textbf{Moving away from coda: MISSION ACCOMPLISHED}}
+\section{\textbf{Moving away from coda \checkmark}}
 
 Due to known coding errors (e.g. the miscalculated confidence interval for $\hat{R}$) and issues with \texttt{coda}, we would like to change our package (functions including \texttt{n.eff} and \texttt{gr.diag}) to no longer rely on \texttt{coda}. An incomplete list of ways we rely on  \texttt{coda}: 
 

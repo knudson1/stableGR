@@ -58,3 +58,20 @@ Gelman, A and Rubin, DB (1992) Inference from iterative simulation using multipl
 Brooks, SP. and Gelman, A. (1998) General methods for monitoring convergence of iterative simulations. \emph{Journal of Computational and Graphical Statistics}, \bold{7}, 434-455.
 }
 
+\examples{
+library(stableGR)
+set.seed(100)
+p <- 5
+n <- 10000
+
+# Making 3 chains
+chain1 <- matrix(rnorm(p*n), ncol = p, nrow = n)
+chain2 <- matrix(rnorm(p*n), ncol = p, nrow = n)
+chain3 <- matrix(rnorm(p*n), ncol = p, nrow = n)
+
+# find GR diagnostic using all three chains
+x <- list(chain1, chain2, chain3)
+stable.GR(x) 
+
+
+}
