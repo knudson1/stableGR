@@ -41,7 +41,7 @@ stable.GR <-
 function (x, mapping = "determinant",  multivariate = TRUE, method = "lug", 
           size = "sqroot", autoburnin = FALSE, blather = FALSE) 
 {
-  
+  # make sure markov chains pass various checks
   x <- mcmcchecks(x, autoburnin = autoburnin)
   
   # Define some notation.
