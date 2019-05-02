@@ -20,9 +20,10 @@
 #' @examples 
 #' library(stableGR)
 #' set.seed(100)
-#' p <- 5
+#' p <- 2
 #' n <- 10000
 #'
+#' sig.mat = matrix(c(1, .8, .8, 1), ncol = 2, nrow = 2)
 #' # Making 3 chains
 #' chain1 <- mvn.gibbs(N = n, p = p, mu = rep(1,p), sigma = sig.mat)
 #' chain2 <- mvn.gibbs(N = n, p = p, mu = rep(1,p), sigma = sig.mat)

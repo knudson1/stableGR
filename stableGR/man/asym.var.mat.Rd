@@ -8,7 +8,7 @@ asym.var.mat(x, method = "lug", size = "sqroot", autoburnin = FALSE,
   adjust = TRUE)
 }
 \arguments{
-\item{x}{a list of matrices, where each matrix represents one Markov chain. Each row represents one step of the chain. Each column represents one variable. A list with a single matrix (chain) is allowed. Optionally, this can be an \code{mcmclist} object. The starting values of the chain(s) should be overdispersed with respect to the posterior distribution.}
+\item{x}{a list of matrices, where each matrix represents one Markov chain sample. Each row of the matrices represents one step of the chain. Each column of the matrices represents one variable. A list with a single matrix (chain) is allowed. Optionally, this can be an \code{mcmclist} object.}
 
 \item{method}{the method used to compute the standard error of the chains. This is one of \dQuote{\code{lug}} (lugsail, the default), \dQuote{\code{bm}} (batch means), \dQuote{\code{obm}} (overlapping batch means), \dQuote{\code{tukey}} (spectral variance method with a Tukey-Hanning window), or \dQuote{\code{bartlett}} (spectral variance method with a Bartlett window).}
 
@@ -19,10 +19,10 @@ asym.var.mat(x, method = "lug", size = "sqroot", autoburnin = FALSE,
 \item{adjust}{a logical flag indicating whether the covariance matrix should be adjusted, when necessary, to ensure it is positive-definite.}
 }
 \value{
-The asymptotic variance matrix.
+The asymptotic covariance matrix in the Markov chain central limit theorem.
 }
 \description{
-This function estimates the asymptotic variance matrix for Markov chain Monte Carlo.
+This function estimates the asymptotic covariance matrix in the Markov chain central limit theorem, compatible with multiple chains. If a single chain is input, it calls \code{mcmcse::mcse.multi}.
 }
 \section{References}{
 
@@ -31,7 +31,9 @@ Vats, D. and Knudson, C. Revisiting the Gelman-Rubin Diagnostic.	arXiv:1812.0938
 Vats, D. and Flegal, J. Lugsail lag windows and their application to MCMC. arXiv: 1809.04541.
 
 Flegal, J. M. and Jones, G. L. (2010) Batch means and spectral variance estimators in Markov chain Monte Carlo. \emph{The Annals of Statistics}, \bold{38}, 1034--1070. \cr
+
 Gelman, A and Rubin, DB (1992) Inference from iterative simulation using multiple sequences, \emph{Statistical Science}, \bold{7}, 457-511. \cr
+
 Brooks, SP. and Gelman, A. (1998) General methods for monitoring convergence of iterative simulations. \emph{Journal of Computational and Graphical Statistics}, \bold{7}, 434-455.
 }
 

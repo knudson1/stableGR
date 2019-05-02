@@ -2,30 +2,30 @@
 % Please edit documentation in R/target.psrf.R
 \name{target.psrf}
 \alias{target.psrf}
-\title{Calculates a Gelman Rubin diagnostic threshold using lugsail variance estimators.}
+\title{Calculates a Gelman Rubin diagnostic threshold using effective sample size thresholds.}
 \usage{
-target.psrf(p, epsilon = 0.05, delta = NULL, m, alpha = 0.05)
+target.psrf(p, m, epsilon = 0.05, delta = NULL, alpha = 0.05)
 }
 \arguments{
 \item{p}{dimension of the estimation problem.}
 
-\item{epsilon}{relative precision level.}
-
-\item{delta}{desired delta value.}
-
 \item{m}{number of chains.}
 
-\item{alpha}{significance level.}
+\item{epsilon}{relative precision level. Values less than .10 are recommended.}
+
+\item{delta}{desired delta value - the cutoff for potential scale reduction factor. If specified, then the corresponding \code{epsilon} is returned.}
+
+\item{alpha}{significance level for confidence regions for the Monte Carlo estimators.}
 }
 \value{
-\item{psrf}{The psrf threshold to be reached for convergence.}
+\item{psrf}{The desired PSRF cutoff to stop the simulation.}
 
-\item{epsilon}{The epsilon value used to calculate the psrf threshold.}
+\item{epsilon}{The epsilon value used to calculate the PSRF threshold.}
 
-\item{delta}{The delta value used to calculate the psrf threshold.}
+\item{delta}{The delta value used to calculate the PSRF. The value is 1 - \code{psrf}}
 }
 \description{
-When the sample diagnostic reaches the psrf threshold calculated in this function, the chain has converged.
+When the sample diagnostic reaches the psrf threshold calculated in this function, sufficient samples have been obtained.
 }
 \section{References}{
 
@@ -34,12 +34,13 @@ Vats, D. and Knudson, C. Revisiting the Gelman-Rubin Diagnostic.	arXiv:1812.0938
 Vats, D. and Flegal, J. Lugsail lag windows and their application to MCMC. arXiv: 1809.04541.
 
 Flegal, J. M. and Jones, G. L. (2010) Batch means and spectral variance estimators in Markov chain Monte Carlo. \emph{The Annals of Statistics}, \bold{38}, 1034--1070. \cr
+
 Gelman, A and Rubin, DB (1992) Inference from iterative simulation using multiple sequences, \emph{Statistical Science}, \bold{7}, 457-511. \cr
+
 Brooks, SP. and Gelman, A. (1998) General methods for monitoring convergence of iterative simulations. \emph{Journal of Computational and Graphical Statistics}, \bold{7}, 434-455.
 }
 
 \examples{
-target.psrf(1, delta = .1, m = 5, alpha = .05)
-target.psrf(1, epsilon = .05, m = 5, alpha = .05)
+target.psrf(p = 2, m = 3, epsilon = .05,  alpha = .05)
 
 }
