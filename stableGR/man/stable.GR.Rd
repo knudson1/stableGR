@@ -2,46 +2,46 @@
 % Please edit documentation in R/stable.GR.R
 \name{stable.GR}
 \alias{stable.GR}
-\title{A stable Gelman-Rubin diagnostic with batch means}
+\title{Stable Gelman-Rubin diagnostic using consistent}
 \usage{
 stable.GR(x, mapping = "determinant", multivariate = TRUE,
   method = "lug", size = "sqroot", autoburnin = FALSE,
   blather = FALSE)
 }
 \arguments{
-\item{x}{a list of matrices, where each matrix represents one Markov chain. Each row represents one step of the chain. Each column represents one variable. A list with a single matrix (chain) is allowed. Optionally, this can be an \code{mcmclist} object. The starting values of the chain(s) should be overdispersed with respect to the posterior distribution.}
+\item{x}{a list of matrices, where each matrix represents one Markov chain sample. Each row of the matrices represents one step of the chain. Each column of the matrices represents one variable. A list with a single matrix (chain) is allowed. Optionally, this can be an \code{mcmclist} object.}
 
 \item{mapping}{the function used to map the covariance matrix to a scalar. This is one of \dQuote{\code{determinant}} (determinant of the covariance matrix, the default) or \dQuote{\code{maxeigen}} (the largest eigenvalue of the covariance matrix).}
 
-\item{multivariate}{a logical flag indicating whether the multivariate potential scale reduction factor should be calculated for multivariate chains.}
+\item{multivariate}{a logical flag indicating whether the multivariate PSRF should be calculated for multivariate chains.}
 
-\item{method}{the method used to compute the standard error of the chains. This is one of \dQuote{\code{lug}} (lugsail, the default), \dQuote{\code{bm}} (batch means), \dQuote{\code{obm}} (overlapping batch means), \dQuote{\code{tukey}} (spectral variance method with a Tukey-Hanning window), or \dQuote{\code{bartlett}} (spectral variance method with a Bartlett window).}
+\item{method}{the method used to compute the Monte Carlo variance for the mean of the chain. This is one of \dQuote{\code{lug}} (lugsail, the default), \dQuote{\code{bm}} (batch means), \dQuote{\code{obm}} (overlapping batch means), \dQuote{\code{tukey}} (spectral variance method with a Tukey-Hanning window), or \dQuote{\code{bartlett}} (spectral variance method with a Bartlett window).}
 
-\item{size}{can take character values of \dQuote{sqroot} and \dQuote{cuberoot} or any numeric value between 1 and n. Size represents the batch size in \dQuote{\code{bm}} (batch means) and the truncation point in \dQuote{\code{bartlett}} and \dQuote{\code{tukey}}. sqroot means size is floor(n^(1/2) and cuberoot means size is floor(n^(1/3)).}
+\item{size}{can take character values of \dQuote{sqroot} and \dQuote{cuberoot} or any numeric value between 1 and Monte Carlo sample size (n). Size represents the batch size in \dQuote{\code{lug}} (lugsail) and the truncation point in \dQuote{\code{bartlett}} and \dQuote{\code{tukey}}. \dQuote{sqroot} means size is floor(n^(1/2) and cuberoot means size is floor(n^(1/3)).}
 
-\item{autoburnin}{a logical flag indicating whether only the second half of the series should be used in the computation.  If set to TRUE and \code{start(x)} is less than \code{end(x)/2} then start of series will be adjusted so that only second half of series is used.}
+\item{autoburnin}{a logical flag indicating whether only the second half of the series should be used in the computation.  If set to TRUE and \code{start(x)} is less than \code{end(x)/2} then start of series will be adjusted so that only second half of series is used. The default is set to \dQuote{\code{FALSE}}, since we encourage users not to burn-in blindly.}
 
 \item{blather}{a logical flag indicating whether to include additional output.}
 }
 \value{
-\item{psrf}{A vector containing the point estimates of the potential scale reduction factor.}
+\item{psrf}{A vector containing the point estimates of the PSRF for all components of the Markov chain.}
 
-\item{mpsrf}{A scalar point estimate of the multivariate potential scale reduction factor.}
+\item{mpsrf}{A scalar point estimate of the multivariate PSRF.}
 
-\item{means}{A vector containing the sample means based on the chains provided.}
+\item{means}{A vector containing the Monte Carlo estimator of the mean based on the chains provided.}
 
-\item{n.eff}{A scalar point estimate of the effective sample size.}
+\item{n.eff}{A scalar point estimate of the effective sample size from all the chains.}
 
 \item{blather}{Either \code{FALSE} or a list containing intermediate calculations.}
 }
 \description{
-This function uses batch means estimators to calculate a convergence diagnostic for Markov chain Monte Carlo in the spirit of Gelman-Rubin. A univariate `potential scale reduction factor' (PSRF) is calculated for each variable in \code{x}. For multivariate chains, a multivariate PSRF is calculated to take into account the interdependence of the chain's components.  The PSRFs decreases to 1 as the chain length increases. When the PSRF becomes sufficiently close to 1, the sample collected by the Markov chain has converged to to the target distribution
+This function uses fast and strongly consistent estimators estimators of Monte Carlo variance to calculate the Gelman-Rubin convergence diagnostic for Markov chain Monte Carlo. A univariate `potential scale reduction factor' (PSRF) is calculated for each variable in \code{x}. For multivariate chains, a multivariate PSRF is calculated to take into account the interdependence of the chain's components.  The PSRFs decrease to 1 as the chain length increases. When the PSRF becomes sufficiently close to 1, the sample collected by the Markov chain has converged to the target distribution.
 }
 \section{Theory}{
  Gelman and Rubin (1992) and Brooks and Gelman (1998) first constructed the univariate and 
-multivariate potential scale reduction factors (PSRF), respectively,  to diagnose Markov chain 
+multivariate PSRFs, respectively,  to diagnose Markov chain 
 convergence. The function \code{stable.GR} stabilizes the PSRF and improves the PSRF's efficiency by 
-incorporating lugsail estimators for the target variance. The PSRF decreases to 1 as the chain length
+incorporating lugsail (or other consistent) estimators for the Monte Carlo variance. The PSRF decreases to 1 as the chain length
  increases; when the PSRF becomes sufficiently close to 1, the sample collected by the Markov chain has 
  converged to to the target distribution. A PSRF convergence threshold can be calculated using 
  \code{choosepsrf}.
@@ -55,6 +55,7 @@ Vats, D. and Flegal, J. Lugsail lag windows and their application to MCMC. arXiv
 
 Flegal, J. M. and Jones, G. L. (2010) Batch means and spectral variance estimators in Markov chain Monte Carlo. \emph{The Annals of Statistics}, \bold{38}, 1034--1070. \cr
 Gelman, A and Rubin, DB (1992) Inference from iterative simulation using multiple sequences, \emph{Statistical Science}, \bold{7}, 457-511. \cr
+
 Brooks, SP. and Gelman, A. (1998) General methods for monitoring convergence of iterative simulations. \emph{Journal of Computational and Graphical Statistics}, \bold{7}, 434-455.
 }
 

@@ -8,7 +8,7 @@ n.eff(x, multivariate = TRUE, method = "lug", size = "sqroot",
   autoburnin = FALSE, epsilon = 0.05, delta = NULL, alpha = 0.05)
 }
 \arguments{
-\item{x}{a list of matrices, where each matrix represents one Markov chain. Each row represents one step of the chain. Each column represents one variable. A list with a single matrix (chain) is allowed. Optionally, this can be an \code{mcmclist} object. The starting values of the chain(s) should be overdispersed with respect to the posterior distribution.}
+\item{x}{a list of matrices, where each matrix represents one Markov chain sample. Each row of the matrices represents one step of the chain. Each column of the matrices represents one variable. A list with a single matrix (chain) is allowed. Optionally, this can be an \code{mcmclist} object.}
 
 \item{multivariate}{a logical flag indicating whether the effective sample size should be calculated for multivariate chains.}
 
@@ -34,7 +34,7 @@ n.eff(x, multivariate = TRUE, method = "lug", size = "sqroot",
 \item{n.more}{NULL (if the chain has converged) or a scalar estimate of number of additional samples required for convergence (per chain), assuming the number of chains is unchanged.  }
 }
 \description{
-For an estimator, effective sample size is the number of independent samples with the same standard error as a correlated sample. This function calculates effective sample size for a set of Markov chains using lugsail variance estimators. This also determines whether the Markov chains have converged. If they have not, this function approximates the number of samples needed.
+For an estimator, effective sample size is the number of independent samples with the same standard error as a correlated sample. This function calculates the (multivariate)	 effective sample size for a set of Markov chains using lugsail variance estimators. This also determines whether the Markov chains have converged. If they have not, this function approximates the number of samples needed.
 }
 \section{References}{
 
@@ -44,19 +44,23 @@ Vats, D. and Flegal, J. Lugsail lag windows and their application to MCMC. arXiv
 
 Flegal, J. M. and Jones, G. L. (2010) Batch means and spectral variance estimators in Markov chain Monte Carlo. \emph{The Annals of Statistics}, \bold{38}, 1034--1070. \cr
 Gelman, A and Rubin, DB (1992) Inference from iterative simulation using multiple sequences, \emph{Statistical Science}, \bold{7}, 457-511. \cr
+
 Brooks, SP. and Gelman, A. (1998) General methods for monitoring convergence of iterative simulations. \emph{Journal of Computational and Graphical Statistics}, \bold{7}, 434-455.
 }
 
 \examples{
 library(stableGR)
 set.seed(100)
-p <- 5
-n <- 10000
+p <- 2
+n <- 1000
+
+sig.mat <- matrix(.8, nrow = p, ncol = p)
+sig.mat <- sig.mat^(abs(col(sig.mat)-row(sig.mat)))
 
 # Making 3 chains
-chain1 <- matrix(rnorm(p*n), ncol = p, nrow = n)
-chain2 <- matrix(rnorm(p*n), ncol = p, nrow = n)
-chain3 <- matrix(rnorm(p*n), ncol = p, nrow = n)
+chain1 <- mvn.gibbs(N = n, p = p, mu = rep(1,p), sigma = sig.mat)
+chain2 <- mvn.gibbs(N = n, p = p, mu = rep(1,p), sigma = sig.mat)
+chain3 <- mvn.gibbs(N = n, p = p, mu = rep(1,p), sigma = sig.mat)
 
 # find ESS using all three chains
 x <- list(chain1, chain2, chain3)
