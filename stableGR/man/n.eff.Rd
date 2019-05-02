@@ -31,8 +31,6 @@ n.eff(x, multivariate = TRUE, epsilon = 0.05, delta = NULL,
 \item{converged}{a logical indicating whether sufficient samples have been obtained.}
 
 \item{n.target}{NULL (if \code{converged == TRUE}) or a scalar estimate of the chain length required for convergence, assuming the number of chains is unchanged.  }
-
-\item{n.more}{NULL (if \code{converged == TRUE}) or a scalar estimate of number of additional samples required for convergence (per chain), assuming the number of chains is unchanged.  }
 }
 \description{
 For an estimator, effective sample size is the number of independent samples with the same standard error as a correlated sample. This function calculates effective sample size for a set of Markov chains using lugsail variance estimators. This also determines whether the Markov chains have converged. If they have not, this function approximates the number of samples needed.

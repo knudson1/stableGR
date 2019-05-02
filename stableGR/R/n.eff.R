@@ -15,7 +15,6 @@
 #' @return \item{n.eff}{a scalar point estimate of the effective sample size.}
 #' @return \item{converged}{a logical indicating whether sufficient samples have been obtained.}
 #' @return \item{n.target}{NULL (if \code{converged == TRUE}) or a scalar estimate of the chain length required for convergence, assuming the number of chains is unchanged.  }
-#' @return \item{n.more}{NULL (if \code{converged == TRUE}) or a scalar estimate of number of additional samples required for convergence (per chain), assuming the number of chains is unchanged.  }
 #'
 #' @examples 
 #' library(stableGR)
@@ -92,7 +91,7 @@ n.eff <- function(x,  multivariate = TRUE, epsilon = .05, delta = NULL, alpha = 
     nmore <- ceiling(ntarget - ncurrent)
   }  
   
-  list(n.eff = currentESS, converged = converged, n.target = ntarget, n.more = nmore)
+  list(n.eff = currentESS, converged = converged, n.target = ntarget)
 }
 
 RtoESS <- function(arrr,  m){
