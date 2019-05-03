@@ -21,8 +21,6 @@ target.psrf(p, m, epsilon = 0.05, delta = NULL, alpha = 0.05)
 \item{psrf}{The desired PSRF cutoff to stop the simulation.}
 
 \item{epsilon}{The epsilon value used to calculate the PSRF threshold.}
-
-\item{delta}{The delta value used to calculate the PSRF. The value is 1 - \code{psrf}}
 }
 \description{
 When the sample diagnostic reaches the psrf threshold calculated in this function, sufficient samples have been obtained.

@@ -24,13 +24,14 @@
 #'
 #' sig.mat = matrix(c(1, .8, .8, 1), ncol = 2, nrow = 2)
 #' # Making 3 chains
-#' chain1 <- mvn.gibbs(N = n, p = p, mu = rep(1,p), sigma = sig.mat)
+#' \dontrun{ chain1 <- mvn.gibbs(N = n, p = p, mu = rep(1,p), sigma = sig.mat)
 #' chain2 <- mvn.gibbs(N = n, p = p, mu = rep(1,p), sigma = sig.mat)
 #' chain3 <- mvn.gibbs(N = n, p = p, mu = rep(1,p), sigma = sig.mat)
 #'
 #' # find ESS using all three chains
 #' x <- list(chain1, chain2, chain3)
 #' n.eff(x) 
+#' }
 
 #'
 #'

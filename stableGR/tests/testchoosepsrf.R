@@ -12,7 +12,7 @@ out1a <- target.psrf(p, epsilon = epsilon, m = m, alpha = alpha)
 Tee <- as.numeric(minESS(p, epsilon, alpha = alpha)) #min effective sample size
 del <- sqrt(1 + m/Tee) - 1
 arr <- 1 + del  
-out1b <- list(psrf = arr, epsilon = epsilon, delta = del)
+out1b <- list(psrf = arr, epsilon = epsilon)
 all.equal(out1a, out1b)
 
 #### Check the case where delta is NOT null (it's given)
@@ -23,5 +23,5 @@ Tee <- M <- m/((1+delta)^2 - 1)
 epsilon <- as.numeric(minESS(p, eps = epsilon, ess = M))
 del <- sqrt(1 + m/Tee) - 1
 arr <- 1 + del  
-out2b <- list(psrf = arr, epsilon = epsilon, delta = del)
+out2b <- list(psrf = arr, epsilon = epsilon)
 all.equal(out2a, out2b)

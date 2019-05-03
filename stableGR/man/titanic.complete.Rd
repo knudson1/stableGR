@@ -2,7 +2,7 @@
 \docType{data}
 \alias{titanic.complete}
 \title{Titanic passenger data}
-\description{Data about the Titanic passenger, complete cases only.}
+\description{Titanic passenger survival data. Complete cases only.}
 
 \usage{data(titanic.complete)}
 \format{

@@ -10,7 +10,6 @@
 #' 
 #' @return \item{psrf}{The desired PSRF cutoff to stop the simulation.} 
 #' @return \item{epsilon}{The epsilon value used to calculate the PSRF threshold.}
-#' @return \item{delta}{The delta value used to calculate the PSRF. The value is 1 - \code{psrf}}
 #' @examples target.psrf(p = 2, m = 3, epsilon = .05,  alpha = .05)
 #' 
 #' @section References:
@@ -39,7 +38,7 @@ target.psrf <- function(p, m, epsilon = .05, delta = NULL, alpha=.05){
   
   del <- sqrt(1 + m/Tee) - 1
   arr <- 1 + del  
-  list(psrf = arr, epsilon = epsilon, delta = del)
+  list(psrf = arr, epsilon = epsilon)
 }
 
 minESS <- mcmcse::minESS
