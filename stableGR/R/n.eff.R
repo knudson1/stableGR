@@ -64,12 +64,12 @@ n.eff <- function(x,  multivariate = TRUE, epsilon = .05, delta = NULL, alpha = 
   #univariate case
   W <- s.hat(x)
   Ssq <- diag(W) 
-  tau2 <- asym.var(x, method = method, size = size, autoburnin = FALSE)
+  tau2 <- asym.var(x, multivariate = FALSE, method = method, size = size, autoburnin = FALSE)
   currentESS <- Nchain * Niter * (Ssq/tau2)^(1/Nvar)  
   
     
   if(multivariate && Nvar > 1){
-    Tee <- asym.var.mat(x, method = method, size = size, autoburnin = FALSE, adjust = TRUE)
+    Tee <- asym.var(x, multivariate = TRUE, method = method, size = size, autoburnin = FALSE, adjust = TRUE)
     mango <- solve(Tee, W) #S T^{-1}
     eigs <- eigen(mango, symmetric = FALSE, only.values = TRUE)$values
     detpiece <- (prod(eigs))^(1/Nvar)

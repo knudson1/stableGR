@@ -82,7 +82,7 @@ function (x,  multivariate = TRUE, mapping = "determinant",  method = "lug",
   Ssq <- diag(W) # Isolate the variances, throw away covariances.
 
 	# Third, calculate tau^2, the sample variance of the sample means (between chain vars)
-  tau2 <- asym.var(x, method = method, size = size, autoburnin = FALSE)
+  tau2 <- asym.var(x, multivariate = FALSE, method = method, size = size, autoburnin = FALSE)
 	
 	# Calculate the estimate of sigma^2.
 	sigsq <- (Niter - 1) * Ssq/Niter + tau2 / Niter 
@@ -102,7 +102,7 @@ function (x,  multivariate = TRUE, mapping = "determinant",  method = "lug",
 	mpsrf <- multivariate
 	
 	if(multivariate && Nvar > 1){
-	  Tee <- asym.var.mat(x, method = method, size = size, autoburnin = FALSE, adjust = TRUE)
+	  Tee <- asym.var(x, multivariate = TRUE, method = method, size = size, autoburnin = FALSE, adjust = TRUE)
 
 		firstpiece <- (Niter-1)/Niter
 		secondpiece <- 1/Niter

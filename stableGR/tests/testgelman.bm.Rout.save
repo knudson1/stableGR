@@ -62,10 +62,10 @@ copyright (c) 2012, James M. Flegal, University of California, Riverside
 > tausq <- .5 * (tausq1 + tausq2)
 > #checked, right
 > 
-> coffee <- asym.var(matrix(chain1, ncol=1))
+> coffee <- asym.var(matrix(chain1, ncol=1), multivariate = FALSE)
 > all.equal(coffee, tausq1)
 [1] TRUE
-> coffee <- asym.var(matrix(chain2, ncol=1))
+> coffee <- asym.var(matrix(chain2, ncol=1), multivariate = FALSE)
 > all.equal(coffee, tausq2)
 [1] TRUE
 > 

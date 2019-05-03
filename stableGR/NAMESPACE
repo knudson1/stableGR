@@ -2,7 +2,6 @@ export(stable.GR)
 export(target.psrf)
 export(n.eff)
 export(asym.var)
-export(asym.var.mat)
 export(mvn.gibbs)
 
 

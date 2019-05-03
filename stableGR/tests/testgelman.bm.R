@@ -36,9 +36,9 @@ tausq2 <- (mcse(chain2, method = "lug")$se)^2 * N
 tausq <- .5 * (tausq1 + tausq2)
 #checked, right
 
-coffee <- asym.var(matrix(chain1, ncol=1))
+coffee <- asym.var(matrix(chain1, ncol=1), multivariate = FALSE)
 all.equal(coffee, tausq1)
-coffee <- asym.var(matrix(chain2, ncol=1))
+coffee <- asym.var(matrix(chain2, ncol=1), multivariate = FALSE)
 all.equal(coffee, tausq2)
 
 # Calulate s^2 for each chain
