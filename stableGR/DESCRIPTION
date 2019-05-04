@@ -1,6 +1,6 @@
 Package: stableGR
 Type: Package
-Title: A Stable Gelman-Rubin Diagnostic for Markov Chain Monte Carlo Convergence
+Title: A Stable Gelman-Rubin Diagnostic for Markov Chain Monte Carlo
 Version: 1.0
 Date: 2019-04-26
 Author: c(person("Christina", "Knudson", role = c("aut", "cre"),

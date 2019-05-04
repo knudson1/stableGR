@@ -1,25 +1,27 @@
-#' Asymptotic variance matrix estimation for Markov chain Monte Carlo
+#' Asymptotic covariance matrix estimation for Markov chain Monte Carlo
 #' 
-#' This function estimates the asymptotic covariance matrix in the Markov chain central limit theorem, compatible with multiple chains. If a single chain is input, it calls \code{mcmcse::mcse.multi}. 
+#' Estimates the asymptotic covariance matrix for Monte Carlo estimators,  compatible with multiple chains. If a single chain is input, it calls \code{mcmcse::mcse.multi}. 
 #' 
-#' @param x a list of matrices, where each matrix represents one Markov chain sample. Each row of the matrices represents one step of the chain. Each column of the matrices represents one variable. A list with a single matrix (chain) is allowed. Optionally, this can be an \code{mcmclist} object.
-#' @param multivariate a logical flag indicating whether the Markov chain has multiple variables
-#' @param method the method used to compute the standard error of the chains. This is one of \dQuote{\code{lug}} (lugsail, the default), \dQuote{\code{bm}} (batch means), \dQuote{\code{obm}} (overlapping batch means), \dQuote{\code{tukey}} (spectral variance method with a Tukey-Hanning window), or \dQuote{\code{bartlett}} (spectral variance method with a Bartlett window).
-#' @param size can take character values of \dQuote{sqroot} and \dQuote{cuberoot} or any numeric value between 1 and n. Size represents the batch size in \dQuote{\code{bm}} (batch means) and the truncation point in \dQuote{\code{bartlett}} and \dQuote{\code{tukey}}. sqroot means size is floor(n^(1/2) and cuberoot means size is floor(n^(1/3)).
+#' @param x a list of matrices, where each matrix is \eqn{n \times p}. Each row of the matrices represents one step of the chain. Each column of the matrices represents one variable. A list with a single matrix (chain) is allowed. Optionally, this can be an \code{mcmclist} object.
+#' @param multivariate a logical flag indicating whether the full matrix is returned (TRUE) or only the diagonals (FALSE)
+#' @param method the method used to compute the matrix. This is one of \dQuote{\code{lug}} (lugsail, the default), \dQuote{\code{bm}} (batch means), \dQuote{\code{obm}} (overlapping batch means), \dQuote{\code{tukey}} (spectral variance method with a Tukey-Hanning window), or \dQuote{\code{bartlett}} (spectral variance method with a Bartlett window).
+#' @param size can take character values of \code{sqroot} and \code{cuberoot} or any numeric value between 1 and \eqn{n}. Size represents the batch size in \dQuote{\code{bm}} (batch means) and the truncation point in \dQuote{\code{bartlett}} and \dQuote{\code{tukey}}. sqroot means size is floor(n^(1/2) and cuberoot means size is floor(n^(1/3)).
 #' @param autoburnin a logical flag indicating whether only the second half of the series should be used in the computation.  If set to TRUE and \code{start(x)} is less than \code{end(x)/2} then start of series will be adjusted so that only second half of series is used.
 #' @param adjust a logical flag indicating whether the covariance matrix should be adjusted, when necessary, to ensure it is positive-definite.
 #'
-#' @return  The asymptotic variance estimate (if multivariate = FALSE) or the asymptotic covariance matrix (if multivariate = TRUE) in the Markov chain central limit theorem. 
+#' @return  The asymptotic variance estimate (if \code{multivariate = FALSE}) or the asymptotic covariance matrix (if \code{multivariate = TRUE}) in the Markov chain central limit theorem. 
 #'
-#'
+#' @details The function returns estimate of the univariate or multivariate asymptotic (co)variance of Monte Carlo estimators. If \eqn{X_1, \dots X_n} are the MCMC samples, then function returns the estimate of \eqn{\lim_{n\to \infty} n Var(\bar{X})}. In other words, if a Markov chain central limit holds such that, as \eqn{n \to \infty}
+#'   \deqn{\sqrt{n}(\bar{X} - \mu) \to N(0, \Sigma) }
+#' then the function returns an estimator of \eqn{\Sigma} from the m different chains. If \code{multivariate == FALSE}, then only the diaongal of \eqn{\Sigma} are returned.
 #' @section References:
 #' Vats, D. and Knudson, C. Revisiting the Gelman-Rubin Diagnostic.	arXiv:1812.09384. 
 #' 
 #' Vats, D. and Flegal, J. Lugsail lag windows and their application to MCMC. arXiv: 1809.04541.
 #' 
-#' Flegal, J. M. and Jones, G. L. (2010) Batch means and spectral variance estimators in Markov chain Monte Carlo. \emph{The Annals of Statistics}, \bold{38}, 1034--1070. \cr
+#' Flegal, J. M. and Jones, G. L. (2010) Batch means and spectral variance estimators in Markov chain Monte Carlo. \emph{The Annals of Statistics}, \bold{38}, 1034--1070.
 #'
-#' Gelman, A and Rubin, DB (1992) Inference from iterative simulation using multiple sequences, \emph{Statistical Science}, \bold{7}, 457-511. \cr
+#' Gelman, A and Rubin, DB (1992) Inference from iterative simulation using multiple sequences, \emph{Statistical Science}, \bold{7}, 457-511. 
 #'
 #' Brooks, SP. and Gelman, A. (1998) General methods for monitoring convergence of iterative simulations. \emph{Journal of Computational and Graphical Statistics}, \bold{7}, 434-455.
 #'
