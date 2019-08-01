@@ -23,8 +23,7 @@ Welcome to the stableGR repository, containing the production-ready version of t
 
 ## Hardware Requirements
 
-The `stableGR` package requires no special hardware.  Because the `stableGR` package is for Markov chain Monte Carlo, computers with greater RAM will complete the analyses more quickly. However, a 'normal' computer should suffice: the analyses were initially completed using a 500 USD netbook purchased in 2012.
-
+The `stableGR` package requires no special hardware.  Because the `stableGR` package diagnoses convergence for Markov chains, computers with greater RAM will complete the analyses more quickly.
 
 
 
