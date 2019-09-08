@@ -207,9 +207,29 @@ Due to known coding errors (e.g. the miscalculated confidence interval for $\hat
 
 
 
+\section{\textbf{Implementing replicated batch means}}
 
+Consider the parameter $\tau^2_n = nVar(\bar{X}_{i\cdot})$. In our first pass at estimator $\tau^2_n$, we used the average of each chain's batch means variance estimates. Now, we are moving towards using replicated batch means: essentially, we will pool the chains together and use the floor of the square root of a \textit{single} chain's length (rather than the conglomerated Monte Carlo sample size.)  With the \texttt{mcmcse} function \texttt{mcse.mat}, it's easy to specify the batch size with the \texttt{size} argument.\\
 
+We have to think a little more because \texttt{mcse.mat} (and \texttt{mcse.multi}) automate some things that we will now have to consider. In particular, \texttt{mcse.mat} (and \texttt{mcse.multi}) takes care of choosing which Monte Carlo samples to trim off in order to use the correct batch size. Now we will need to: 
+\begin{enumerate}
+\item Calculate the correct Monte Carlo batch size (floor of square root of a single chain's length).
+\item Split each chain into batches by trimming the samples at the start of the chain rather than at the tail of the chain (see sketch below).
+\item Stack the chains on top of each other (rbind).
+\item Pass the conglomerated chain to mcse.mat (and also pass the correct batch size). 
+\end{enumerate}
 
+\includegraphics[width=3in]{repBMstackchains.png}\\
+
+These calculations should be done in \texttt{asym.var}, since this function calls \texttt{mcse.mat} (and \texttt{mcse.multi}).
+We  also need to implement replicated batch means for matrix T (the multivariate version of $\tau^2_n$),  which calls \texttt{mcse.multi} rather than \texttt{mcse.mat}.\\
+
+To do list:
+
+\begin{itemize} \renewcommand{\labelitemi}{$\square$}
+\item Implement replicated batch means for the univariate PSRF
+\item Implemented replicated batch means for the MPSRF 
+\end{itemize}
 
 
 \bibliographystyle{apalike}
