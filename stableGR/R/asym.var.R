@@ -58,20 +58,60 @@ asym.var <- function (x, multivariate = TRUE, method = "lug", size = "sqroot", a
   Niter <- nrow(x[[1]])  # number of iterations per chains. We also call this n.
   Nvar <- ncol(x[[1]]) # number of variables
   Nchain <- length(x)
+  
+  # When we have multiple chains, we need to do replicated batch means
+  # meaning we need to calculate the batch sizes manually
+  if (size == "sqroot") {
+      b = floor(sqrt(Niter))
+      a = floor(Niter/b)
+  }  else if (size == "cuberoot") {
+      b = floor(Niter^(1/3))
+      a = floor(Niter/b)
+  }  else {
+      if (!is.numeric(size) || size <= 1 || size == Inf) 
+          stop("'size' must be a finite numeric quantity larger than 1.")
+      b = floor(size)
+      a = floor(Niter/b)
+  }
 
-  if(multivariate == FALSE){
-      tau2i <- matrix(sapply(x, gettau, method = method)*Niter, ncol = Nchain)
-      tau2 <- apply(tau2i, 1, mean)
-      Tee <- tau2
+  
+  ## trim away beginnings of each chain (if necessary)
+  Nneeded <- a*b
+  Ntrim <- Niter - Nneeded
+  trimmedchain <- x
+  if(Ntrim > 0){
+      for(i in 1:Nchain){
+          removethese <- 1:Ntrim
+          trimmedchain[[i]] <- x[[i]][-removethese,]
+      }
   }
   
+  ## stack the chains into a single matrix
+  stackedchains <- do.call(rbind,trimmedchain)
+  
+  ## calculate tau squared using replicated batch means
+  if(multivariate == FALSE){
+      #tau2i <- matrix(sapply(stackedchains, gettau, method = method, size = b)*Niter, ncol = Nchain)
+      #tau2 <- apply(tau2i, 1, mean)
+      Tee <- gettau(stackedchains, method = method, size = b) * Niter * Nchain
+  }
+  
+  ## calculate T using replicated batch means
   if(multivariate){
       if(Nvar == 1)stop("The option multivariate = TRUE requires a Markov chain with multiple variables. If you have a univariate Markov chain, use multivariate = FALSE.")
-      
-      Ti <- lapply(x, getT, method = method, size = size)  # For each chain
-      Tee <- matrix(Reduce("+", Ti)  / Nchain, nrow = Nvar)
+      Tee <- getT(stackedchains, method = method, size = b)
       if(adjust == TRUE) Tee <- adjust.matrix(Tee, Niter)      
   }
+  
+ 
+  # ## calculate T using old method
+  # if(multivariate){
+  #     if(Nvar == 1)stop("The option multivariate = TRUE requires a Markov chain with multiple variables. If you have a univariate Markov chain, use multivariate = FALSE.")
+  #     
+  #     Ti <- lapply(x, getT, method = method, size = b)  # For each chain
+  #     Tee <- matrix(Reduce("+", Ti)  / Nchain, nrow = Nvar)
+  #     if(adjust == TRUE) Tee <- adjust.matrix(Tee, Niter)      
+  # }
 
   
   Tee

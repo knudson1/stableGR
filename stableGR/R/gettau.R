@@ -1,5 +1,5 @@
-gettau <- function(x1, method) 
+gettau <- function(x1, method, size) 
 {
-	(mcse.mat(x1, method = method)[ ,2])^2 
+	(mcse.mat(x1, method = method, size = size)[ ,2])^2 
 }
 

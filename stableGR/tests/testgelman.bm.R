@@ -34,6 +34,7 @@ chain2 <- out.gibbs2[ ,1]
 tausq1 <- (mcse(chain1, method = "lug")$se)^2 * N 
 tausq2 <- (mcse(chain2, method = "lug")$se)^2 * N
 tausq <- .5 * (tausq1 + tausq2)
+names(tausq1) <- names(tausq2) <-c("se")
 #checked, right
 
 coffee <- asym.var(matrix(chain1, ncol=1), multivariate = FALSE)
@@ -57,7 +58,7 @@ sigsq <- ((N-1) * ssquared + tausq)/N
 Rhat <- sigsq / ssquared
 
 that <- sqrt(Rhat)
-
+names(that) <- NULL
 
 
 
