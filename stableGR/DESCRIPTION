@@ -8,7 +8,7 @@ Author@R: c(person("Christina", "Knudson", role = c("aut", "cre"),
 Author: Christina Knudson [aut, cre], Dootika Vats [aut]
 Maintainer: Christina Knudson <knud8583@stthomas.edu>
 Description: Uses stable variance estimates to calculate the Gelman-Rubin diagnostic, in addition to smart cut-offs for the diagnostic. 
-License: GPL-2
+License: GPL-3
 Depends: R (>= 3.1.1)
 Imports: mcmc, mvtnorm, mcmcse
 ByteCompile: TRUE

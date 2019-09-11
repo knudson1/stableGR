@@ -30,9 +30,11 @@ withfun <- outwithfun$mpsrf
 blather <- outwithfun$blather
 
 # Calculate Tmat for each chain
+stacked <- rbind(out.gibbs1, out.gibbs2)
+That <- mcse.multi(stacked, method = "lug", size = sqrt(N))$cov
 Tmat1 <- mcse.multi(out.gibbs1, method = "lug")$cov
-Tmat2 <- mcse.multi(out.gibbs2, method = "lug")$cov
-That <- .5*(Tmat1 + Tmat2) 
+#Tmat2 <- mcse.multi(out.gibbs2, method = "lug")$cov
+#That <- .5*(Tmat1 + Tmat2) 
 all.equal(That, blather$AsymVarMatrix)
 
 #Calc Smat
