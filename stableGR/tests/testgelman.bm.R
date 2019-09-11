@@ -30,17 +30,13 @@ obj <- list(out.gibbs1, out.gibbs2)
 chain1 <- out.gibbs1[ ,1]
 chain2 <- out.gibbs2[ ,1]
 
-# Calculate tau^2 for each chain
-tausq1 <- (mcse(chain1, method = "lug")$se)^2 * N 
-tausq2 <- (mcse(chain2, method = "lug")$se)^2 * N
-tausq <- .5 * (tausq1 + tausq2)
-names(tausq1) <- names(tausq2) <-c("se")
-#checked, right
-
-coffee <- asym.var(matrix(chain1, ncol=1), multivariate = FALSE)
-all.equal(coffee, tausq1)
-coffee <- asym.var(matrix(chain2, ncol=1), multivariate = FALSE)
-all.equal(coffee, tausq2)
+# Calculate tau^2 
+stacked <- c(chain1, chain2)
+tausq <- (mcse(stacked, method = "lug", size = sqrt(N))$se)^2 * 2 * N
+names(tausq) <- c('se')
+temp <-matrix(stacked, ncol=1)
+coffee <- asym.var(temp, multivariate = FALSE, method = "lug", size = sqrt(N))
+all.equal(coffee, tausq)
 
 # Calulate s^2 for each chain
 sampvar1 <- var(chain1)

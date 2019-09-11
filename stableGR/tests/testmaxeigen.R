@@ -22,11 +22,6 @@ out.gibbs2 <- mvn.gibbs(N = N, mu = mu, sigma = sigma, p = p)
 
 obj <- list(out.gibbs1, out.gibbs2)
 
-# Convert to MCMC objects
-#out1 <- mcmc(out.gibbs1)
-#out2 <- mcmc(out.gibbs2)
-#obj <- mcmc.list(out1, out2)
-
 ################ 
 # Perform unit test using the two chains in obj
 
@@ -34,9 +29,11 @@ withfun <- stable.GR(obj, mapping = "maxeigen")$mpsrf
 
 
 # Calculate Tmat for each chain
-Tmat1 <- mcse.multi(out.gibbs1, method = "lug")$cov
-Tmat2 <- mcse.multi(out.gibbs2, method = "lug")$cov
-That <- .5*(Tmat1 + Tmat2) #good
+stacked <- rbind(out.gibbs1, out.gibbs2)
+That <- mcse.multi(stacked, method = "lug", size = sqrt(N))$cov
+#Tmat1 <- mcse.multi(out.gibbs1, method = "lug")$cov
+#Tmat2 <- mcse.multi(out.gibbs2, method = "lug")$cov
+#That <- .5*(Tmat1 + Tmat2) #good
 
 #Calc Smat
 cov1 <- var(out.gibbs1)
