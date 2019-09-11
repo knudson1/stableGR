@@ -8,7 +8,7 @@ library(stableGR)
 #
 # Details on the chain construction
 p <- 5
-N <- 2000
+N <- 44^2
 tail.ind <- floor(N*.80):N
 foo <- matrix(.50, nrow=p, ncol=p)
 sigma <- foo^(abs(col(foo)-row(foo)))
@@ -33,8 +33,8 @@ results1 <- stable.GR(obj)
 chain1 <- out.gibbs1[ ,1]
 
 # Calculate tau^2 for each chain
-tausq1 <- (mcse(chain1, method = "lug")$se)^2 * N 
-tausq <- tausq1 
+tausq <- (mcse(chain1, method = "lug")$se)^2 * N 
+#tausq <- tausq1 
 #checked, right
 
 # Calulate s^2 for each chain
