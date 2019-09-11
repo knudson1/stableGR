@@ -82,7 +82,7 @@ asym.var <- function (x, multivariate = TRUE, method = "lug", size = "sqroot", a
   if(Ntrim > 0){
       for(i in 1:Nchain){
           removethese <- 1:Ntrim
-          trimmedchain[[i]] <- x[[i]][-removethese,]
+          trimmedchain[[i]] <- matrix(x[[i]][-removethese,], ncol = Nvar)
       }
   }
   
