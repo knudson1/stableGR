@@ -61,6 +61,12 @@ asym.var <- function (x, multivariate = TRUE, method = "lug", size = "sqroot", a
   
   # When we have multiple chains, we need to do replicated batch means
   # meaning we need to calculate the batch sizes manually
+  
+  # for (i in 1:Nchain){
+  # b_vec[i] <- batchSize( x[[i]] , method = "bm")
+  # }
+  # b <- mean(b_vec)
+  
   if (size == "sqroot") {
       b = floor(sqrt(Niter))
       a = floor(Niter/b)
