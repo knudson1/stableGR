@@ -66,3 +66,4 @@ melon$converged
 set.seed(1234)
 banana <- list(matrix(rnorm(1000), ncol = 1))
 n.eff(banana)$converged == FALSE
+
