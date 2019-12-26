@@ -69,7 +69,7 @@ n.eff <- function(x,  multivariate = TRUE, epsilon = .05, delta = NULL, alpha = 
   
     
   if(multivariate && Nvar > 1){
-    Tee <- asym.var(x, multivariate = TRUE, method = method, size = size, autoburnin = FALSE, adjust = TRUE)
+    Tee <- asym.var(x, multivariate = TRUE, method = method, size = size, autoburnin = FALSE)
     mango <- solve(Tee, W) #S T^{-1}
     eigs <- eigen(mango, symmetric = FALSE, only.values = TRUE)$values
     detpiece <- (prod(eigs))^(1/Nvar)

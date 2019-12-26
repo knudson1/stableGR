@@ -102,7 +102,7 @@ function (x,  multivariate = TRUE, mapping = "determinant",  method = "lug",
 	mpsrf <- multivariate
 	
 	if(multivariate && Nvar > 1){
-	  Tee <- asym.var(x, multivariate = TRUE, method = method, size = size, autoburnin = FALSE, adjust = TRUE)
+	  Tee <- asym.var(x, multivariate = TRUE, method = method, size = size, autoburnin = FALSE)
 
 		firstpiece <- (Niter-1)/Niter
 		secondpiece <- 1/Niter
