@@ -18,7 +18,7 @@ asym.var(x, multivariate = TRUE, method = "lug", size = "sqroot",
 
 \item{autoburnin}{a logical flag indicating whether only the second half of the series should be used in the computation.  If set to TRUE and \code{start(x)} is less than \code{end(x)/2} then start of series will be adjusted so that only second half of series is used.}
 
-\item{adjust}{a logical flag indicating whether the covariance matrix should be adjusted, when necessary, to ensure it is positive-definite.}
+\item{adjust}{this argument is now obselete due to package updates.}
 }
 \value{
 The asymptotic variance estimate (if \code{multivariate = FALSE}) or the asymptotic covariance matrix (if \code{multivariate = TRUE}) in the Markov chain central limit theorem.

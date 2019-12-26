@@ -7,7 +7,7 @@
 #' @param method the method used to compute the matrix. This is one of \dQuote{\code{lug}} (lugsail, the default), \dQuote{\code{bm}} (batch means), \dQuote{\code{obm}} (overlapping batch means), \dQuote{\code{tukey}} (spectral variance method with a Tukey-Hanning window), or \dQuote{\code{bartlett}} (spectral variance method with a Bartlett window).
 #' @param size can take character values of \code{sqroot} and \code{cuberoot} or any numeric value between 1 and \eqn{n}. Size represents the batch size in \dQuote{\code{bm}} (batch means) and the truncation point in \dQuote{\code{bartlett}} and \dQuote{\code{tukey}}. sqroot means size is floor(n^(1/2) and cuberoot means size is floor(n^(1/3)).
 #' @param autoburnin a logical flag indicating whether only the second half of the series should be used in the computation.  If set to TRUE and \code{start(x)} is less than \code{end(x)/2} then start of series will be adjusted so that only second half of series is used.
-#' @param adjust a logical flag indicating whether the covariance matrix should be adjusted, when necessary, to ensure it is positive-definite.
+#' @param adjust this argument is now obselete due to package updates.
 #'
 #' @return  The asymptotic variance estimate (if \code{multivariate = FALSE}) or the asymptotic covariance matrix (if \code{multivariate = TRUE}) in the Markov chain central limit theorem. 
 #'
@@ -61,11 +61,11 @@ asym.var <- function (x, multivariate = TRUE, method = "lug", size = "sqroot", a
   
   # When we have multiple chains, we need to do replicated batch means
   # meaning we need to calculate the batch sizes manually
-  
-  # for (i in 1:Nchain){
-  # b_vec[i] <- batchSize( x[[i]] , method = "bm")
-  # }
-  # b <- mean(b_vec)
+  b_vec <- rep(-1, Nchain)
+  for(i in 1:Nchain){
+    b_vec[i] <- batchSize( x[[i]] , method = "bm")
+  }
+    b <- mean(b_vec)
   
   if (size == "sqroot") {
       b = floor(sqrt(Niter))
@@ -97,8 +97,6 @@ asym.var <- function (x, multivariate = TRUE, method = "lug", size = "sqroot", a
   
   ## calculate tau squared using replicated batch means
   if(multivariate == FALSE){
-      #tau2i <- matrix(sapply(stackedchains, gettau, method = method, size = b)*Niter, ncol = Nchain)
-      #tau2 <- apply(tau2i, 1, mean)
       Tee <- gettau(stackedchains, method = method, size = b) * Niter * Nchain
   }
   
@@ -106,20 +104,8 @@ asym.var <- function (x, multivariate = TRUE, method = "lug", size = "sqroot", a
   if(multivariate){
       if(Nvar == 1)stop("The option multivariate = TRUE requires a Markov chain with multiple variables. If you have a univariate Markov chain, use multivariate = FALSE.")
       Tee <- getT(stackedchains, method = method, size = b)
-      if(adjust == TRUE) Tee <- adjust.matrix(Tee, Niter)      
   }
-  
- 
-  # ## calculate T using old method
-  # if(multivariate){
-  #     if(Nvar == 1)stop("The option multivariate = TRUE requires a Markov chain with multiple variables. If you have a univariate Markov chain, use multivariate = FALSE.")
-  #     
-  #     Ti <- lapply(x, getT, method = method, size = b)  # For each chain
-  #     Tee <- matrix(Reduce("+", Ti)  / Nchain, nrow = Nvar)
-  #     if(adjust == TRUE) Tee <- adjust.matrix(Tee, Niter)      
-  # }
 
-  
   Tee
 
 }
