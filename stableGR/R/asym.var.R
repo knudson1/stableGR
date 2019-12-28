@@ -59,43 +59,42 @@ asym.var <- function (x, multivariate = TRUE, method = "lug", size = "sqroot", a
   Nvar <- ncol(x[[1]]) # number of variables
   Nchain <- length(x)
   
+  # calculate batch size and number of batches based on user input.
   # When we have multiple chains, we need to do replicated batch means
   # meaning we need to calculate the batch sizes manually
-  # b_vec <- rep(-1, Nchain)
-  # for(i in 1:Nchain){
-  #   b_vec[i] <- batchSize( x[[i]] , method = "bm")
-  # }
-  #   b <- mean(b_vec)
-  bvec <- sapply(x, FUN = batchSize, simplify = TRUE, method = "bm")  
-  b <- mean(bvec)
-    
-  if (size == "sqroot") {
-      b = floor(sqrt(Niter))
-      a = floor(Niter/b)
-  }  else if (size == "cuberoot") {
-      b = floor(Niter^(1/3))
-      a = floor(Niter/b)
-  }  else {
-      if (!is.numeric(size) || size <= 1 || size == Inf) 
-          stop("'size' must be a finite numeric quantity larger than 1.")
-      b = floor(size)
-      a = floor(Niter/b)
+  if(is.null(size)){
+    bvec <- sapply(x, FUN = batchSize, simplify = TRUE, method = "bm")  
+    b <- floor(mean(bvec))
+    a <- floor(Niter/b)
   }
-
+  if(is.null(size) == FALSE){    # if size != NULL
+    if (size == "sqroot") {   #calculation for square root
+        b = floor(sqrt(Niter))
+        a = floor(Niter/b)
+    }  else if (size == "cuberoot") { #calculation for cube root
+        b = floor(Niter^(1/3))
+        a = floor(Niter/b)
+    }  else {
+        if (!is.numeric(size) || size <= 1 || size == Inf) 
+            stop("'size' must be a finite numeric quantity larger than 1.")
+        b = floor(size) #calculation for a user-specified batch size
+        a = floor(Niter/b)
+    }
+  }
   
   ## trim away beginnings of each chain (if necessary)
   Nneeded <- a*b
   Ntrim <- Niter - Nneeded
-  trimmedchain <- x
   if(Ntrim > 0){
-      for(i in 1:Nchain){
-          removethese <- 1:Ntrim
-          trimmedchain[[i]] <- matrix(x[[i]][-removethese,], ncol = Nvar)
-      }
+    removethese <- 1:Ntrim
+    # for(i in 1:Nchain){
+    #   trimmedchain[[i]] <- trimchain(x[[i]], removethese)
+    # }
+    trim2 <- lapply(x, FUN = trimchain, removethese = removethese)
   }
   
   ## stack the chains into a single matrix
-  stackedchains <- do.call(rbind,trimmedchain)
+  stackedchains <- do.call(rbind,trim2)
   
   ## calculate tau squared using replicated batch means
   if(multivariate == FALSE){
@@ -110,5 +109,11 @@ asym.var <- function (x, multivariate = TRUE, method = "lug", size = "sqroot", a
 
   Tee
 
+}
+
+
+trimchain <- function(fullchain, removethese){
+  Nvar <- ncol(fullchain)
+  matrix(fullchain[-removethese,], ncol = Nvar)
 }
 
