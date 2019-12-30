@@ -48,9 +48,6 @@
 
 asym.var <- function (x, multivariate = TRUE, method = "lug", size = "sqroot", autoburnin = FALSE, adjust = TRUE) 
 {
-  mcse.mat <- mcmcse::mcse.mat
-  mcse.multi <- mcmcse::mcse.multi
-  
   # perform various checks on markov chains
   x <- mcmcchecks(x, autoburnin = autoburnin)
   
@@ -85,6 +82,7 @@ asym.var <- function (x, multivariate = TRUE, method = "lug", size = "sqroot", a
   ## trim away beginnings of each chain (if necessary)
   Nneeded <- a*b
   Ntrim <- Niter - Nneeded
+  trim2 <- x
   if(Ntrim > 0){
     removethese <- 1:Ntrim
     # for(i in 1:Nchain){
