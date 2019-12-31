@@ -25,28 +25,27 @@ obj <- list(out.gibbs1)
 #obj <- mcmc.list(out1)
 
 # Calculate psrfs with stable.GR
-results1 <- stable.GR(obj)
+size <- NULL
+method <- "lug"
+results1 <- stable.GR(obj, blather = TRUE, size = size, method = method)
 
 ##############################################
 # Calculate psrfs by for this chain by hand
 # Isolate the first component of the  chain
-chain1 <- out.gibbs1[ ,1]
+chain1 <- matrix(out.gibbs1[ ,1], ncol = 1)
 
 # Calculate tau^2 for each chain
-tausq <- (mcse(chain1, method = "lug")$se)^2 * N 
-#tausq <- tausq1 
-#checked, right
+tausq <- (mcse(chain1, method = method)$se)^2 * N 
+tau2 <- asym.var(list(chain1), multivariate = FALSE, method = method, size = size, autoburnin = FALSE)
 
 # Calulate s^2 for each chain
 sampvar1 <- var(chain1)
 ssquared <- sampvar1 
-#checked, right
 
 # Calculate sigma^2 estimate
 sigsq <- ((N-1) * ssquared + tausq)/N
-# checked, right
-
-
+othersigsq <- results1$blather$sigmasq
+all.equal(as.numeric(sigsq), othersigsq[1])
 
 # Calculate the diagnostic
 Rhat <- sigsq / ssquared

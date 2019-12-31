@@ -6,7 +6,7 @@
 #' @param multivariate a logical flag indicating whether the multivariate potential scale reduction factor should be calculated for multivariate chains.
 #' @param mapping the function used to map the covariance matrix to a scalar. This is one of \dQuote{\code{determinant}} (determinant of the covariance matrix, the default) or \dQuote{\code{maxeigen}} (the largest eigenvalue of the covariance matrix).
 #' @param method the method used to compute the standard error of the chains. This is one of \dQuote{\code{lug}} (lugsail, the default), \dQuote{\code{bm}} (batch means), \dQuote{\code{obm}} (overlapping batch means), \dQuote{\code{tukey}} (spectral variance method with a Tukey-Hanning window), or \dQuote{\code{bartlett}} (spectral variance method with a Bartlett window).
-#' @param size can take character values of \dQuote{sqroot} and \dQuote{cuberoot} or any numeric value between 1 and n. Size represents the batch size in \dQuote{\code{bm}} (batch means) and the truncation point in \dQuote{\code{bartlett}} and \dQuote{\code{tukey}}. sqroot means size is floor(n^(1/2) and cuberoot means size is floor(n^(1/3)).
+#' @param size options are \code{NULL} (default, which calculates an ideal batch size), character values of \code{sqroot} and \code{cuberoot}, or any numeric value between 1 and \eqn{n}. Size represents the batch size in \dQuote{\code{bm}} (batch means) and the truncation point in \dQuote{\code{bartlett}} and \dQuote{\code{tukey}}. sqroot means size is floor(n^(1/2) and cuberoot means size is floor(n^(1/3)).
 #' @param autoburnin a logical flag indicating whether only the second half of the series should be used in the computation.  If set to TRUE and \code{start(x)} is less than \code{end(x)/2} then start of series will be adjusted so that only second half of series is used.
 #' @param blather a logical flag indicating whether to include additional output.
 #'
@@ -58,14 +58,23 @@
 
 stable.GR <-
 function (x,  multivariate = TRUE, mapping = "determinant",  method = "lug", 
-          size = "sqroot", autoburnin = FALSE, blather = FALSE) 
+          size = NULL, autoburnin = FALSE, blather = FALSE) 
 {
   # make sure markov chains pass various checks
   x <- mcmcchecks(x, autoburnin = autoburnin)
   
   # Define some notation.
-  Niter <- nrow(x[[1]])  # number of iterations per chains. We also call this n.
-  Nvar <- ncol(x[[1]]) # number of variables
+  if(is.vector(x[[1]])) #single component
+  {
+    Nvar <- 1
+    Niter <- length(x[[1]])
+  }
+  if(is.matrix(x[[1]])) #univariate OR multivariate
+  {
+    Nvar <- ncol(x[[1]])
+    Niter <- nrow(x[[1]])  # number of iterations per chains. We also call this n.
+  } # number of variables
+  
   xnames <- colnames(x[[1]])
   Nchain <- length(x)
 

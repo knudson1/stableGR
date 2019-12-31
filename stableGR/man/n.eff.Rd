@@ -5,8 +5,7 @@
 \title{Effective sample size}
 \usage{
 n.eff(x, multivariate = TRUE, epsilon = 0.05, delta = NULL,
-  alpha = 0.05, method = "lug", size = "sqroot",
-  autoburnin = FALSE)
+  alpha = 0.05, method = "lug", size = NULL, autoburnin = FALSE)
 }
 \arguments{
 \item{x}{a list of matrices, where each matrix represents one Markov chain sample. Each row of the matrices represents one step of the chain. Each column of the matrices represents one variable. A list with a single matrix (chain) is allowed. Optionally, this can be an \code{mcmclist} object.}
@@ -21,7 +20,7 @@ n.eff(x, multivariate = TRUE, epsilon = 0.05, delta = NULL,
 
 \item{method}{the method used to compute the standard error of the chains. This is one of \dQuote{\code{lug}} (lugsail, the default), \dQuote{\code{bm}} (batch means), \dQuote{\code{obm}} (overlapping batch means), \dQuote{\code{tukey}} (spectral variance method with a Tukey-Hanning window), or \dQuote{\code{bartlett}} (spectral variance method with a Bartlett window).}
 
-\item{size}{can take character values of \dQuote{sqroot} and \dQuote{cuberoot} or any numeric value between 1 and n. Size represents the batch size in \dQuote{\code{bm}} (batch means) and the truncation point in \dQuote{\code{bartlett}} and \dQuote{\code{tukey}}. sqroot means size is floor(n^(1/2) and cuberoot means size is floor(n^(1/3)).}
+\item{size}{options are \code{NULL} (default, which calculates an ideal batch size), character values of \code{sqroot} and \code{cuberoot}, or any numeric value between 1 and \eqn{n}. Size represents the batch size in \dQuote{\code{bm}} (batch means) and the truncation point in \dQuote{\code{bartlett}} and \dQuote{\code{tukey}}. sqroot means size is floor(n^(1/2) and cuberoot means size is floor(n^(1/3)).}
 
 \item{autoburnin}{a logical flag indicating whether only the second half of the series should be used in the computation.  If set to TRUE and \code{start(x)} is less than \code{end(x)/2} then start of series will be adjusted so that only second half of series is used.}
 }
