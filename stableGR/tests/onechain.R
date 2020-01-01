@@ -20,37 +20,71 @@ mvn.gibbs <- stableGR:::mvn.gibbs
 out.gibbs1 <- mvn.gibbs(N = N, mu = mu, sigma = sigma, p = p)
 obj <- list(out.gibbs1)
 
-# Convert to MCMC objects
-#out1 <- mcmc(out.gibbs1)
-#obj <- mcmc.list(out1)
+##############################################
+# size = NULL, for a single chain (ideal batch size)
 
 # Calculate psrfs with stable.GR
 size <- NULL
 method <- "lug"
 results1 <- stable.GR(obj, blather = TRUE, size = size, method = method)
 
-##############################################
-# Calculate psrfs by for this chain by hand
 # Isolate the first component of the  chain
 chain1 <- matrix(out.gibbs1[ ,1], ncol = 1)
+GR1chain <- stable.GR(list(chain1), method = method, multivariate = FALSE, size = size, autoburnin=FALSE, blather = TRUE)
 
+# Calculate psrfs by for this chain by hand
 # Calculate tau^2 for each chain
 tausq <- (mcse(chain1, method = method)$se)^2 * N 
 tau2 <- asym.var(list(chain1), multivariate = FALSE, method = method, size = size, autoburnin = FALSE)
+all.equal(as.numeric(tausq), as.numeric(tau2))
+all.equal(as.numeric(tausq), as.numeric(GR1chain$blather$asymVars))
 
-# Calulate s^2 for each chain
+# Calculate s^2 for each chain
 sampvar1 <- var(chain1)
 ssquared <- sampvar1 
 
 # Calculate sigma^2 estimate
 sigsq <- ((N-1) * ssquared + tausq)/N
-othersigsq <- results1$blather$sigmasq
-all.equal(as.numeric(sigsq), othersigsq[1])
+othersigsq <- as.numeric(GR1chain$blather$sigmasq)
+all.equal(as.numeric(sigsq), othersigsq)
 
 # Calculate the diagnostic
 Rhat <- sigsq / ssquared
-
 that <- sqrt(Rhat)
+all.equal(as.numeric(that[1]) , as.numeric(GR1chain$psrf))
 
-all.equal(as.numeric(that[1]) , as.numeric(results1$psrf[1]))
+
+######################################## batch size is square root
+# Calculate psrfs with stable.GR
+size <- "sqroot"
+method <- "lug"
+results2 <- stable.GR(obj, blather = TRUE, size = size, method = method)
+results3 <- stable.GR(chain1, blather = TRUE, size = size, method = method)
+all.equal(as.numeric(results2$psrf[1]), as.numeric(results3$psrf[1]))
+
+
+# Calculate psrfs by for this chain by hand
+# Calculate tau^2 for each chain
+tausq <- (mcse(chain1, method = method, size = size)$se)^2 * N 
+tau2 <- asym.var(list(chain1), multivariate = FALSE, method = method, size = size, autoburnin = FALSE)
+all.equal(as.numeric(tausq), as.numeric(tau2))
+all.equal(as.numeric(tausq), as.numeric(results2$blather$asymVars[1]))
+all.equal(as.numeric(tausq), as.numeric(results3$blather$asymVars))
+
+# Calculate s^2 for each chain
+sampvar1 <- var(chain1)
+ssquared <- sampvar1 
+
+# Calculate sigma^2 estimate
+sigsq <- ((N-1) * ssquared + tausq)/N
+othersigsq <- as.numeric(results3$blather$sigmasq)
+all.equal(as.numeric(sigsq), othersigsq)
+othersigsq <- as.numeric(results2$blather$sigmasq[1])
+all.equal(as.numeric(sigsq), othersigsq)
+
+
+# Calculate the diagnostic
+Rhat <- sigsq / ssquared
+that <- sqrt(Rhat)
+all.equal(as.numeric(that[1]) , as.numeric(results2$psrf[1]))
 
