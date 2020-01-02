@@ -25,3 +25,4 @@ del <- sqrt(1 + m/Tee) - 1
 arr <- 1 + del  
 out2b <- list(psrf = arr, epsilon = epsilon)
 all.equal(out2a, out2b)
+
