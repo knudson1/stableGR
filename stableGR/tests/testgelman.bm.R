@@ -42,11 +42,9 @@ all.equal(coffee, tausq)
 sampvar1 <- var(chain1)
 sampvar2 <- var(chain2)
 ssquared <- .5 * (sampvar1 + sampvar2)
-#checked, right
 
 # Calculate sigma^2 estimate
 sigsq <- ((N-1) * ssquared + tausq)/N
-#checked, right
 
 
 
@@ -58,7 +56,7 @@ names(that) <- NULL
 
 
 
-withfunc <- stable.GR(obj, method = "lug")
+withfunc <- stable.GR(obj, method = "lug", size = "sqroot")
 all.equal(as.numeric(withfunc$psrf[1]), that)
 
 
