@@ -25,14 +25,14 @@ obj <- list(out.gibbs1, out.gibbs2)
 ################ 
 # Perform unit test using the two chains in obj
 
-outwithfun <- stable.GR(obj, blather = TRUE)
+outwithfun <- stable.GR(obj, blather = TRUE, size = "sqroot")
 withfun <- outwithfun$mpsrf
 blather <- outwithfun$blather
 
 # Calculate Tmat for each chain
 stacked <- rbind(out.gibbs1, out.gibbs2)
 That <- mcse.multi(stacked, method = "lug", size = sqrt(N))$cov
-Tmat1 <- mcse.multi(out.gibbs1, method = "lug")$cov
+Tmat1 <- mcse.multi(out.gibbs1, method = "lug", size = "sqroot")$cov
 #Tmat2 <- mcse.multi(out.gibbs2, method = "lug")$cov
 #That <- .5*(Tmat1 + Tmat2) 
 all.equal(That, blather$AsymVarMatrix)
@@ -62,7 +62,7 @@ all.equal(byhand, withfun)
 ################ ################ ################
 # Perform unit test using a SINGLE chain (just in case)
 onechain <- list(out.gibbs1)
-withfun <- stable.GR(onechain)$mpsrf
+withfun <- stable.GR(onechain, size = "sqroot")$mpsrf
 
 #calculate determinants
 Teigen <- eigen(Tmat1)$values

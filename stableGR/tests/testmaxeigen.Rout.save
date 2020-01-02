@@ -53,7 +53,7 @@ copyright (c) 2012, James M. Flegal, University of California, Riverside
 > ################ 
 > # Perform unit test using the two chains in obj
 > 
-> withfun <- stable.GR(obj, mapping = "maxeigen")$mpsrf
+> withfun <- stable.GR(obj, mapping = "maxeigen", size = "sqroot")$mpsrf
 > 
 > 
 > # Calculate Tmat for each chain
@@ -83,4 +83,4 @@ copyright (c) 2012, James M. Flegal, University of California, Riverside
 > 
 > proc.time()
    user  system elapsed 
-  11.34    0.20   11.53 
+   9.87    0.10    9.95 

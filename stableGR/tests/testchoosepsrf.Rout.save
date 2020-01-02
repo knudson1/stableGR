@@ -45,6 +45,7 @@ Type 'q()' to quit R.
 > all.equal(out2a, out2b)
 [1] TRUE
 > 
+> 
 > proc.time()
    user  system elapsed 
-   0.28    0.26    0.53 
+   0.37    0.12    0.48 

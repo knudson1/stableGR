@@ -25,7 +25,7 @@ obj <- list(out.gibbs1, out.gibbs2)
 ################ 
 # Perform unit test using the two chains in obj
 
-withfun <- stable.GR(obj, mapping = "maxeigen")$mpsrf
+withfun <- stable.GR(obj, mapping = "maxeigen", size = "sqroot")$mpsrf
 
 
 # Calculate Tmat for each chain

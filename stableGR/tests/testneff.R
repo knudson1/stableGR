@@ -54,16 +54,16 @@ all.equal(outA$n.eff, outB$n.eff)
 babyout1 <- matrix(out.gibbs1[,1], ncol = 1)
 babyout2 <- matrix(out.gibbs2[,1], ncol = 1)
 babyobj <- list(babyout1, babyout2)
-temp <- stable.GR(babyobj)$psrf
-denom <- temp^2 - ((N-1)/N)
+suppressWarnings(confrontyourracistuncle <- stable.GR(babyobj)$psrf)
+denom <- confrontyourracistuncle^2 - ((N-1)/N)
 m <- length(babyobj)
 byhand <- m/denom
-melon <- n.eff(babyobj)
+suppressWarnings(melon <- n.eff(babyobj))
 all.equal(melon$n.eff, byhand)
 melon$converged
 
 ################ ################ 
 set.seed(1234)
 banana <- list(matrix(rnorm(1000), ncol = 1))
-n.eff(banana)$converged == FALSE
+suppressWarnings(n.eff(banana)$converged) == FALSE
 

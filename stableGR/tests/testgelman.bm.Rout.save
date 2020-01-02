@@ -71,11 +71,9 @@ copyright (c) 2012, James M. Flegal, University of California, Riverside
 > sampvar1 <- var(chain1)
 > sampvar2 <- var(chain2)
 > ssquared <- .5 * (sampvar1 + sampvar2)
-> #checked, right
 > 
 > # Calculate sigma^2 estimate
 > sigsq <- ((N-1) * ssquared + tausq)/N
-> #checked, right
 > 
 > 
 > 
@@ -87,7 +85,7 @@ copyright (c) 2012, James M. Flegal, University of California, Riverside
 > 
 > 
 > 
-> withfunc <- stable.GR(obj, method = "lug")
+> withfunc <- stable.GR(obj, method = "lug", size = "sqroot")
 > all.equal(as.numeric(withfunc$psrf[1]), that)
 [1] TRUE
 > 
@@ -96,4 +94,4 @@ copyright (c) 2012, James M. Flegal, University of California, Riverside
 > 
 > proc.time()
    user  system elapsed 
-  13.10    0.31   13.68 
+   9.95    0.17   10.10 
