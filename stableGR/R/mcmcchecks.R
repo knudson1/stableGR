@@ -1,13 +1,13 @@
 mcmcchecks <- function(x, autoburnin){
   
   # in case input is an mcmc object (single markov chain), change it to a matrix
-  if(class(x) == "mcmc") {
+  if(sum(class(x) == "mcmc")>0) {
     x <- as.matrix(x)
   }
   
   
   # in case input is a matrix (single markov chain), change it to a list
-  if(class(x) == "matrix") {
+  if(is.matrix(x)) {
     x <- list(x)
   }
   
@@ -21,7 +21,7 @@ mcmcchecks <- function(x, autoburnin){
   # make sure we have a list of matrices
   if(class(x) != "list") stop("Input x must be a list of matrices.")
   Nchain <- length(x) # number of chains. We also call this m.
-  if(all.equal(lapply(x, class), as.list(rep("matrix", Nchain))) == FALSE) stop("Each item in list x must be a matrix.")
+  if(sum(sapply(x, is.matrix)) != Nchain)stop("Each item in list x must be a matrix.")
   
   # Define some notation.
   Niter <- nrow(x[[1]])  # number of iterations per chains. We also call this n.

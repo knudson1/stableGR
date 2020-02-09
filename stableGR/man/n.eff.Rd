@@ -4,8 +4,16 @@
 \alias{n.eff}
 \title{Effective sample size}
 \usage{
-n.eff(x, multivariate = TRUE, epsilon = 0.05, delta = NULL,
-  alpha = 0.05, method = "lug", size = NULL, autoburnin = FALSE)
+n.eff(
+  x,
+  multivariate = TRUE,
+  epsilon = 0.05,
+  delta = NULL,
+  alpha = 0.05,
+  method = "lug",
+  size = NULL,
+  autoburnin = FALSE
+)
 }
 \arguments{
 \item{x}{a list of matrices, where each matrix represents one Markov chain sample. Each row of the matrices represents one step of the chain. Each column of the matrices represents one variable. A list with a single matrix (chain) is allowed. Optionally, this can be an \code{mcmclist} object.}

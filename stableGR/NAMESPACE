@@ -5,7 +5,7 @@ export(asym.var)
 export(mvn.gibbs)
 
 
-import(mvtnorm, mcmc, mcmcse)
+import(mvtnorm, mcmcse)
 importFrom("stats", "cov", "end", "start", "var", "window")
 importFrom("stats", "cov2cor")
 

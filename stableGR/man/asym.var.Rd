@@ -4,8 +4,14 @@
 \alias{asym.var}
 \title{Asymptotic covariance matrix estimation for Markov chain Monte Carlo}
 \usage{
-asym.var(x, multivariate = TRUE, method = "lug", size = NULL,
-  autoburnin = FALSE, adjust = TRUE)
+asym.var(
+  x,
+  multivariate = TRUE,
+  method = "lug",
+  size = NULL,
+  autoburnin = FALSE,
+  adjust = TRUE
+)
 }
 \arguments{
 \item{x}{a list of matrices, where each matrix is \eqn{n \times p}. Each row of the matrices represents one step of the chain. Each column of the matrices represents one variable. A list with a single matrix (chain) is allowed. Optionally, this can be an \code{mcmclist} object.}

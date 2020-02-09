@@ -4,8 +4,15 @@
 \alias{stable.GR}
 \title{Gelman-Rubin diagnostic using stable variance estimators}
 \usage{
-stable.GR(x, multivariate = TRUE, mapping = "determinant",
-  method = "lug", size = NULL, autoburnin = FALSE, blather = FALSE)
+stable.GR(
+  x,
+  multivariate = TRUE,
+  mapping = "determinant",
+  method = "lug",
+  size = NULL,
+  autoburnin = FALSE,
+  blather = FALSE
+)
 }
 \arguments{
 \item{x}{a list of matrices, where each matrix represents one Markov chain sample. Each row of the matrices represents one step of the chain. Each column of the matrices represents one variable. A list with a single matrix (chain) is allowed. Optionally, this can be an \code{mcmclist} object.}

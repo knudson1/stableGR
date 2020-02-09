@@ -40,8 +40,8 @@ all.equal(byhand, as.numeric(n.eff(obj)[1]))
 ################ ################ 
 # make sure arguments can be passed through n.eff to stable.GR correctly
 ################ 
-outA <- stable.GR(obj, autoburnin = TRUE)
-outB <- n.eff(obj, autoburnin = TRUE)
+outA <- stable.GR(obj, autoburnin = FALSE)
+outB <- n.eff(obj, autoburnin = FALSE)
 all.equal(outA$n.eff, outB$n.eff)
 
 ################ 
