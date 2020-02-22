@@ -35,7 +35,7 @@ Estimates the asymptotic covariance matrix for Monte Carlo estimators,  compatib
 \details{
 The function returns estimate of the univariate or multivariate asymptotic (co)variance of Monte Carlo estimators. If \eqn{X_1, \dots X_n} are the MCMC samples, then function returns the estimate of \eqn{\lim_{n\to \infty} n Var(\bar{X})}. In other words, if a Markov chain central limit holds such that, as \eqn{n \to \infty}
   \deqn{\sqrt{n}(\bar{X} - \mu) \to N(0, \Sigma) }
-then the function returns an estimator of \eqn{\Sigma} from the m different chains. If \code{multivariate == FALSE}, then only the diaongal of \eqn{\Sigma} are returned.
+then the function returns an estimator of \eqn{\Sigma} from the m different chains. If \code{multivariate == FALSE}, then only the diagonal of \eqn{\Sigma} are returned.
 }
 \section{References}{
 
@@ -54,17 +54,18 @@ Brooks, SP. and Gelman, A. (1998) General methods for monitoring convergence of 
 library(stableGR)
 set.seed(100)
 p <- 2
-n <- 1000
+n <- 100 # n is tiny here purely for demo purposes.
+# use n much larger for real problems!
 
 sig.mat = matrix(c(1, .8, .8, 1), ncol = 2, nrow = 2)
 
 # Making 3 chains
-\dontrun{chain1 <- mvn.gibbs(N = n, p = p, mu = rep(1,p), sigma = sig.mat)
+chain1 <- mvn.gibbs(N = n, p = p, mu = rep(1,p), sigma = sig.mat)
 chain2 <- mvn.gibbs(N = n, p = p, mu = rep(1,p), sigma = sig.mat)
 chain3 <- mvn.gibbs(N = n, p = p, mu = rep(1,p), sigma = sig.mat)
 
 # find GR diagnostic using all three chains
 x <- list(chain1, chain2, chain3)
 asym.var(x)
-}
+
 }

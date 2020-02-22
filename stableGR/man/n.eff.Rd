@@ -59,18 +59,20 @@ Brooks, SP. and Gelman, A. (1998) General methods for monitoring convergence of 
 library(stableGR)
 set.seed(100)
 p <- 2
-n <- 10000
+n <- 100 # n is tiny here purely for demo purposes.
+# use n much larger for real problems!
+
 
 sig.mat = matrix(c(1, .8, .8, 1), ncol = 2, nrow = 2)
 # Making 3 chains
-\dontrun{ chain1 <- mvn.gibbs(N = n, p = p, mu = rep(1,p), sigma = sig.mat)
+chain1 <- mvn.gibbs(N = n, p = p, mu = rep(1,p), sigma = sig.mat)
 chain2 <- mvn.gibbs(N = n, p = p, mu = rep(1,p), sigma = sig.mat)
 chain3 <- mvn.gibbs(N = n, p = p, mu = rep(1,p), sigma = sig.mat)
 
 # find ESS using all three chains
 x <- list(chain1, chain2, chain3)
 n.eff(x) 
-}
+
 
 
 }
