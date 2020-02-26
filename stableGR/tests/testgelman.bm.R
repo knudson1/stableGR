@@ -35,7 +35,7 @@ stacked <- c(chain1, chain2)
 tausq <- (mcse(stacked, method = "lug", size = sqrt(N))$se)^2 * 2 * N
 names(tausq) <- c('se')
 temp <-matrix(stacked, ncol=1)
-coffee <- asym.var(temp, multivariate = FALSE, method = "lug", size = "sqroot")
+coffee <- asym.var(temp, multivariate = FALSE, method = "lug", size = sqrt(N))
 all.equal(coffee, tausq)
 
 # Calulate s^2 for each chain
