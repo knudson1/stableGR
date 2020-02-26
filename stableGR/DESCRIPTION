@@ -2,7 +2,7 @@ Package: stableGR
 Type: Package
 Title: A Stable Gelman-Rubin Diagnostic for Markov Chain Monte Carlo
 Version: 1.0
-Date: 2020-2-8
+Date: 2020-2-26
 Authors@R: c(person("Christina", "Knudson", role = c("aut", "cre"),
     email = "knud8583@stthomas.edu"), person("Dootika", "Vats", role = c("aut"), email = "dootika.vats@gmail.com"))
 Maintainer: Christina Knudson <knud8583@stthomas.edu>
