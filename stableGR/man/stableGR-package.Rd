@@ -13,7 +13,12 @@
 
 \packageDESCRIPTION{stableGR}
 % \packageIndices{stableGR}
-The differentiating feature of this package is the connection between effective sample size and the potential scale reduction factor (PSRF), compatible with multiple chains. The two main functions in the package are \code{stable.GR}, \code{n.eff}, and \code{target.psrf}. \code{stable.GR} will return the univariate and multivariate PSRF, along with an estimate of the effective sample size. \code{n.eff} will return an estimate of the effective sample size, along with an estimate of the target effective sample size that should be reached. \code{target.psrf} returns the desired cutoff for \code{stable.GR}, so that simulation of MCMC should stop only when the \code{target.psrf} values has been obtained.
+Practitioners of Bayesian statistics often use Markov chain Monte Carlo (MCMC) samplers to sample from a posterior distribution. This package determines whether the MCMC sample is large enough to accurately approximate the posterior. In particular, this calculates a Gelman-Rubin convergence diagnostic using lugsail batch means estimators, which stably estimate the posterior variance. Additionally, this uses the connection between an MCMC sample's effective sample size and the Gelman-Rubin diagnostic to produce a threshold for terminating MCMC simulation. Finally, this informs the user whether enough samples have been collected  and (if necessary) estimates the sample size necessary to approximate the posterior distribution to the desired level of accuracy. The theory underlying these methods can be found in "Revisiting the Gelman-Rubin Diagnostic" by Vats and  Knudson (2018) <arXiv:1812:09384>. 
+
+
+This package is unique in a few ways. First, it uses stable variance estimators to calculate a stabilized Gelman-Rubin statistic. Second, it leverages the connection between effective sample size and the potential scale reduction factor (PSRF). Third, this diagnostic can be used whether MCMC samples were created from a single chain or multiple chains. 
+
+The main functions in the package are \code{stable.GR}, \code{n.eff}, and \code{target.psrf}. \code{stable.GR}  returns the univariate PSRF, the multivariate PSRF, and the estimated effective sample size. \code{n.eff}  returns informs the user whether sufficient MCMC samples have been collected; if not, \code{n.eff} also returns the estimated target sample size \code{target.psrf} creates a termination threshold for \code{stable.GR}; MCMC sampling can terminate when the MCMC samples' psrf is smaller than the value returned by \code{target.psrf}.
 }
 \author{
 \packageAuthor{stableGR}
