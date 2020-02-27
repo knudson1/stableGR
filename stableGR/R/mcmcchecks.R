@@ -5,12 +5,15 @@ mcmcchecks <- function(x, autoburnin){
     x <- as.matrix(x)
   }
   
+  # if input is vector, change to mtx
+  if(is.vector(x)&!is.list(x)){
+    x <- as.matrix(x, ncol = 1)
+  }
   
   # in case input is a matrix (single markov chain), change it to a list
   if(is.matrix(x)) {
     x <- list(x)
   }
-  
   
   # in case input is of type mcmc.list, change it to a list of matrices
   if(class(x) == "mcmc.list") {
