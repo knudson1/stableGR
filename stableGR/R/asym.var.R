@@ -106,7 +106,7 @@ asym.var <- function (x, multivariate = TRUE, method = "lug", size = NULL, autob
   
   ## calculate tau squared using replicated batch means
   if(multivariate == FALSE){
-      Tee <- gettau(stackedchains, method = method, size = b) * Niter * Nchain 
+      Tee <- gettau(stackedchains, method = method, size = b) * Nneeded 
       #### Doots, mcse breaks if b = 1 (says is too small)
   }
   

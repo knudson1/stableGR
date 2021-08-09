@@ -20,31 +20,49 @@ mvn.gibbs <- stableGR:::mvn.gibbs
 out.gibbs1 <- mvn.gibbs(N = N, mu = mu, sigma = sigma, p = p)
 out.gibbs2 <- mvn.gibbs(N = N, mu = mu, sigma = sigma, p = p)
 
-obj <- list(out.gibbs1, out.gibbs2)
 ################ 
-# Perform unit test using the two chains in obj
+# Perform unit test using the two chains 
 # Just for the first variable
 
-# Write the psrf for the specific obj chains
-# Isolate the first component of the two chains
-chain1 <- out.gibbs1[ ,1]
-chain2 <- out.gibbs2[ ,1]
+chainlist <- list(out.gibbs1, out.gibbs2)
 
-# Calculate tau^2 
-stacked <- c(chain1, chain2)
-tausq <- (mcse(stacked, method = "lug", size = sqrt(N))$se)^2 * 2 * N
+# calculate batch size
+bees <- sapply(chainlist, batchSize, method = "bm")
+b <- floor(mean(bees))
+a <- floor(N/b)
+Nneeded <- a*b
+Ngoaway <- N - Nneeded
+
+#trim away beginning of each chain
+if(Ngoaway ==0) trimmedchains <- chainlist
+if(Ngoaway >0) {
+    trimmedchain1 <- out.gibbs1[-(1:Ngoaway),]
+    trimmedchain2 <- out.gibbs2[-(1:Ngoaway),]
+    trimmedchains <- list(trimmedchain1, trimmedchain2)
+}
+
+#stack the trimmed chains
+stacked <- do.call(rbind, trimmedchains)
+
+# Calculate tau^2 for first component by hand
+mat <- mcse.mat(stacked, method = "lug", size = b)
+#SE are in second column, and we want first comp
+tausq <- (mat[1,2])^2 * 2 * Nneeded
 names(tausq) <- c('se')
-temp <-matrix(stacked, ncol=1)
-coffee <- asym.var(temp, multivariate = FALSE, method = "lug", size = sqrt(N))
+
+#calculate tau^2 for first component using asym.var
+onecomp <- stacked[,1]
+onecomp <-matrix(onecomp, ncol=1)
+coffee <- asym.var(onecomp, multivariate = FALSE, method = "lug", size = b)
+
+#do two tau^2 calculations match?
 all.equal(coffee, tausq)
 
-# Calulate s^2 for each chain
-sampvar1 <- var(chain1)
-sampvar2 <- var(chain2)
-ssquared <- .5 * (sampvar1 + sampvar2)
+# Calulate s^2 (combine all samples, calc var)
+ssquared <- var(onecomp)
 
 # Calculate sigma^2 estimate
-sigsq <- ((N-1) * ssquared + tausq)/N
+sigsq <- ((Nneeded-1) * ssquared + tausq)/(Nneeded)
 
 
 
@@ -56,8 +74,8 @@ names(that) <- NULL
 
 
 
-withfunc <- stable.GR(obj, method = "lug", size = "sqroot")
-all.equal(as.numeric(withfunc$psrf[1]), that)
+withfunc <- stable.GR(chainlist, method = "lug")
+all.equal(as.numeric(withfunc$psrf[1]), as.numeric(that))
 
 
 
