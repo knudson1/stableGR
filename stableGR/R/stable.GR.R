@@ -63,32 +63,28 @@ function (x,  multivariate = TRUE, mapping = "determinant",  method = "lug",
 {
   # make sure markov chains pass various checks
   x <- mcmcchecks(x, autoburnin = autoburnin)
-  
-  # Define some notation.
-  if(is.vector(x[[1]])) #single component
-  {
-    Nvar <- 1
-    Niter <- length(x[[1]])
-  }
-  if(is.matrix(x[[1]])) #univariate OR multivariate
-  {
-    Nvar <- ncol(x[[1]])
-    Niter <- nrow(x[[1]])  # number of iterations per chains. We also call this n.
-  } # number of variables
-  
   xnames <- colnames(x[[1]])
   Nchain <- length(x)
-
-
-	# First, calculate sample means.
-	# Calculate column means for each chain.
-  xbar <- matrix(sapply(x, apply, 2, mean, simplify = TRUE),nrow = Nvar, ncol = Nchain) 
-	# Average the means across chains
-  muhat <- apply(xbar, 1, mean) 
+  
+  # preliminary number crunching
+  out <- size.and.trim(x=x, size = size)
+  Nvar <- out$Nvar
+  Nneeded <- out$Nneeded
+  a <- out$a
+  b <- out$b
+  trimmedchains <- out$trimmedchains
+  # chains preppared for rep bm, still in list
+  
+  #stack the trimmed chains so it looks like one chain and the batches will line up for rep bm
+  stackedchains <- do.call(rbind, trimmedchains)
+  
+  
+	# First, calculate sample means for each component.
+  muhat <- apply(stackedchains, 2, mean)
 
 	# Second, calculate overall sample variance for each variable.
 	# Calculate vcov matrix for variables in each chain. List length = nchain.
-  W <- s.hat(x)
+  W <- var(stackedchains)
   Ssq <- diag(W) # Isolate the variances, throw away covariances.
 
 	# Third, calculate tau^2, the sample variance of the sample means (between chain vars)

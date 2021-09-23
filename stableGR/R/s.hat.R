@@ -1,3 +1,5 @@
+# We don't use this anymore. This was before we learned about replicated batch means.
+
 s.hat <- function(x){
 
   # Define some notation.
