@@ -26,12 +26,19 @@ out.gibbs2 <- mvn.gibbs(N = N, mu = mu, sigma = sigma, p = p)
 
 chainlist <- list(out.gibbs1, out.gibbs2)
 
+withfunc <- stable.GR(chainlist, method = "lug", blather = TRUE)
+blatherout <- withfunc$blather
+
 # calculate batch size
 bees <- sapply(chainlist, batchSize, method = "bm")
 b <- floor(mean(bees))
 a <- floor(N/b)
 Nneeded <- a*b
 Ngoaway <- N - Nneeded
+
+all.equal(b, blatherout$b)
+all.equal(a, blatherout$a)
+all.equal(Nneeded, blatherout$Nneeded)
 
 #trim away beginning of each chain
 if(Ngoaway ==0) trimmedchains <- chainlist
@@ -43,39 +50,33 @@ if(Ngoaway >0) {
 
 #stack the trimmed chains
 stacked <- do.call(rbind, trimmedchains)
+all.equal(stacked, blatherout$stackedchains)
 
-# Calculate tau^2 for first component by hand
+# Calculate tau^2 by hand but using mcse.mat
 mat <- mcse.mat(stacked, method = "lug", size = b)
 #SE are in second column, and we want first comp
-tausq <- (mat[1,2])^2 * 2 * Nneeded
-names(tausq) <- c('se')
+tausq <- (mat[,2])^2 * Nneeded
+all.equal(tausq, blatherout$tausq)
 
-#calculate tau^2 for first component using asym.var
-onecomp <- stacked[,1]
-onecomp <-matrix(onecomp, ncol=1)
-coffee <- asym.var(onecomp, multivariate = FALSE, method = "lug", size = b)
 
-#do two tau^2 calculations match?
-all.equal(coffee, tausq)
+# Calulate s^2 (variance for each component) without apply
+ssquared <- rep(0, ncol(stacked))
+for(i in 1:ncol(stacked)){
+    ssquared[i] <- var(stacked[,i])
+}
 
-# Calulate s^2 (combine all samples, calc var)
-ssquared <- var(onecomp)
 
 # Calculate sigma^2 estimate
 sigsq <- ((Nneeded-1) * ssquared + tausq)/(Nneeded)
-
-
+all.equal(sigsq, blatherout$sigmasq)
 
 # Calculate the diagnostic
 Rhat <- sigsq / ssquared
+psrfbyhand <- sqrt(Rhat)
+names(psrfbyhand) <- NULL
 
-that <- sqrt(Rhat)
-names(that) <- NULL
-
-
-
-withfunc <- stable.GR(chainlist, method = "lug")
-all.equal(as.numeric(withfunc$psrf[1]), as.numeric(that))
+#moment of truth
+all.equal(as.numeric(withfunc$psrf), as.numeric(psrfbyhand))
 
 
 

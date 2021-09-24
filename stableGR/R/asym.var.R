@@ -47,7 +47,12 @@
 #'
 
 
-asym.var <- function (x, multivariate = TRUE, method = "lug", size = NULL, autoburnin = FALSE, adjust = TRUE) 
+asym.var <- function (x, 
+                      multivariate = TRUE, 
+                      method = "lug", 
+                      size = NULL, 
+                      autoburnin = FALSE, 
+                      adjust = TRUE) 
 {
   # perform various checks on markov chains
   x <- mcmcchecks(x, autoburnin = autoburnin)

@@ -58,8 +58,13 @@
 #'
 
 stable.GR <-
-function (x,  multivariate = TRUE, mapping = "determinant",  method = "lug", 
-          size = NULL, autoburnin = FALSE, blather = FALSE) 
+function (x, 
+          multivariate = TRUE, 
+          mapping = "determinant",  
+          method = "lug", 
+          size = NULL, 
+          autoburnin = FALSE, 
+          blather = FALSE) 
 {
   # make sure markov chains pass various checks
   x <- mcmcchecks(x, autoburnin = autoburnin)
@@ -73,7 +78,7 @@ function (x,  multivariate = TRUE, mapping = "determinant",  method = "lug",
   a <- out$a
   b <- out$b
   trimmedchains <- out$trimmedchains
-  # chains preppared for rep bm, still in list
+  # chains prepared for rep bm, still in list
   
   #stack the trimmed chains so it looks like one chain and the batches will line up for rep bm
   stackedchains <- do.call(rbind, trimmedchains)
@@ -91,7 +96,7 @@ function (x,  multivariate = TRUE, mapping = "determinant",  method = "lug",
   tau2 <- asym.var(x, multivariate = FALSE, method = method, size = size, autoburnin = FALSE)
 	
 	# Calculate the estimate of sigma^2.
-	sigsq <- (Niter - 1) * Ssq/Niter + tau2 / Niter 
+	sigsq <- (Nneeded - 1) * Ssq/Nneeded + tau2 / Nneeded 
 
 	arrr <- sigsq / Ssq
 	psrf <- sqrt(arrr)
@@ -99,10 +104,18 @@ function (x,  multivariate = TRUE, mapping = "determinant",  method = "lug",
 	blatherout <- blather
 	
 	if(blather){
-	  blatherout <- list(method = method, Niter = Niter, Nchain = Nchain, Nvar = Nvar,
-	                     asymVars = tau2, sigmasq = sigsq) }
+	  blatherout <- list(method = method, 
+	                     Nneeded = Nneeded,
+	                     Nchain = Nchain, 
+	                     Nvar = Nvar,
+	                     asymVars = tau2, 
+	                     sigmasq = sigsq,
+	                     a = a,
+	                     b = b,
+	                     stackedchains = stackedchains,
+	                     tausq = tau2) }
 
-	denom <- arrr - ((Niter-1)/Niter)
+	denom <- arrr - ((Nneeded-1)/Nneeded)
 	n.eff <- Nchain/denom
 	
 	mpsrf <- multivariate
@@ -110,8 +123,8 @@ function (x,  multivariate = TRUE, mapping = "determinant",  method = "lug",
 	if(multivariate && Nvar > 1){
 	  Tee <- asym.var(x, multivariate = TRUE, method = method, size = size, autoburnin = FALSE)
 
-		firstpiece <- (Niter-1)/Niter
-		secondpiece <- 1/Niter
+		firstpiece <- (Nneeded-1)/Nneeded
+		secondpiece <- 1/Nneeded
 		mango <- solve(W, Tee) #S^{-1}T
 		eigs <- eigen(mango, symmetric = FALSE, only.values = TRUE)$values
 		
@@ -126,7 +139,7 @@ function (x,  multivariate = TRUE, mapping = "determinant",  method = "lug",
         }else{ mpsrf <- mpsrfmax
         }
 
-		denom <- mpsrf^2 - ((Niter-1)/Niter)
+		denom <- mpsrf^2 - ((Nneeded-1)/Nneeded)
 		n.eff <- Nchain/denom
 
 		if(blather){

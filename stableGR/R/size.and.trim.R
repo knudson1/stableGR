@@ -1,3 +1,5 @@
+# x is a list of chains
+# size is the batch mean size
 
 size.and.trim <- function(x, size){
     
