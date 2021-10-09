@@ -52,22 +52,53 @@
 #'
 
 
-n.eff <- function(x,  multivariate = TRUE, epsilon = .05, delta = NULL, alpha = .05, method = "lug", size = NULL, 
+n.eff <- function(x,  multivariate = TRUE, 
+                  epsilon = .05, delta = NULL, 
+                  alpha = .05, method = "lug", 
+                  size = NULL, 
                   autoburnin = FALSE){ 
   
   # make sure markov chains pass various checks
   x <- mcmcchecks(x, autoburnin = autoburnin)
   
-  # Define some notation.
-  Niter <- nrow(x[[1]])  # number of iterations per chains. We also call this n.
-  Nvar <- ncol(x[[1]]) # number of variables
+  # preliminary number crunching
   Nchain <- length(x)
+  out <- size.and.trim(x=x, size = size)
+  Nvar <- out$Nvar
+  Nneeded <- out$Nneeded
+  a <- out$a
+  b <- out$b
+  trimmedchains <- out$trimmedchains
+  # chains prepared for rep bm, still in list
+  
+  #stack the trimmed chains so it looks like one chain and the batches will line up for rep bm
+  stackedchains <- do.call(rbind, trimmedchains)
+  
+
   
   #univariate case
-  W <- s.hat(x)
-  Ssq <- diag(W) 
+  # W <- var(stackedchains)
+  # Ssq <- diag(W) 
+  # tau2 <- asym.var(x, multivariate = FALSE, method = method, size = size, autoburnin = FALSE)
+  # 
+  # currentESS <- Nchain * Nneeded * (Ssq/tau2)^(1/Nvar)  
+  
+  # Second, calculate overall sample variance for each variable.
+  # Calculate vcov matrix for variables in each chain. List length = nchain.
+  W <- var(stackedchains)
+  Ssq <- diag(W) # Isolate the variances, throw away covariances.
+  
+  # Third, calculate tau^2, the sample variance of the sample means (between chain vars)
   tau2 <- asym.var(x, multivariate = FALSE, method = method, size = size, autoburnin = FALSE)
-  currentESS <- Nchain * Niter * (Ssq/tau2)^(1/Nvar)  
+  
+  # Calculate the estimate of sigma^2.
+  sigsq <- (Nneeded - 1) * Ssq/Nneeded + tau2 / Nneeded 
+  
+  arrr <- sigsq / Ssq
+
+  denom <- arrr - ((Nneeded-1)/Nneeded)
+ currentESS <- Nchain/denom
+  ############################
   
     
   if(multivariate && Nvar > 1){
@@ -75,7 +106,7 @@ n.eff <- function(x,  multivariate = TRUE, epsilon = .05, delta = NULL, alpha = 
     mango <- solve(Tee, W) #S T^{-1}
     eigs <- eigen(mango, symmetric = FALSE, only.values = TRUE)$values
     detpiece <- (prod(eigs))^(1/Nvar)
-    currentESS <- Nchain * Niter * detpiece
+    currentESS <- Nchain * Nneeded * detpiece
     }
   
   # prepare and do comparison to our goal

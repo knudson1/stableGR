@@ -1,6 +1,6 @@
 
-R version 3.6.2 (2019-12-12) -- "Dark and Stormy Night"
-Copyright (C) 2019 The R Foundation for Statistical Computing
+R version 4.0.3 (2020-10-10) -- "Bunny-Wunnies Freak Out"
+Copyright (C) 2020 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
@@ -56,8 +56,10 @@ copyright (c) 2012, James M. Flegal, University of California, Riverside
 > mpsrf <- outwithfun$mpsrf
 > blather <- outwithfun$blather
 > m <- length(obj)
+> Nneeded <- blather$Nneeded
 > 
 > denom <- mpsrf^2 - ((N-1)/N)
+> denom <- mpsrf^2 - ((Nneeded-1)/Nneeded)
 > byhand <- m/denom
 > 
 > all.equal(byhand, outwithfun$n.eff)
@@ -103,4 +105,4 @@ copyright (c) 2012, James M. Flegal, University of California, Riverside
 > 
 > proc.time()
    user  system elapsed 
-  9.688   0.031   9.708 
+ 10.805   0.046  10.835 
