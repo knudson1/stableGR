@@ -1,6 +1,6 @@
 
-R version 3.6.2 (2019-12-12) -- "Dark and Stormy Night"
-Copyright (C) 2019 The R Foundation for Statistical Computing
+R version 4.0.3 (2020-10-10) -- "Bunny-Wunnies Freak Out"
+Copyright (C) 2020 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
@@ -59,23 +59,19 @@ copyright (c) 2012, James M. Flegal, University of California, Riverside
 > stacked <- rbind(out.gibbs1, out.gibbs2)
 > That <- mcse.multi(stacked, method = "lug", size = sqrt(N))$cov
 > Tmat1 <- mcse.multi(out.gibbs1, method = "lug", size = "sqroot")$cov
-> #Tmat2 <- mcse.multi(out.gibbs2, method = "lug")$cov
-> #That <- .5*(Tmat1 + Tmat2) 
+> 
 > all.equal(That, blather$AsymVarMatrix)
 [1] TRUE
 > 
 > #Calc Smat
-> cov1 <- var(out.gibbs1)
-> cov2 <- var(out.gibbs2)
-> Smat <- .5*(cov1 + cov2) 
+> sloan <- stableGR:::size.and.trim(obj, size = "sqroot")
+> trimmedchains <- sloan$trimmedchains
+> stackedchains <- do.call(rbind, trimmedchains)
+> Smat <- var(stackedchains)
 > all.equal(Smat, blather$S)
 [1] TRUE
 > 
-> #calculate determinants
-> #Teigen <- eigen(That)$values
-> #Seigen <- eigen(Smat)$values
-> #detT <- (prod(Teigen))
-> #detS <- (prod(Seigen))
+> 
 > detratio <- det(That)/det(Smat) 
 > all.equal(detratio, det(solve(blather$S, blather$AsymVarMatrix)))
 [1] TRUE
@@ -97,6 +93,7 @@ copyright (c) 2012, James M. Flegal, University of California, Riverside
 > 
 > #calculate determinants
 > Teigen <- eigen(Tmat1)$values
+> cov1 <- var(out.gibbs1)
 > Seigen <- eigen(cov1)$values
 > detT <- (prod(Teigen))
 > detS <- (prod(Seigen))
@@ -114,4 +111,4 @@ copyright (c) 2012, James M. Flegal, University of California, Riverside
 > 
 > proc.time()
    user  system elapsed 
-  8.406   0.025   8.419 
+  9.198   0.035   9.215 

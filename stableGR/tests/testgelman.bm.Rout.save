@@ -1,6 +1,6 @@
 
-R version 3.6.2 (2019-12-12) -- "Dark and Stormy Night"
-Copyright (C) 2019 The R Foundation for Statistical Computing
+R version 4.0.3 (2020-10-10) -- "Bunny-Wunnies Freak Out"
+Copyright (C) 2020 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
@@ -46,45 +46,69 @@ copyright (c) 2012, James M. Flegal, University of California, Riverside
 > out.gibbs1 <- mvn.gibbs(N = N, mu = mu, sigma = sigma, p = p)
 > out.gibbs2 <- mvn.gibbs(N = N, mu = mu, sigma = sigma, p = p)
 > 
-> obj <- list(out.gibbs1, out.gibbs2)
 > ################ 
-> # Perform unit test using the two chains in obj
+> # Perform unit test using the two chains 
 > # Just for the first variable
 > 
-> # Write the psrf for the specific obj chains
-> # Isolate the first component of the two chains
-> chain1 <- out.gibbs1[ ,1]
-> chain2 <- out.gibbs2[ ,1]
+> chainlist <- list(out.gibbs1, out.gibbs2)
 > 
-> # Calculate tau^2 
-> stacked <- c(chain1, chain2)
-> tausq <- (mcse(stacked, method = "lug", size = sqrt(N))$se)^2 * 2 * N
-> names(tausq) <- c('se')
-> temp <-matrix(stacked, ncol=1)
-> coffee <- asym.var(temp, multivariate = FALSE, method = "lug", size = sqrt(N))
-> all.equal(coffee, tausq)
+> withfunc <- stable.GR(chainlist, method = "lug", blather = TRUE)
+> blatherout <- withfunc$blather
+> 
+> # calculate batch size
+> bees <- sapply(chainlist, batchSize, method = "bm")
+> b <- floor(mean(bees))
+> a <- floor(N/b)
+> Nneeded <- a*b
+> Ngoaway <- N - Nneeded
+> 
+> all.equal(b, blatherout$b)
+[1] TRUE
+> all.equal(a, blatherout$a)
+[1] TRUE
+> all.equal(Nneeded, blatherout$Nneeded)
 [1] TRUE
 > 
-> # Calulate s^2 for each chain
-> sampvar1 <- var(chain1)
-> sampvar2 <- var(chain2)
-> ssquared <- .5 * (sampvar1 + sampvar2)
+> #trim away beginning of each chain
+> if(Ngoaway ==0) trimmedchains <- chainlist
+> if(Ngoaway >0) {
++     trimmedchain1 <- out.gibbs1[-(1:Ngoaway),]
++     trimmedchain2 <- out.gibbs2[-(1:Ngoaway),]
++     trimmedchains <- list(trimmedchain1, trimmedchain2)
++ }
+> 
+> #stack the trimmed chains
+> stacked <- do.call(rbind, trimmedchains)
+> all.equal(stacked, blatherout$stackedchains)
+[1] TRUE
+> 
+> # Calculate tau^2 by hand but using mcse.mat
+> mat <- mcse.mat(stacked, method = "lug", size = b)
+> #SE are in second column, and we want first comp
+> tausq <- (mat[,2])^2 * Nneeded
+> all.equal(tausq, blatherout$tausq)
+[1] TRUE
+> 
+> 
+> # Calulate s^2 (variance for each component) without apply
+> ssquared <- rep(0, ncol(stacked))
+> for(i in 1:ncol(stacked)){
++     ssquared[i] <- var(stacked[,i])
++ }
+> 
 > 
 > # Calculate sigma^2 estimate
-> sigsq <- ((N-1) * ssquared + tausq)/N
-> 
-> 
+> sigsq <- ((Nneeded-1) * ssquared + tausq)/(Nneeded)
+> all.equal(sigsq, blatherout$sigmasq)
+[1] TRUE
 > 
 > # Calculate the diagnostic
 > Rhat <- sigsq / ssquared
+> psrfbyhand <- sqrt(Rhat)
+> names(psrfbyhand) <- NULL
 > 
-> that <- sqrt(Rhat)
-> names(that) <- NULL
-> 
-> 
-> 
-> withfunc <- stable.GR(obj, method = "lug", size = "sqroot")
-> all.equal(as.numeric(withfunc$psrf[1]), that)
+> #moment of truth
+> all.equal(as.numeric(withfunc$psrf), as.numeric(psrfbyhand))
 [1] TRUE
 > 
 > 
@@ -92,4 +116,4 @@ copyright (c) 2012, James M. Flegal, University of California, Riverside
 > 
 > proc.time()
    user  system elapsed 
-  8.334   0.028   8.351 
+  9.730   0.033   9.755 

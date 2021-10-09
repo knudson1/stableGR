@@ -30,8 +30,10 @@ outwithfun <- stable.GR(obj, blather = TRUE)
 mpsrf <- outwithfun$mpsrf
 blather <- outwithfun$blather
 m <- length(obj)
+Nneeded <- blather$Nneeded
 
 denom <- mpsrf^2 - ((N-1)/N)
+denom <- mpsrf^2 - ((Nneeded-1)/Nneeded)
 byhand <- m/denom
 
 all.equal(byhand, outwithfun$n.eff)

@@ -33,21 +33,17 @@ blather <- outwithfun$blather
 stacked <- rbind(out.gibbs1, out.gibbs2)
 That <- mcse.multi(stacked, method = "lug", size = sqrt(N))$cov
 Tmat1 <- mcse.multi(out.gibbs1, method = "lug", size = "sqroot")$cov
-#Tmat2 <- mcse.multi(out.gibbs2, method = "lug")$cov
-#That <- .5*(Tmat1 + Tmat2) 
+
 all.equal(That, blather$AsymVarMatrix)
 
 #Calc Smat
-cov1 <- var(out.gibbs1)
-cov2 <- var(out.gibbs2)
-Smat <- .5*(cov1 + cov2) 
+sloan <- stableGR:::size.and.trim(obj, size = "sqroot")
+trimmedchains <- sloan$trimmedchains
+stackedchains <- do.call(rbind, trimmedchains)
+Smat <- var(stackedchains)
 all.equal(Smat, blather$S)
 
-#calculate determinants
-#Teigen <- eigen(That)$values
-#Seigen <- eigen(Smat)$values
-#detT <- (prod(Teigen))
-#detS <- (prod(Seigen))
+
 detratio <- det(That)/det(Smat) 
 all.equal(detratio, det(solve(blather$S, blather$AsymVarMatrix)))
 
@@ -66,6 +62,7 @@ withfun <- stable.GR(onechain, size = "sqroot")$mpsrf
 
 #calculate determinants
 Teigen <- eigen(Tmat1)$values
+cov1 <- var(out.gibbs1)
 Seigen <- eigen(cov1)$values
 detT <- (prod(Teigen))
 detS <- (prod(Seigen))
