@@ -18,15 +18,6 @@ Type 'q()' to quit R.
 > set.seed(10)
 > library(mvtnorm)
 > library(mcmcse)
-mcmcse: Monte Carlo Standard Errors for MCMC
-Version 1.4-1 created on 2020-01-29.
-copyright (c) 2012, James M. Flegal, University of California, Riverside
-                    John Hughes, University of Colorado, Denver
-                    Dootika Vats, University of Warwick
-                    Ning Dai, University of Minnesota
- For citation information, type citation("mcmcse").
- Type help("mcmcse-package") to get started.
-
 > library(stableGR)
 > 
 > ################ 
@@ -116,4 +107,4 @@ copyright (c) 2012, James M. Flegal, University of California, Riverside
 > 
 > proc.time()
    user  system elapsed 
-  9.730   0.033   9.755 
+  9.111   0.043   9.136 

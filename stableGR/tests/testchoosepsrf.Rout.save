@@ -1,6 +1,6 @@
 
-R version 3.6.2 (2019-12-12) -- "Dark and Stormy Night"
-Copyright (C) 2019 The R Foundation for Statistical Computing
+R version 4.0.3 (2020-10-10) -- "Bunny-Wunnies Freak Out"
+Copyright (C) 2020 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
@@ -17,15 +17,6 @@ Type 'q()' to quit R.
 
 > library(stableGR)
 Loading required package: mcmcse
-mcmcse: Monte Carlo Standard Errors for MCMC
-Version 1.4-1 created on 2020-01-29.
-copyright (c) 2012, James M. Flegal, University of California, Riverside
-                    John Hughes, University of Colorado, Denver
-                    Dootika Vats, University of Warwick
-                    Ning Dai, University of Minnesota
- For citation information, type citation("mcmcse").
- Type help("mcmcse-package") to get started.
-
 > minESS <- mcmcse::minESS
 > p <- 1
 > alpha <- .05
@@ -58,4 +49,4 @@ copyright (c) 2012, James M. Flegal, University of California, Riverside
 > 
 > proc.time()
    user  system elapsed 
-  0.190   0.034   0.213 
+  0.250   0.024   0.257 

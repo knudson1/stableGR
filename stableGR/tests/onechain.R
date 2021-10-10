@@ -8,7 +8,7 @@ library(stableGR)
 #
 # Details on the chain construction
 p <- 5
-N <- 44^2
+N <- 50^2
 tail.ind <- floor(N*.80):N
 foo <- matrix(.50, nrow=p, ncol=p)
 sigma <- foo^(abs(col(foo)-row(foo)))
@@ -39,12 +39,13 @@ tau2 <- asym.var(list(chain1), multivariate = FALSE, method = method, size = siz
 all.equal(as.numeric(tausq), as.numeric(tau2))
 all.equal(as.numeric(tausq), as.numeric(GR1chain$blather$asymVars))
 
-# Calculate s^2 for each chain
-sampvar1 <- var(chain1)
-ssquared <- sampvar1 
+# Calculate s^2 
+ssquared <- var(chain1)
+
 
 # Calculate sigma^2 estimate
-sigsq <- ((N-1) * ssquared + tausq)/N
+Nneeded <- GR1chain$blather$Nneeded
+sigsq <- ((Nneeded-1) * ssquared + tausq)/Nneeded
 othersigsq <- as.numeric(GR1chain$blather$sigmasq)
 all.equal(as.numeric(sigsq), othersigsq)
 
@@ -54,7 +55,7 @@ that <- sqrt(Rhat)
 all.equal(as.numeric(that[1]) , as.numeric(GR1chain$psrf))
 
 
-######################################## batch size is square root
+######################################## 
 # Calculate psrfs with stable.GR
 size <- "sqroot"
 method <- "lug"
@@ -71,12 +72,13 @@ all.equal(as.numeric(tausq), as.numeric(tau2))
 all.equal(as.numeric(tausq), as.numeric(results2$blather$asymVars[1]))
 all.equal(as.numeric(tausq), as.numeric(results3$blather$asymVars))
 
-# Calculate s^2 for each chain
-sampvar1 <- var(chain1)
-ssquared <- sampvar1 
+# Calculate s^2 
+ssquared <- var(chain1)
+
 
 # Calculate sigma^2 estimate
-sigsq <- ((N-1) * ssquared + tausq)/N
+Nneeded <- results2$blather$Nneeded
+sigsq <- ((Nneeded-1) * ssquared + tausq)/Nneeded
 othersigsq <- as.numeric(results3$blather$sigmasq)
 all.equal(as.numeric(sigsq), othersigsq)
 othersigsq <- as.numeric(results2$blather$sigmasq[1])

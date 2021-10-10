@@ -1,6 +1,6 @@
 
-R version 3.6.2 (2019-12-12) -- "Dark and Stormy Night"
-Copyright (C) 2019 The R Foundation for Statistical Computing
+R version 4.0.3 (2020-10-10) -- "Bunny-Wunnies Freak Out"
+Copyright (C) 2020 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
@@ -18,15 +18,6 @@ Type 'q()' to quit R.
 > set.seed(10)
 > library(mvtnorm)
 > library(mcmcse)
-mcmcse: Monte Carlo Standard Errors for MCMC
-Version 1.4-1 created on 2020-01-29.
-copyright (c) 2012, James M. Flegal, University of California, Riverside
-                    John Hughes, University of Colorado, Denver
-                    Dootika Vats, University of Warwick
-                    Ning Dai, University of Minnesota
- For citation information, type citation("mcmcse").
- Type help("mcmcse-package") to get started.
-
 > library(stableGR)
 > 
 > ################ 
@@ -34,7 +25,7 @@ copyright (c) 2012, James M. Flegal, University of California, Riverside
 > #
 > # Details on the chain construction
 > p <- 5
-> N <- 44^2
+> N <- 50^2
 > tail.ind <- floor(N*.80):N
 > foo <- matrix(.50, nrow=p, ncol=p)
 > sigma <- foo^(abs(col(foo)-row(foo)))
@@ -67,12 +58,13 @@ copyright (c) 2012, James M. Flegal, University of California, Riverside
 > all.equal(as.numeric(tausq), as.numeric(GR1chain$blather$asymVars))
 [1] TRUE
 > 
-> # Calculate s^2 for each chain
-> sampvar1 <- var(chain1)
-> ssquared <- sampvar1 
+> # Calculate s^2 
+> ssquared <- var(chain1)
+> 
 > 
 > # Calculate sigma^2 estimate
-> sigsq <- ((N-1) * ssquared + tausq)/N
+> Nneeded <- GR1chain$blather$Nneeded
+> sigsq <- ((Nneeded-1) * ssquared + tausq)/Nneeded
 > othersigsq <- as.numeric(GR1chain$blather$sigmasq)
 > all.equal(as.numeric(sigsq), othersigsq)
 [1] TRUE
@@ -84,7 +76,7 @@ copyright (c) 2012, James M. Flegal, University of California, Riverside
 [1] TRUE
 > 
 > 
-> ######################################## batch size is square root
+> ######################################## 
 > # Calculate psrfs with stable.GR
 > size <- "sqroot"
 > method <- "lug"
@@ -105,12 +97,13 @@ copyright (c) 2012, James M. Flegal, University of California, Riverside
 > all.equal(as.numeric(tausq), as.numeric(results3$blather$asymVars))
 [1] TRUE
 > 
-> # Calculate s^2 for each chain
-> sampvar1 <- var(chain1)
-> ssquared <- sampvar1 
+> # Calculate s^2 
+> ssquared <- var(chain1)
+> 
 > 
 > # Calculate sigma^2 estimate
-> sigsq <- ((N-1) * ssquared + tausq)/N
+> Nneeded <- results2$blather$Nneeded
+> sigsq <- ((Nneeded-1) * ssquared + tausq)/Nneeded
 > othersigsq <- as.numeric(results3$blather$sigmasq)
 > all.equal(as.numeric(sigsq), othersigsq)
 [1] TRUE
@@ -128,4 +121,4 @@ copyright (c) 2012, James M. Flegal, University of California, Riverside
 > 
 > proc.time()
    user  system elapsed 
-  1.117   0.019   1.125 
+  1.424   0.012   1.424 
