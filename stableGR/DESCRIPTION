@@ -1,11 +1,11 @@
 Package: stableGR
 Type: Package
 Title: A Stable Gelman-Rubin Diagnostic for Markov Chain Monte Carlo
-Version: 1.1
-Date: 2021-10-9
+Version: 1.2
+Date: 2022-9-27
 Authors@R: c(person("Christina", "Knudson", role = c("aut", "cre"),
-    email = "knud8583@stthomas.edu"), person("Dootika", "Vats", role = c("aut"), email = "dootika.vats@gmail.com"))
-Maintainer: Christina Knudson <knud8583@stthomas.edu>
+    email = "drchristinaknudson@gmail.com"), person("Dootika", "Vats", role = c("aut"), email = "dootika.vats@gmail.com"))
+Maintainer: Christina Knudson <drchristinaknudson@gmail.com>
 Description: Practitioners of Bayesian statistics often use Markov chain Monte Carlo (MCMC) samplers to sample from a posterior distribution. This package determines whether the MCMC sample is large enough   to yield reliable estimates of the target distribution. In particular, this calculates a Gelman-Rubin convergence diagnostic using stable and consistent estimators of Monte Carlo variance. Additionally, this uses the connection between an MCMC sample's effective sample size and the Gelman-Rubin diagnostic to produce a threshold for terminating MCMC simulation. Finally, this informs the user whether enough samples have been collected  and (if necessary) estimates the number of samples needed for a desired level of accuracy. The theory underlying these methods can be found in "Revisiting the Gelman-Rubin Diagnostic" by Vats and  Knudson (2018) <arXiv:1812:09384>. 
 License: GPL-3
 Depends: R (>= 3.5), mcmcse(>= 1.4-1)
