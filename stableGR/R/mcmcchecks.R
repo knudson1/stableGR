@@ -16,13 +16,13 @@ mcmcchecks <- function(x, autoburnin){
   }
   
   # in case input is of type mcmc.list, change it to a list of matrices
-  if(class(x) == "mcmc.list") {
+  if(inherits(x, "mcmc.list")) {
     x <- as.list(x)
     x <- lapply(x, as.matrix)
   }
   
   # make sure we have a list of matrices
-  if(class(x) != "list") stop("Input x must be a list of matrices.")
+  if(!inherits(x, "list")) stop("Input x must be a list of matrices.")
   Nchain <- length(x) # number of chains. We also call this m.
   if(sum(sapply(x, is.matrix)) != Nchain)stop("Each item in list x must be a matrix.")
   
